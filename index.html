@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Memo Scan – Révisions intelligentes</title>
+  
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4f6ef7">
+  
+  <meta name="description" content="Memo Scan - Application éducative pour réviser efficacement. Cours à domicile, prof particulier, soutien scolaire. Idéal pour enfants dyslexiques.">
+  <meta name="keywords" content="cours à domicile, prof particulier, soutien scolaire, réviser, dyslexique, lecteur manuscrit, aide aux devoirs">
+  <meta name="author" content="Smart Learn">
+  <meta name="robots" content="index, follow">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --ink: #111218; --slate: #1e2130; --paper: #f4f7fc;
+      --accent: #4f6ef7; --al: #eef0fe; --gold: #f5a623;
+      --green: #00c48c; --red: #ff4757;
+      --g1: #f8f9fc; --g2: #e8ecf5; --g5: #8b90a7;
+    }
+
+    body { font-family: system-ui, sans-serif; background: var(--paper); color: var(--ink); }
+
+    .header {
+      background: white; border-bottom: 1px solid var(--g2);
+      padding: 12px 20px; display: flex; align-items: center;
+      justify-content: space-between; position: sticky; top: 0; z-index: 100;
+    }
+
+    .logo-area { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 38px; height: 38px; background: var(--accent); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: white; }
+    .logo-text { font-weight: 800; font-size: 1rem; }
+    .logo-small { font-size: 0.55rem; color: var(--accent); }
+
+    .dys-btn {
+      background: var(--g1); border: 1.5px solid var(--g2); border-radius: 40px;
+      padding: 6px 16px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .dys-btn.active { background: var(--accent); color: white; }
+
+    .trial-banner {
+      background: #e8c87a; color: #1e2130; padding: 10px 20px;
+      text-align: center; font-size: 0.8rem; font-weight: 600;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+    }
+    .trial-banner button { background: #1e2130; color: #e8c87a; border: none;
+      border-radius: 40px; padding: 4px 14px; cursor: pointer; }
+
+    /* 3 MODES D'ENTRÉE - SIMPLIFIÉS */
+    .input-modes {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .mode-card {
+      flex: 1;
+      background: white;
+      border: 2px solid var(--g2);
+      border-radius: 20px;
+      padding: 20px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .mode-card.active {
+      border-color: var(--accent);
+      background: var(--al);
+      box-shadow: 0 4px 12px rgba(79,110,247,0.15);
+    }
+
+    .mode-card-emoji { font-size: 2rem; margin-bottom: 8px; }
+    .mode-card-title { font-weight: 700; font-size: 0.9rem; }
+    .mode-card-desc { font-size: 0.7rem; color: var(--g5); margin-top: 4px; }
+
+    /* ZONES D'UPLOAD */
+    .upload-zone {
+      display: none;
+      margin-bottom: 20px;
+    }
+
+    .upload-zone.active {
+      display: block;
+    }
+
+    .upload-area {
+      border: 2px dashed var(--g2);
+      border-radius: 20px;
+      padding: 40px 20px;
+      text-align: center;
+      background: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .upload-area:hover {
+      border-color: var(--accent);
+      background: var(--al);
+    }
+
+    .upload-emoji { font-size: 2.5rem; margin-bottom: 12px; }
+    .upload-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+    .upload-desc { font-size: 0.75rem; color: var(--g5); }
+
+    .paste-textarea {
+      width: 100%;
+      min-height: 180px;
+      padding: 16px;
+      border: 2px solid var(--g2);
+      border-radius: 20px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      resize: vertical;
+      background: white;
+    }
+    .paste-textarea:focus { border-color: var(--accent); outline: none; }
+
+    .preview-images {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .preview-img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid var(--g2);
+    }
+
+    .generate-btn {
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 60px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin: 20px 0;
+    }
+    .generate-btn:disabled { background: var(--g2); color: var(--g5); cursor: not-allowed; }
+
+    #modeSection { margin-top: 30px; background: white; border-radius: 24px; padding: 20px 16px; }
+    .mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+    .mode-btn {
+      background: var(--g1); border: 2px solid var(--g2); border-radius: 16px;
+      padding: 14px 10px; text-align: center; cursor: pointer;
+    }
+    .mode-btn.active { background: var(--accent); color: white; }
+    .mode-emoji { font-size: 1.6rem; margin-bottom: 6px; }
+    .mode-title { font-weight: 700; font-size: 0.85rem; }
+
+    .carea { margin-top: 16px; }
+    .ccard { background: white; border: 2px solid var(--g2); border-radius: 20px; padding: 24px; margin-bottom: 16px; }
+    .kpc { background: var(--g1); border-radius: 14px; padding: 14px; margin-bottom: 10px; display: flex; gap: 12px; }
+    .kpn { width: 28px; height: 28px; background: var(--accent); color: white; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-weight: 800; }
+
+    .fcwrap { perspective: 800px; height: 220px; cursor: pointer; margin-bottom: 12px; }
+    .fcin { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.4s; }
+    .fcin.fl { transform: rotateY(180deg); }
+    .fcf { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 20px;
+      display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; }
+    .fcfront { background: var(--ink); color: white; }
+    .fcback { background: var(--accent); color: white; transform: rotateY(180deg); }
+
+    .qblock { background: white; border: 2px solid var(--g2); border-radius: 18px; padding: 18px; margin-bottom: 14px; }
+    .opt { padding: 12px 14px; border: 1.5px solid var(--g2); border-radius: 50px; margin: 8px 0; cursor: pointer; background: var(--g1); }
+
+    .mindmap-container { display: flex; flex-direction: column; align-items: center; }
+    .mindmap-center { background: var(--accent); color: white; font-weight: bold; padding: 14px 28px; border-radius: 60px; margin-bottom: 28px; }
+    .mindmap-branches { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+    .mindmap-branch { flex: 1; min-width: 170px; background: var(--g1); border-radius: 18px; padding: 16px; border: 2px solid var(--g2); position: relative; }
+    .mindmap-branch::before { content: ''; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); width: 2px; height: 14px; background: var(--accent); }
+    .branch-title { font-weight: 800; text-align: center; padding-bottom: 10px; border-bottom: 2px solid var(--accent); color: var(--accent); }
+    .branch-leaves li { padding: 8px 0; display: flex; align-items: center; gap: 8px; list-style: none; }
+    .branch-leaves li::before { content: "•"; color: var(--accent); font-weight: bold; }
+
+    .spinner { display: inline-block; width: 22px; height: 22px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; margin-left: 8px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    body.dys { font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif; }
+    body.dys .main-content, body.dys .ccard, body.dys #modeSection { background: #fdf8e7 !important; }
+    body.dys, body.dys p, body.dys li, body.dys .kpt, body.dys .opt, body.dys button { font-size: 1.2rem !important; line-height: 2.2 !important; }
+    body.dys .syllabe-bleue { color: #1e4bd2 !important; font-weight: 700; }
+    body.dys .syllabe-rouge { color: #c62828 !important; font-weight: 700; }
+    body.dys .lettre-muette { color: #b0b0b0 !important; opacity: 0.7; }
+
+    .main-content { max-width: 800px; margin: 0 auto; padding: 20px 16px 40px; }
+    .hero { background: linear-gradient(135deg, var(--ink), var(--slate)); border-radius: 24px; padding: 24px; margin-bottom: 28px; color: white; text-align: center; }
+    .hero h2 { font-size: 1.3rem; }
+    .footer { text-align: center; padding: 20px; font-size: 0.7rem; color: var(--g5); border-top: 1px solid var(--g2); margin-top: 30px; background: white; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-area">
+    <div class="logo-icon">📖</div>
+    <div><div class="logo-text">Memo Scan</div><div class="logo-small">BY SMART LEARN</div></div>
+  </div>
+  <button class="dys-btn" id="dysBtn"><span>🎨</span> <span id="dysBtnText">Mode DYS</span></button>
+</div>
+
+<div id="trialBanner" class="trial-banner">
+  <span>🎓 2 jours gratuits</span>
+  <button id="payBtn">💳 29€/an</button>
+</div>
+
+<div class="main-content">
+  <div class="hero">
+    <h2>📚 Réviser n'a jamais été aussi simple</h2>
+    <p>Cours à domicile · Prof particulier · Soutien scolaire · IA éducative</p>
+  </div>
+
+  <!-- 3 MODES D'ENTRÉE (simples, sans doublon) -->
+  <div class="input-modes">
+    <div class="mode-card" data-mode="photo" id="modePhotoCard">
+      <div class="mode-card-emoji">📸</div>
+      <div class="mode-card-title">Prendre une photo</div>
+      <div class="mode-card-desc">Appareil photo</div>
+    </div>
+    <div class="mode-card" data-mode="gallery" id="modeGalleryCard">
+      <div class="mode-card-emoji">🖼️</div>
+      <div class="mode-card-title">Choisir une photo</div>
+      <div class="mode-card-desc">Galerie</div>
+    </div>
+    <div class="mode-card" data-mode="text" id="modeTextCard">
+      <div class="mode-card-emoji">📝</div>
+      <div class="mode-card-title">Copier-coller</div>
+      <div class="mode-card-desc">Texte</div>
+    </div>
+  </div>
+
+  <!-- ZONE PHOTO -->
+  <div class="upload-zone" id="photoZone">
+    <div class="upload-area" id="cameraArea">
+      <div class="upload-emoji">📸</div>
+      <div class="upload-title">Prendre une photo</div>
+      <div class="upload-desc">Clique pour ouvrir l'appareil photo</div>
+    </div>
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
+  </div>
+
+  <!-- ZONE GALERIE -->
+  <div class="upload-zone" id="galleryZone">
+    <div class="upload-area" id="galleryArea">
+      <div class="upload-emoji">🖼️</div>
+      <div class="upload-title">Choisir une photo</div>
+      <div class="upload-desc">Clique pour sélectionner dans ta galerie</div>
+    </div>
+    <input type="file" id="galleryInput" accept="image/*" style="display:none">
+  </div>
+
+  <!-- ZONE TEXTE -->
+  <div class="upload-zone" id="textZone">
+    <textarea class="paste-textarea" id="pasteText" placeholder="Colle ton cours ici... (tu peux le copier d'un PDF, d'un site web ou de tes notes)"></textarea>
+  </div>
+
+  <div id="previewContainer" class="preview-images"></div>
+
+  <button class="generate-btn" id="generateBtn" disabled>🔍 Générer mes exercices</button>
+
+  <div id="loadingDiv" style="display:none; text-align:center; padding:20px;">
+    <div class="spinner"></div>
+    <p>Analyse en cours... L'IA prépare tes exercices</p>
+  </div>
+
+  <div id="modeSection" style="display:none;">
+    <div class="mode-grid">
+      <div class="mode-btn" data-mode="cours"><div class="mode-emoji">📋</div><div class="mode-title">Cours corrigé</div></div>
+      <div class="mode-btn" data-mode="resume"><div class="mode-emoji">🗂️</div><div class="mode-title">Résumé</div></div>
+      <div class="mode-btn" data-mode="flashcard"><div class="mode-emoji">🃏</div><div class="mode-title">Flashcards</div></div>
+      <div class="mode-btn" data-mode="qcm"><div class="mode-emoji">✅</div><div class="mode-title">QCM</div></div>
+      <div class="mode-btn" data-mode="open"><div class="mode-emoji">✍️</div><div class="mode-title">Questions</div></div>
+      <div class="mode-btn" data-mode="exercise"><div class="mode-emoji">🧮</div><div class="mode-title">Exercices</div></div>
+      <div class="mode-btn" data-mode="mindmap"><div class="mode-emoji">🗺️</div><div class="mode-title">Mind Map</div></div>
+      <div class="mode-btn" data-mode="interro"><div class="mode-emoji">⏱️</div><div class="mode-title">Interro</div></div>
+    </div>
+    <div id="carea" class="carea"></div>
+  </div>
+
+  <div class="footer">Memo Scan · Smart Learn — Cours à domicile, prof particulier, soutien scolaire</div>
+</div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfrICeVrhpkUg2h7X_PUSQB6BX_Y7tX7VhxVn9wSChSkvFsAwtVhnVqiZkrbSffFZ_ig/exec";
+
+  let currentMode = null, currentInputMode = 'photo', pages = [], pastedText = '', appData = null;
+  let fcIndex = 0, fcFlipped = false, _compteurDYSGlobal = 0;
+
+  // DOM elements
+  const modePhotoCard = document.getElementById('modePhotoCard');
+  const modeGalleryCard = document.getElementById('modeGalleryCard');
+  const modeTextCard = document.getElementById('modeTextCard');
+  const photoZone = document.getElementById('photoZone');
+  const galleryZone = document.getElementById('galleryZone');
+  const textZone = document.getElementById('textZone');
+  const cameraArea = document.getElementById('cameraArea');
+  const cameraInput = document.getElementById('cameraInput');
+  const galleryArea = document.getElementById('galleryArea');
+  const galleryInput = document.getElementById('galleryInput');
+  const previewContainer = document.getElementById('previewContainer');
+  const generateBtn = document.getElementById('generateBtn');
+  const pasteTextarea = document.getElementById('pasteText');
+
+  // Changer de mode
+  function setInputMode(mode) {
+    currentInputMode = mode;
+    modePhotoCard.classList.toggle('active', mode === 'photo');
+    modeGalleryCard.classList.toggle('active', mode === 'gallery');
+    modeTextCard.classList.toggle('active', mode === 'text');
+    photoZone.classList.toggle('active', mode === 'photo');
+    galleryZone.classList.toggle('active', mode === 'gallery');
+    textZone.classList.toggle('active', mode === 'text');
+    updateGenerateButton();
+  }
+
+  function updateGenerateButton() {
+    if (currentInputMode === 'text') generateBtn.disabled = !pastedText.trim();
+    else generateBtn.disabled = pages.length === 0;
+  }
+
+  // Upload images
+  function handleImageUpload(files) {
+    if (!files || files.length === 0) return;
+    pages = [];
+    previewContainer.innerHTML = '';
+    Array.from(files).forEach(file => {
+      if (!file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX = 1200;
+          let w = img.width, h = img.height;
+          if (w > MAX || h > MAX) {
+            if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+            else { w = Math.round(w * MAX / h); h = MAX; }
+          }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const compressed = canvas.toDataURL('image/jpeg', 0.85);
+          pages.push({ src: compressed, base64: compressed.split(',')[1], mime: 'image/jpeg' });
+          const preview = document.createElement('img');
+          preview.src = compressed;
+          preview.className = 'preview-img';
+          previewContainer.appendChild(preview);
+          updateGenerateButton();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // PHOTO : clic sur la zone
+  cameraArea.addEventListener('click', () => {
+    cameraInput.click();
+  });
+  cameraInput.addEventListener('change', (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleImageUpload(e.target.files);
+    }
+  });
+
+  // GALERIE : clic sur la zone
+  galleryArea.addEventListener('click', () => {
+    galleryInput.click();
+  });
+  galleryInput.addEventListener('change', (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleImageUpload(e.target.files);
+    }
+  });
+
+  // TEXTE
+  pasteTextarea.addEventListener('input', () => {
+    pastedText = pasteTextarea.value;
+    updateGenerateButton();
+  });
+
+  // Sélection du mode
+  modePhotoCard.addEventListener('click', () => setInputMode('photo'));
+  modeGalleryCard.addEventListener('click', () => setInputMode('gallery'));
+  modeTextCard.addEventListener('click', () => setInputMode('text'));
+
+  // ========== API ==========
+  async function callClaudeVision(imageBase64) {
+    const res = await fetch(`${SCRIPT_URL}?action=claude`, {
+      method: 'POST',
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514", max_tokens: 2000,
+        messages: [{ role: "user", content: [{ type: "image", source: { type: "base64", media_type: "image/jpeg", data: imageBase64 } },
+          { type: "text", text: "Retranscris TOUT le texte de cette image mot pour mot." }] }]
+      })
+    });
+    const data = await res.json();
+    return data.content[0].text;
+  }
+
+  async function callDeepSeek(prompt) {
+    const res = await fetch(`${SCRIPT_URL}?action=deepseek`, {
+      method: 'POST',
+      body: JSON.stringify({ messages: [{ role: "user", content: prompt }], max_tokens: 4000 })
+    });
+    const data = await res.json();
+    return data.choices[0].message.content;
+  }
+
+  async function generateExercises() {
+    document.getElementById('loadingDiv').style.display = 'block';
+    generateBtn.disabled = true;
+    try {
+      let coursTexte = '';
+      if (currentInputMode === 'text') coursTexte = pastedText;
+      else {
+        for (let i = 0; i < pages.length; i++) {
+          const text = await callClaudeVision(pages[i].base64);
+          coursTexte += `--- PAGE ${i+1} ---\n${text}\n\n`;
+        }
+      }
+      const prompt = `Cours:\n${coursTexte}\n\nGénère UNIQUEMENT JSON: {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
+      const jsonRes = await callDeepSeek(prompt);
+      const match = jsonRes.match(/\{[\s\S]*\}/);
+      appData = JSON.parse(match[0]);
+      document.getElementById('loadingDiv').style.display = 'none';
+      document.getElementById('modeSection').style.display = 'block';
+      setMode('cours');
+    } catch(e) { console.error(e); alert('Erreur'); document.getElementById('loadingDiv').style.display = 'none'; generateBtn.disabled = false; }
+  }
+
+  generateBtn.addEventListener('click', generateExercises);
+
+  // ========== AFFICHAGE DES MODES ==========
+  function setMode(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
+    const area = document.getElementById('carea');
+    if (mode === 'cours') area.innerHTML = `<div class="ccard">${appData.corrected_course}</div>`;
+    else if (mode === 'resume') {
+      let html = `<div class="ccard"><h2>📌 ${appData.topic}</h2>`;
+      appData.key_points.forEach((p,i) => html += `<div class="kpc"><div class="kpn">${i+1}</div><div>${p}</div></div>`);
+      if (appData.definition) html += `<div class="kpc"><strong>📖 Définition :</strong> ${appData.definition}</div>`;
+      html += `</div>`;
+      area.innerHTML = html;
+    } else if (mode === 'flashcard') {
+      const card = appData.flashcards[fcIndex];
+      area.innerHTML = `<div class="ccard"><div class="fcwrap" onclick="flipFlashcard()"><div class="fcin ${fcFlipped ? 'fl' : ''}"><div class="fcf fcfront">${card.question}</div><div class="fcf fcback">${card.answer}</div></div></div><div style="display:flex; justify-content:space-between;"><button onclick="prevFlashcard()">◀</button><button onclick="nextFlashcard()">▶</button></div></div>`;
+    } else if (mode === 'qcm') {
+      let html = `<div class="ccard"><h2>✅ QCM</h2>`;
+      appData.qcm.forEach((q,qi) => {
+        html += `<div class="qblock"><p><strong>${q.question}</strong></p>`;
+        q.options.forEach((opt,oi) => html += `<div class="opt" onclick="repondreQCM(${qi},${oi})">${String.fromCharCode(65+oi)}. ${opt}</div>`);
+        html += `<div id="fb-${qi}"></div></div>`;
+      });
+      html += `</div>`;
+      area.innerHTML = html;
+    } else if (mode === 'open') {
+      let html = `<div class="ccard"><h2>✍️ Questions</h2>`;
+      appData.open_questions.forEach(q => html += `<div class="qblock"><p><strong>${q.question}</strong></p><textarea rows="4" style="width:100%; border-radius:12px; padding:10px;"></textarea><button onclick="alert('Correction : ${q.model_answer}')">📖 Voir correction</button></div>`);
+      area.innerHTML = html;
+    } else if (mode === 'exercise') {
+      let html = `<div class="ccard"><h2>🧮 Exercices</h2>`;
+      appData.exercises.forEach(ex => html += `<div class="qblock"><p><strong>${ex.tag}</strong><br>${ex.statement}</p><textarea rows="4" style="width:100%; padding:10px;"></textarea><button onclick="alert('Solution : ${ex.solution}')">🔍 Voir correction</button></div>`);
+      area.innerHTML = html;
+    } else if (mode === 'mindmap') {
+      let html = `<div class="ccard"><div class="mindmap-container"><div class="mindmap-center">${appData.mindmap.center}</div><div class="mindmap-branches">`;
+      appData.mindmap.branches.forEach(b => html += `<div class="mindmap-branch"><div class="branch-title">${b.label}</div><ul class="branch-leaves">${b.leaves.map(l => `<li>${l}</li>`).join('')}</ul></div>`);
+      html += `</div></div></div>`;
+      area.innerHTML = html;
+    } else if (mode === 'interro') {
+      let html = `<div class="ccard"><h2>⏱️ Interro</h2>`;
+      appData.interro.forEach(q => html += `<div class="qblock"><p><strong>${q.question}</strong></p><textarea rows="3" style="width:100%; padding:10px;"></textarea><button onclick="alert('Réponse : ${q.answer}')">✅ Voir correction</button></div>`);
+      area.innerHTML = html;
+    }
+    appliquerCouleursDYS();
+  }
+
+  window.flipFlashcard = () => { fcFlipped = !fcFlipped; setMode('flashcard'); };
+  window.prevFlashcard = () => { fcIndex = (fcIndex - 1 + appData.flashcards.length) % appData.flashcards.length; fcFlipped = false; setMode('flashcard'); };
+  window.nextFlashcard = () => { fcIndex = (fcIndex + 1) % appData.flashcards.length; fcFlipped = false; setMode('flashcard'); };
+  window.repondreQCM = (qi, oi) => {
+    const q = appData.qcm[qi];
+    const fb = document.getElementById(`fb-${qi}`);
+    if (oi === q.correct) { fb.innerHTML = `✅ Bonne réponse ! ${q.explanation}`; fb.style.color = "green"; }
+    else { fb.innerHTML = `❌ Mauvaise réponse. ${q.explanation}`; fb.style.color = "red"; }
+    appliquerCouleursDYS();
+  };
+
+  document.querySelectorAll('.mode-btn').forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode)));
+
+  // ========== MODE DYS ==========
+  const SONS = ['oin','ein','ien','eau','ain','ion','ill','an','am','in','im','yn','on','om','ou','oi','au','ai','eu','ui','un','em','en','er','ez','ei','ph','ch','gn','gu','qu','th','é','è','ê','à','â','ô','î','ï','û','ù','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+  function decouperSyllabes(mot) { let r=[], i=0, m=mot.toLowerCase(); while(i<m.length) { let t=false; for(let s of SONS) if(m.substr(i,s.length)===s) { r.push(mot.substr(i,s.length)); i+=s.length; t=true; break; } if(!t) { r.push(mot[i]); i++; } } return r; }
+  function estEMuetFinal(mot) { let m=mot.toLowerCase(); if(m.length<2||m.slice(-1)!=='e') return false; if(m.slice(-2)==='ée') return true; if(['que','gue','ce','ge'].includes(m.slice(-3))) return true; if('aeiouyàâôîïûù'.includes(m.slice(-2,-1))) return false; if(['le','me','te','se','je','ne','de','ce'].includes(m)) return false; return true; }
+  function getConsonneMuetteFin(mot) { let m=mot.toLowerCase(); if(m.length<2) return null; let fin=m.slice(-1); return ['t','s','x','n','d','p','g'].includes(fin)?fin:null; }
+  function traiterMotDYS(mot,compteurDepart) { if(!mot||!mot.trim()) return {html:mot,compteur:compteurDepart}; let poncAv='',poncFin='',motPur=mot; let mAv=mot.match(/^([«"'(]+)/); if(mAv){poncAv=mAv[0];motPur=mot.slice(poncAv.length);} let mFin=motPur.match(/([.,!?;:…»"')]+)$/); if(mFin){poncFin=mFin[0];motPur=motPur.slice(0,-poncFin.length);} if(!motPur) return {html:poncAv+poncFin,compteur:compteurDepart}; let syllabes=decouperSyllabes(motPur), html=poncAv, compteur=compteurDepart, eMuet=estEMuetFinal(motPur), consMuette=getConsonneMuetteFin(motPur); syllabes.forEach((syl,idx)=>{ let dern=idx===syllabes.length-1; if(dern&&eMuet&&syl.slice(-1)==='e'){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">e</span>`; } else if(dern&&consMuette&&syl.slice(-1)===consMuette){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">${consMuette}</span>`; } else{ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${syl}</span>`; compteur++; } }); return {html:html+poncFin,compteur:compteur}; }
+  function colorerTexteDYS(texte,startCompteur){ if(!document.body.classList.contains('dys')) return {html:texte,compteur:startCompteur}; if(!texte) return {html:texte,compteur:startCompteur}; let tokens=texte.split(/(\s+)/g), html='', compteur=startCompteur; for(let tok of tokens){ if(/^\s+$/.test(tok)){ html+=tok; continue; } let res=traiterMotDYS(tok,compteur); html+=res.html; compteur=res.compteur; } return {html,compteur}; }
+  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,li,.kpt,.deft,.exst,.fcq,.qtxt,.opt,.branch-title,.branch-leaves li,.question-text,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
+  function toggleDyslexia(){ document.body.classList.toggle('dys'); let a=document.body.classList.contains('dys'); let btn=document.getElementById('dysBtn'), txt=document.getElementById('dysBtnText'); if(a){ btn.classList.add('active'); txt.innerHTML='DYS ● ON'; localStorage.setItem('ms_dys_mode','1'); } else{ btn.classList.remove('active'); txt.innerHTML='Mode DYS'; localStorage.setItem('ms_dys_mode','0'); let ca=document.getElementById('carea'); if(ca) ca.querySelectorAll('[data-dys-original]').forEach(el=>el.textContent=el.dataset.dysOriginal); } if(appData&&currentMode) setMode(currentMode); }
+  if(localStorage.getItem('ms_dys_mode')==='1') toggleDyslexia();
+  document.getElementById('dysBtn').addEventListener('click',toggleDyslexia);
+  document.getElementById('payBtn').addEventListener('click',()=>alert("💳 Paiement 29€/an via Wise\nContact: smartlearn.mu@gmail.com"));
+
+  setInputMode('photo');
+
+  // Enregistrement du Service Worker PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('✅ SW enregistré'))
+      .catch(err => console.error('❌ Erreur SW:', err));
+  }
+
+</script>
+</body>
+</html>
