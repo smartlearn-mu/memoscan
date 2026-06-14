@@ -5,13 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Memo Scan – Révisions intelligentes</title>
   
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#4f6ef7">
-  
+  <!-- ==================== META SEO ==================== -->
   <meta name="description" content="Memo Scan - Application éducative pour réviser efficacement. Cours à domicile, prof particulier, soutien scolaire. Idéal pour enfants dyslexiques.">
   <meta name="keywords" content="cours à domicile, prof particulier, soutien scolaire, réviser, dyslexique, lecteur manuscrit, aide aux devoirs">
   <meta name="author" content="Smart Learn">
   <meta name="robots" content="index, follow">
+  
+  <!-- ==================== PWA ==================== -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%234f6ef7'/%3E%3Ctext x='256' y='310' text-anchor='middle' fill='white' font-size='190' font-weight='700' font-family='Georgia'%3EMS%3C/text%3E%3C/svg%3E">
+  <meta name="theme-color" content="#4f6ef7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Memo Scan">
   
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -48,11 +54,11 @@
       background: #e8c87a; color: #1e2130; padding: 10px 20px;
       text-align: center; font-size: 0.8rem; font-weight: 600;
       display: flex; align-items: center; justify-content: center; gap: 12px;
+      flex-wrap: wrap;
     }
     .trial-banner button { background: #1e2130; color: #e8c87a; border: none;
       border-radius: 40px; padding: 4px 14px; cursor: pointer; }
 
-    /* 3 MODES D'ENTRÉE - SIMPLIFIÉS */
     .input-modes {
       display: flex;
       gap: 12px;
@@ -81,7 +87,6 @@
     .mode-card-title { font-weight: 700; font-size: 0.9rem; }
     .mode-card-desc { font-size: 0.7rem; color: var(--g5); margin-top: 4px; }
 
-    /* ZONES D'UPLOAD */
     .upload-zone {
       display: none;
       margin-bottom: 20px;
@@ -148,6 +153,7 @@
       font-size: 1.1rem;
       cursor: pointer;
       margin: 20px 0;
+      transition: 0.2s;
     }
     .generate-btn:disabled { background: var(--g2); color: var(--g5); cursor: not-allowed; }
 
@@ -156,6 +162,7 @@
     .mode-btn {
       background: var(--g1); border: 2px solid var(--g2); border-radius: 16px;
       padding: 14px 10px; text-align: center; cursor: pointer;
+      transition: 0.2s;
     }
     .mode-btn.active { background: var(--accent); color: white; }
     .mode-emoji { font-size: 1.6rem; margin-bottom: 6px; }
@@ -199,7 +206,8 @@
 
     .main-content { max-width: 800px; margin: 0 auto; padding: 20px 16px 40px; }
     .hero { background: linear-gradient(135deg, var(--ink), var(--slate)); border-radius: 24px; padding: 24px; margin-bottom: 28px; color: white; text-align: center; }
-    .hero h2 { font-size: 1.3rem; }
+    .hero h2 { font-size: 1.3rem; margin-bottom: 6px; }
+    .hero p { font-size: 0.8rem; opacity: 0.8; }
     .footer { text-align: center; padding: 20px; font-size: 0.7rem; color: var(--g5); border-top: 1px solid var(--g2); margin-top: 30px; background: white; }
   </style>
 </head>
@@ -224,7 +232,6 @@
     <p>Cours à domicile · Prof particulier · Soutien scolaire · IA éducative</p>
   </div>
 
-  <!-- 3 MODES D'ENTRÉE (simples, sans doublon) -->
   <div class="input-modes">
     <div class="mode-card" data-mode="photo" id="modePhotoCard">
       <div class="mode-card-emoji">📸</div>
@@ -243,7 +250,6 @@
     </div>
   </div>
 
-  <!-- ZONE PHOTO -->
   <div class="upload-zone" id="photoZone">
     <div class="upload-area" id="cameraArea">
       <div class="upload-emoji">📸</div>
@@ -253,7 +259,6 @@
     <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
   </div>
 
-  <!-- ZONE GALERIE -->
   <div class="upload-zone" id="galleryZone">
     <div class="upload-area" id="galleryArea">
       <div class="upload-emoji">🖼️</div>
@@ -263,7 +268,6 @@
     <input type="file" id="galleryInput" accept="image/*" style="display:none">
   </div>
 
-  <!-- ZONE TEXTE -->
   <div class="upload-zone" id="textZone">
     <textarea class="paste-textarea" id="pasteText" placeholder="Colle ton cours ici... (tu peux le copier d'un PDF, d'un site web ou de tes notes)"></textarea>
   </div>
@@ -295,6 +299,7 @@
 </div>
 
 <script>
+  // ==================== CONFIGURATION ====================
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfrICeVrhpkUg2h7X_PUSQB6BX_Y7tX7VhxVn9wSChSkvFsAwtVhnVqiZkrbSffFZ_ig/exec";
 
   let currentMode = null, currentInputMode = 'photo', pages = [], pastedText = '', appData = null;
@@ -315,7 +320,6 @@
   const generateBtn = document.getElementById('generateBtn');
   const pasteTextarea = document.getElementById('pasteText');
 
-  // Changer de mode
   function setInputMode(mode) {
     currentInputMode = mode;
     modePhotoCard.classList.toggle('active', mode === 'photo');
@@ -332,7 +336,6 @@
     else generateBtn.disabled = pages.length === 0;
   }
 
-  // Upload images
   function handleImageUpload(files) {
     if (!files || files.length === 0) return;
     pages = [];
@@ -366,25 +369,13 @@
     });
   }
 
-  // PHOTO : clic sur la zone
-  cameraArea.addEventListener('click', () => {
-    cameraInput.click();
-  });
-  cameraInput.addEventListener('change', (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      handleImageUpload(e.target.files);
-    }
-  });
+  // PHOTO
+  cameraArea.addEventListener('click', () => cameraInput.click());
+  cameraInput.addEventListener('change', (e) => { if (e.target.files?.length) handleImageUpload(e.target.files); });
 
-  // GALERIE : clic sur la zone
-  galleryArea.addEventListener('click', () => {
-    galleryInput.click();
-  });
-  galleryInput.addEventListener('change', (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      handleImageUpload(e.target.files);
-    }
-  });
+  // GALERIE
+  galleryArea.addEventListener('click', () => galleryInput.click());
+  galleryInput.addEventListener('change', (e) => { if (e.target.files?.length) handleImageUpload(e.target.files); });
 
   // TEXTE
   pasteTextarea.addEventListener('input', () => {
@@ -392,59 +383,135 @@
     updateGenerateButton();
   });
 
-  // Sélection du mode
   modePhotoCard.addEventListener('click', () => setInputMode('photo'));
   modeGalleryCard.addEventListener('click', () => setInputMode('gallery'));
   modeTextCard.addEventListener('click', () => setInputMode('text'));
 
-  // ========== API ==========
+  // ==================== APPELS API (CORRIGÉS AVEC GESTION D'ERREUR) ====================
+  
   async function callClaudeVision(imageBase64) {
-    const res = await fetch(`${SCRIPT_URL}?action=claude`, {
-      method: 'POST',
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514", max_tokens: 2000,
-        messages: [{ role: "user", content: [{ type: "image", source: { type: "base64", media_type: "image/jpeg", data: imageBase64 } },
-          { type: "text", text: "Retranscris TOUT le texte de cette image mot pour mot." }] }]
-      })
-    });
-    const data = await res.json();
-    return data.content[0].text;
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=claude`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 2000,
+          messages: [{
+            role: "user",
+            content: [
+              { type: "image", source: { type: "base64", media_type: "image/jpeg", data: imageBase64 } },
+              { type: "text", text: "Retranscris TOUT le texte de cette image mot pour mot. Ne dis JAMAIS que l'écriture est illisible." }
+            ]
+          }]
+        })
+      });
+      
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+      
+      const data = await res.json();
+      console.log('Réponse Claude:', data);
+      
+      // Vérifier les différents formats de réponse possibles
+      if (data.error) {
+        throw new Error(`API Claude: ${data.error.message || JSON.stringify(data.error)}`);
+      }
+      
+      if (data.content && data.content[0] && data.content[0].text) {
+        return data.content[0].text;
+      }
+      
+      // Format alternatif
+      if (data.completion) {
+        return data.completion;
+      }
+      
+      throw new Error(`Format de réponse inattendu: ${JSON.stringify(data)}`);
+      
+    } catch (error) {
+      console.error('Erreur callClaudeVision:', error);
+      throw error;
+    }
   }
 
   async function callDeepSeek(prompt) {
-    const res = await fetch(`${SCRIPT_URL}?action=deepseek`, {
-      method: 'POST',
-      body: JSON.stringify({ messages: [{ role: "user", content: prompt }], max_tokens: 4000 })
-    });
-    const data = await res.json();
-    return data.choices[0].message.content;
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=deepseek`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: "user", content: prompt }],
+          max_tokens: 4000
+        })
+      });
+      
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+      
+      const data = await res.json();
+      console.log('Réponse DeepSeek:', data);
+      
+      if (data.error) {
+        throw new Error(`API DeepSeek: ${data.error}`);
+      }
+      
+      if (data.choices && data.choices[0] && data.choices[0].message) {
+        return data.choices[0].message.content;
+      }
+      
+      throw new Error(`Format de réponse DeepSeek inattendu: ${JSON.stringify(data)}`);
+      
+    } catch (error) {
+      console.error('Erreur callDeepSeek:', error);
+      throw error;
+    }
   }
 
   async function generateExercises() {
     document.getElementById('loadingDiv').style.display = 'block';
     generateBtn.disabled = true;
+    
     try {
       let coursTexte = '';
-      if (currentInputMode === 'text') coursTexte = pastedText;
-      else {
+      
+      if (currentInputMode === 'text') {
+        coursTexte = pastedText;
+        if (!coursTexte.trim()) throw new Error('Colle ton cours dans le texte');
+      } else {
+        if (pages.length === 0) throw new Error('Ajoute au moins une photo');
+        
         for (let i = 0; i < pages.length; i++) {
           const text = await callClaudeVision(pages[i].base64);
           coursTexte += `--- PAGE ${i+1} ---\n${text}\n\n`;
         }
       }
-      const prompt = `Cours:\n${coursTexte}\n\nGénère UNIQUEMENT JSON: {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
+      
+      const prompt = `Cours:\n${coursTexte}\n\nGénère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
+      
       const jsonRes = await callDeepSeek(prompt);
       const match = jsonRes.match(/\{[\s\S]*\}/);
+      if (!match) throw new Error('Pas de JSON trouvé dans la réponse');
+      
       appData = JSON.parse(match[0]);
+      
       document.getElementById('loadingDiv').style.display = 'none';
       document.getElementById('modeSection').style.display = 'block';
       setMode('cours');
-    } catch(e) { console.error(e); alert('Erreur'); document.getElementById('loadingDiv').style.display = 'none'; generateBtn.disabled = false; }
+      
+    } catch(e) { 
+      console.error('Erreur generateExercises:', e);
+      alert('Erreur: ' + e.message); 
+      document.getElementById('loadingDiv').style.display = 'none'; 
+      generateBtn.disabled = false; 
+    }
   }
 
   generateBtn.addEventListener('click', generateExercises);
 
-  // ========== AFFICHAGE DES MODES ==========
+  // ==================== AFFICHAGE DES MODES ====================
   function setMode(mode) {
     currentMode = mode;
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
@@ -503,7 +570,7 @@
 
   document.querySelectorAll('.mode-btn').forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode)));
 
-  // ========== MODE DYS ==========
+  // ==================== MODE DYS ====================
   const SONS = ['oin','ein','ien','eau','ain','ion','ill','an','am','in','im','yn','on','om','ou','oi','au','ai','eu','ui','un','em','en','er','ez','ei','ph','ch','gn','gu','qu','th','é','è','ê','à','â','ô','î','ï','û','ù','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
   function decouperSyllabes(mot) { let r=[], i=0, m=mot.toLowerCase(); while(i<m.length) { let t=false; for(let s of SONS) if(m.substr(i,s.length)===s) { r.push(mot.substr(i,s.length)); i+=s.length; t=true; break; } if(!t) { r.push(mot[i]); i++; } } return r; }
   function estEMuetFinal(mot) { let m=mot.toLowerCase(); if(m.length<2||m.slice(-1)!=='e') return false; if(m.slice(-2)==='ée') return true; if(['que','gue','ce','ge'].includes(m.slice(-3))) return true; if('aeiouyàâôîïûù'.includes(m.slice(-2,-1))) return false; if(['le','me','te','se','je','ne','de','ce'].includes(m)) return false; return true; }
@@ -518,13 +585,12 @@
 
   setInputMode('photo');
 
-  // Enregistrement du Service Worker PWA
+  // ==================== SERVICE WORKER ====================
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-      .then(() => console.log('✅ SW enregistré'))
+    navigator.serviceWorker.register('/memoscan/sw.js')
+      .then(reg => console.log('✅ SW enregistré', reg))
       .catch(err => console.error('❌ Erreur SW:', err));
   }
-
 </script>
 </body>
 </html>
