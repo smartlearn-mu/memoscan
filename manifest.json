@@ -2,21 +2,21 @@
   "name": "Memo Scan - Smart Learn",
   "short_name": "Memo Scan",
   "description": "Application éducative pour réviser efficacement. Cours à domicile, prof particulier, soutien scolaire. Idéal pour enfants dyslexiques.",
-  "start_url": "/memoscan/",
-  "scope": "/memoscan/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#4f6ef7",
   "background_color": "#f4f7fc",
   "icons": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%234f6ef7'/%3E%3Ctext x='256' y='310' text-anchor='middle' fill='white' font-size='190' font-weight='700' font-family='Georgia'%3EMS%3C/text%3E%3C/svg%3E",
+      "src": "icon.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%234f6ef7'/%3E%3Ctext x='256' y='310' text-anchor='middle' fill='white' font-size='190' font-weight='700' font-family='Georgia'%3EMS%3C/text%3E%3C/svg%3E",
+      "src": "icon.svg",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any maskable"

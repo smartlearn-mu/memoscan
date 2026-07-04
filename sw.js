@@ -1,15 +1,10 @@
-const CACHE_NAME = 'memoscan-v1';
-const ASSETS = [
-  '/memoscan/',
-  '/memoscan/index.html'
-];
+const CACHE_NAME = 'memoscan-v2';
+const ASSETS = ['./', './index.html', './manifest.json'];
 
 // Installation : mise en cache des assets
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS);
-    })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
   );
   self.skipWaiting();
 });
@@ -17,35 +12,56 @@ self.addEventListener('install', event => {
 // Activation : nettoyage des anciens caches
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-      );
-    })
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    )
   );
   self.clients.claim();
 });
 
-// Interception des requêtes : stratégie "cache d'abord, puis réseau"
+// Interception des requêtes
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      if (response) {
-        return response;
-      }
-      return fetch(event.request).then(fetchResponse => {
-        // Mise en cache des nouvelles requêtes (sauf les appels API)
-        if (!event.request.url.includes('/exec') && !event.request.url.includes('googleapis')) {
-          const responseClone = fetchResponse.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseClone);
-          });
-        }
-        return fetchResponse;
-      });
-    }).catch(() => {
-      // Hors-ligne : page par défaut (optionnel)
-      return caches.match('/memoscan/index.html');
-    })
-  );
+  // Ignorer tout ce qui n'est pas GET
+  if (event.request.method !== 'GET') return;
+
+  const url = event.request.url;
+
+  // Ne jamais mettre en cache les appels API Apps Script
+  if (url.includes('/exec')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  const isNavigation = event.request.mode === 'navigate' ||
+    (event.request.method === 'GET' && event.request.headers.get('accept') &&
+     event.request.headers.get('accept').includes('text/html'));
+
+  if (isNavigation) {
+    // Network-first pour les navigations/documents
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request).then(r => r || caches.match('./index.html')))
+    );
+  } else {
+    // Cache-first pour le reste
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        if (cached) return cached;
+        return fetch(event.request).then(response => {
+          if (response.ok || response.type === 'opaque') {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          }
+          return response;
+        });
+      })
+    );
+  }
 });

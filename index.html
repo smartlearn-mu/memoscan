@@ -13,13 +13,28 @@
   
   <!-- ==================== PWA ==================== -->
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%234f6ef7'/%3E%3Ctext x='256' y='310' text-anchor='middle' fill='white' font-size='190' font-weight='700' font-family='Georgia'%3EMS%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="icon.svg">
   <meta name="theme-color" content="#4f6ef7">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Memo Scan">
   
   <style>
+    @font-face {
+      font-family: 'OpenDyslexic';
+      src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Regular.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'OpenDyslexic';
+      src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Bold.woff') format('woff');
+      font-weight: bold;
+      font-style: normal;
+      font-display: swap;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
@@ -184,6 +199,10 @@
 
     .qblock { background: white; border: 2px solid var(--g2); border-radius: 18px; padding: 18px; margin-bottom: 14px; }
     .opt { padding: 12px 14px; border: 1.5px solid var(--g2); border-radius: 50px; margin: 8px 0; cursor: pointer; background: var(--g1); }
+    .opt.correct { background: #d4f5e2; border-color: var(--green); color: #006644; font-weight: 700; }
+    .opt.wrong { background: #fde8e8; border-color: var(--red); color: #a00; }
+    .qblock.answered .opt { pointer-events: none; }
+    .correction-box { background: var(--al); border-radius: 12px; padding: 12px; margin-top: 8px; font-size: 0.9rem; border: 1px solid var(--accent); }
 
     .mindmap-container { display: flex; flex-direction: column; align-items: center; }
     .mindmap-center { background: var(--accent); color: white; font-weight: bold; padding: 14px 28px; border-radius: 60px; margin-bottom: 28px; }
@@ -233,17 +252,17 @@
   </div>
 
   <div class="input-modes">
-    <div class="mode-card" data-mode="photo" id="modePhotoCard">
+    <div class="mode-card" data-mode="photo" id="modePhotoCard" role="button" tabindex="0">
       <div class="mode-card-emoji">📸</div>
       <div class="mode-card-title">Prendre une photo</div>
       <div class="mode-card-desc">Appareil photo</div>
     </div>
-    <div class="mode-card" data-mode="gallery" id="modeGalleryCard">
+    <div class="mode-card" data-mode="gallery" id="modeGalleryCard" role="button" tabindex="0">
       <div class="mode-card-emoji">🖼️</div>
       <div class="mode-card-title">Choisir une photo</div>
       <div class="mode-card-desc">Galerie</div>
     </div>
-    <div class="mode-card" data-mode="text" id="modeTextCard">
+    <div class="mode-card" data-mode="text" id="modeTextCard" role="button" tabindex="0">
       <div class="mode-card-emoji">📝</div>
       <div class="mode-card-title">Copier-coller</div>
       <div class="mode-card-desc">Texte</div>
@@ -265,7 +284,7 @@
       <div class="upload-title">Choisir une photo</div>
       <div class="upload-desc">Clique pour sélectionner dans ta galerie</div>
     </div>
-    <input type="file" id="galleryInput" accept="image/*" style="display:none">
+    <input type="file" id="galleryInput" accept="image/*" multiple style="display:none">
   </div>
 
   <div class="upload-zone" id="textZone">
@@ -281,16 +300,18 @@
     <p>Analyse en cours... L'IA prépare tes exercices</p>
   </div>
 
+  <div id="errorDiv" style="display:none; background:#fde8e8; border:1.5px solid var(--red); border-radius:16px; padding:14px 18px; margin-bottom:16px; font-size:0.9rem;"></div>
+
   <div id="modeSection" style="display:none;">
     <div class="mode-grid">
-      <div class="mode-btn" data-mode="cours"><div class="mode-emoji">📋</div><div class="mode-title">Cours corrigé</div></div>
-      <div class="mode-btn" data-mode="resume"><div class="mode-emoji">🗂️</div><div class="mode-title">Résumé</div></div>
-      <div class="mode-btn" data-mode="flashcard"><div class="mode-emoji">🃏</div><div class="mode-title">Flashcards</div></div>
-      <div class="mode-btn" data-mode="qcm"><div class="mode-emoji">✅</div><div class="mode-title">QCM</div></div>
-      <div class="mode-btn" data-mode="open"><div class="mode-emoji">✍️</div><div class="mode-title">Questions</div></div>
-      <div class="mode-btn" data-mode="exercise"><div class="mode-emoji">🧮</div><div class="mode-title">Exercices</div></div>
-      <div class="mode-btn" data-mode="mindmap"><div class="mode-emoji">🗺️</div><div class="mode-title">Mind Map</div></div>
-      <div class="mode-btn" data-mode="interro"><div class="mode-emoji">⏱️</div><div class="mode-title">Interro</div></div>
+      <div class="mode-btn" data-mode="cours" role="button" tabindex="0"><div class="mode-emoji">📋</div><div class="mode-title">Cours corrigé</div></div>
+      <div class="mode-btn" data-mode="resume" role="button" tabindex="0"><div class="mode-emoji">🗂️</div><div class="mode-title">Résumé</div></div>
+      <div class="mode-btn" data-mode="flashcard" role="button" tabindex="0"><div class="mode-emoji">🃏</div><div class="mode-title">Flashcards</div></div>
+      <div class="mode-btn" data-mode="qcm" role="button" tabindex="0"><div class="mode-emoji">✅</div><div class="mode-title">QCM</div></div>
+      <div class="mode-btn" data-mode="open" role="button" tabindex="0"><div class="mode-emoji">✍️</div><div class="mode-title">Questions</div></div>
+      <div class="mode-btn" data-mode="exercise" role="button" tabindex="0"><div class="mode-emoji">🧮</div><div class="mode-title">Exercices</div></div>
+      <div class="mode-btn" data-mode="mindmap" role="button" tabindex="0"><div class="mode-emoji">🗺️</div><div class="mode-title">Mind Map</div></div>
+      <div class="mode-btn" data-mode="interro" role="button" tabindex="0"><div class="mode-emoji">⏱️</div><div class="mode-title">Interro</div></div>
     </div>
     <div id="carea" class="carea"></div>
   </div>
@@ -320,6 +341,61 @@
   const generateBtn = document.getElementById('generateBtn');
   const pasteTextarea = document.getElementById('pasteText');
 
+  // ==================== UTILITAIRES ====================
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // ==================== ESSAI 2 JOURS ====================
+  function initTrial() {
+    if (localStorage.getItem('ms_paid') === '1') {
+      document.getElementById('trialBanner').style.display = 'none';
+      return;
+    }
+    if (!localStorage.getItem('ms_trial_start')) {
+      localStorage.setItem('ms_trial_start', String(Date.now()));
+    }
+    updateTrialBanner();
+    setInterval(updateTrialBanner, 60000);
+  }
+
+  function updateTrialBanner() {
+    if (localStorage.getItem('ms_paid') === '1') return;
+    const start = parseInt(localStorage.getItem('ms_trial_start') || '0', 10);
+    const elapsed = Date.now() - start;
+    const TWO_DAYS = 48 * 60 * 60 * 1000;
+    const remaining = TWO_DAYS - elapsed;
+    const banner = document.getElementById('trialBanner');
+    const span = banner.querySelector('span');
+    if (remaining <= 0) {
+      span.textContent = '🔒 Essai terminé — passe à la version complète';
+    } else {
+      const hoursLeft = Math.ceil(remaining / (60 * 60 * 1000));
+      const daysLeft = Math.floor(hoursLeft / 24);
+      const hRest = hoursLeft % 24;
+      if (daysLeft >= 1) {
+        span.textContent = `🎓 Essai gratuit : il te reste ${daysLeft} jour(s)`;
+      } else {
+        span.textContent = `⏳ dernières heures ! (${hRest}h restantes)`;
+      }
+    }
+  }
+
+  function isTrialExpired() {
+    if (localStorage.getItem('ms_paid') === '1') return false;
+    const start = parseInt(localStorage.getItem('ms_trial_start') || '0', 10);
+    return (Date.now() - start) >= 48 * 60 * 60 * 1000;
+  }
+
+  initTrial();
+
+  // ==================== MODES DE SAISIE ====================
   function setInputMode(mode) {
     currentInputMode = mode;
     modePhotoCard.classList.toggle('active', mode === 'photo');
@@ -336,34 +412,46 @@
     else generateBtn.disabled = pages.length === 0;
   }
 
+  // ==================== UPLOAD IMAGES (ordre garanti) ====================
   function handleImageUpload(files) {
     if (!files || files.length === 0) return;
-    pages = [];
+    const fileList = Array.from(files).filter(f => f.type.startsWith('image/'));
+    if (fileList.length === 0) return;
+    pages = new Array(fileList.length).fill(null);
     previewContainer.innerHTML = '';
-    Array.from(files).forEach(file => {
-      if (!file.type.startsWith('image/')) return;
+    // Pré-créer les éléments preview pour maintenir l'ordre
+    const previews = fileList.map(() => {
+      const img = document.createElement('img');
+      img.className = 'preview-img';
+      previewContainer.appendChild(img);
+      return img;
+    });
+    let done = 0;
+    fileList.forEach((file, idx) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
+        const imgEl = new Image();
+        imgEl.onload = () => {
           const canvas = document.createElement('canvas');
           const MAX = 1200;
-          let w = img.width, h = img.height;
+          let w = imgEl.width, h = imgEl.height;
           if (w > MAX || h > MAX) {
             if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
             else { w = Math.round(w * MAX / h); h = MAX; }
           }
           canvas.width = w; canvas.height = h;
-          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          canvas.getContext('2d').drawImage(imgEl, 0, 0, w, h);
           const compressed = canvas.toDataURL('image/jpeg', 0.85);
-          pages.push({ src: compressed, base64: compressed.split(',')[1], mime: 'image/jpeg' });
-          const preview = document.createElement('img');
-          preview.src = compressed;
-          preview.className = 'preview-img';
-          previewContainer.appendChild(preview);
-          updateGenerateButton();
+          pages[idx] = { src: compressed, base64: compressed.split(',')[1], mime: 'image/jpeg' };
+          previews[idx].src = compressed;
+          done++;
+          if (done === fileList.length) {
+            // Filtrer les éventuels trous (ne devrait pas arriver)
+            pages = pages.filter(p => p !== null);
+            updateGenerateButton();
+          }
         };
-        img.src = e.target.result;
+        imgEl.src = e.target.result;
       };
       reader.readAsDataURL(file);
     });
@@ -383,19 +471,26 @@
     updateGenerateButton();
   });
 
+  // Clics sur les cartes de saisie
   modePhotoCard.addEventListener('click', () => setInputMode('photo'));
   modeGalleryCard.addEventListener('click', () => setInputMode('gallery'));
   modeTextCard.addEventListener('click', () => setInputMode('text'));
 
-  // ==================== APPELS API (CORRIGÉS AVEC GESTION D'ERREUR) ====================
-  
+  // Accessibilité clavier sur les mode-card (Enter/Espace)
+  document.querySelectorAll('.mode-card').forEach(card => {
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+    });
+  });
+
+  // ==================== APPELS API ====================
   async function callClaudeVision(imageBase64) {
     try {
       const res = await fetch(`${SCRIPT_URL}?action=claude`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
+          model: "claude-sonnet-4-6",
           max_tokens: 2000,
           messages: [{
             role: "user",
@@ -406,30 +501,13 @@
           }]
         })
       });
-      
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-      }
-      
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const data = await res.json();
       console.log('Réponse Claude:', data);
-      
-      // Vérifier les différents formats de réponse possibles
-      if (data.error) {
-        throw new Error(`API Claude: ${data.error.message || JSON.stringify(data.error)}`);
-      }
-      
-      if (data.content && data.content[0] && data.content[0].text) {
-        return data.content[0].text;
-      }
-      
-      // Format alternatif
-      if (data.completion) {
-        return data.completion;
-      }
-      
+      if (data.error) throw new Error(`API Claude: ${data.error.message || JSON.stringify(data.error)}`);
+      if (data.content && data.content[0] && data.content[0].text) return data.content[0].text;
+      if (data.completion) return data.completion;
       throw new Error(`Format de réponse inattendu: ${JSON.stringify(data)}`);
-      
     } catch (error) {
       console.error('Erreur callClaudeVision:', error);
       throw error;
@@ -446,129 +524,225 @@
           max_tokens: 4000
         })
       });
-      
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-      }
-      
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const data = await res.json();
       console.log('Réponse DeepSeek:', data);
-      
-      if (data.error) {
-        throw new Error(`API DeepSeek: ${data.error}`);
-      }
-      
-      if (data.choices && data.choices[0] && data.choices[0].message) {
-        return data.choices[0].message.content;
-      }
-      
+      if (data.error) throw new Error(`API DeepSeek: ${data.error}`);
+      if (data.choices && data.choices[0] && data.choices[0].message) return data.choices[0].message.content;
       throw new Error(`Format de réponse DeepSeek inattendu: ${JSON.stringify(data)}`);
-      
     } catch (error) {
       console.error('Erreur callDeepSeek:', error);
       throw error;
     }
   }
 
+  // ==================== NORMALISATION appData ====================
+  function normaliserAppData(d) {
+    if (!d) return d;
+    if (!Array.isArray(d.key_points)) d.key_points = [];
+    if (!Array.isArray(d.to_remember)) d.to_remember = [];
+    if (!Array.isArray(d.flashcards)) d.flashcards = [];
+    if (!Array.isArray(d.qcm)) d.qcm = [];
+    if (!Array.isArray(d.open_questions)) d.open_questions = [];
+    if (!Array.isArray(d.exercises)) d.exercises = [];
+    if (!Array.isArray(d.interro)) d.interro = [];
+    if (!d.mindmap || typeof d.mindmap !== 'object') {
+      d.mindmap = { center: d.topic || 'Cours', branches: [] };
+    }
+    if (!Array.isArray(d.mindmap.branches)) d.mindmap.branches = [];
+    return d;
+  }
+
+  function afficherErreur(message) {
+    const div = document.getElementById('errorDiv');
+    div.textContent = message;
+    div.style.display = 'block';
+  }
+
   async function generateExercises() {
+    document.getElementById('errorDiv').style.display = 'none';
+    if (isTrialExpired()) {
+      afficherErreur("🔒 Essai terminé ! 💳 Paiement 29€/an via Wise — Contact : smartlearn.mu@gmail.com");
+      return;
+    }
     document.getElementById('loadingDiv').style.display = 'block';
     generateBtn.disabled = true;
-    
+
     try {
       let coursTexte = '';
-      
       if (currentInputMode === 'text') {
         coursTexte = pastedText;
         if (!coursTexte.trim()) throw new Error('Colle ton cours dans le texte');
       } else {
         if (pages.length === 0) throw new Error('Ajoute au moins une photo');
-        
         for (let i = 0; i < pages.length; i++) {
           const text = await callClaudeVision(pages[i].base64);
           coursTexte += `--- PAGE ${i+1} ---\n${text}\n\n`;
         }
       }
-      
+
       const prompt = `Cours:\n${coursTexte}\n\nGénère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
-      
+
       const jsonRes = await callDeepSeek(prompt);
       const match = jsonRes.match(/\{[\s\S]*\}/);
       if (!match) throw new Error('Pas de JSON trouvé dans la réponse');
-      
-      appData = JSON.parse(match[0]);
-      
+
+      appData = normaliserAppData(JSON.parse(match[0]));
+      fcIndex = 0;
+      fcFlipped = false;
+
       document.getElementById('loadingDiv').style.display = 'none';
       document.getElementById('modeSection').style.display = 'block';
+      generateBtn.disabled = false;
       setMode('cours');
-      
-    } catch(e) { 
+
+    } catch(e) {
       console.error('Erreur generateExercises:', e);
-      alert('Erreur: ' + e.message); 
-      document.getElementById('loadingDiv').style.display = 'none'; 
-      generateBtn.disabled = false; 
+      afficherErreur('😕 Oups, ça n\'a pas marché : ' + e.message);
+      document.getElementById('loadingDiv').style.display = 'none';
+      generateBtn.disabled = false;
     }
   }
 
   generateBtn.addEventListener('click', generateExercises);
 
   // ==================== AFFICHAGE DES MODES ====================
+  const MSG_VIDE = '<div class="ccard"><p>😅 Pas de contenu pour ce mode. Réessaie de générer !</p></div>';
+
   function setMode(mode) {
     currentMode = mode;
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
     document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
     const area = document.getElementById('carea');
-    if (mode === 'cours') area.innerHTML = `<div class="ccard">${appData.corrected_course}</div>`;
-    else if (mode === 'resume') {
-      let html = `<div class="ccard"><h2>📌 ${appData.topic}</h2>`;
-      appData.key_points.forEach((p,i) => html += `<div class="kpc"><div class="kpn">${i+1}</div><div>${p}</div></div>`);
-      if (appData.definition) html += `<div class="kpc"><strong>📖 Définition :</strong> ${appData.definition}</div>`;
+
+    if (mode === 'cours') {
+      area.innerHTML = `<div class="ccard">${appData.corrected_course}</div>`;
+
+    } else if (mode === 'resume') {
+      let html = `<div class="ccard"><h2>📌 ${escapeHtml(appData.topic)}</h2>`;
+      if (appData.key_points.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
+      appData.key_points.forEach((p, i) => html += `<div class="kpc"><div class="kpn">${i+1}</div><div>${escapeHtml(p)}</div></div>`);
+      if (appData.definition) html += `<div class="kpc"><strong>📖 Définition :</strong> ${escapeHtml(appData.definition)}</div>`;
       html += `</div>`;
       area.innerHTML = html;
+
     } else if (mode === 'flashcard') {
+      if (appData.flashcards.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
       const card = appData.flashcards[fcIndex];
-      area.innerHTML = `<div class="ccard"><div class="fcwrap" onclick="flipFlashcard()"><div class="fcin ${fcFlipped ? 'fl' : ''}"><div class="fcf fcfront">${card.question}</div><div class="fcf fcback">${card.answer}</div></div></div><div style="display:flex; justify-content:space-between;"><button onclick="prevFlashcard()">◀</button><button onclick="nextFlashcard()">▶</button></div></div>`;
+      area.innerHTML = `<div class="ccard"><div class="fcwrap" onclick="flipFlashcard()"><div class="fcin ${fcFlipped ? 'fl' : ''}"><div class="fcf fcfront">${escapeHtml(card.question)}</div><div class="fcf fcback">${escapeHtml(card.answer)}</div></div></div><div style="display:flex; justify-content:space-between;"><button onclick="prevFlashcard()">◀</button><span style="font-size:0.8rem;align-self:center;">${fcIndex+1}/${appData.flashcards.length}</span><button onclick="nextFlashcard()">▶</button></div></div>`;
+
     } else if (mode === 'qcm') {
+      if (appData.qcm.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
       let html = `<div class="ccard"><h2>✅ QCM</h2>`;
-      appData.qcm.forEach((q,qi) => {
-        html += `<div class="qblock"><p><strong>${q.question}</strong></p>`;
-        q.options.forEach((opt,oi) => html += `<div class="opt" onclick="repondreQCM(${qi},${oi})">${String.fromCharCode(65+oi)}. ${opt}</div>`);
+      appData.qcm.forEach((q, qi) => {
+        html += `<div class="qblock" id="qblock-${qi}"><p><strong>${escapeHtml(q.question)}</strong></p>`;
+        q.options.forEach((opt, oi) => {
+          html += `<div class="opt" role="button" tabindex="0" data-qi="${qi}" data-oi="${oi}" onclick="repondreQCM(${qi},${oi})">${String.fromCharCode(65+oi)}. ${escapeHtml(opt)}</div>`;
+        });
         html += `<div id="fb-${qi}"></div></div>`;
       });
       html += `</div>`;
       area.innerHTML = html;
+      // Accessibilité clavier sur les opts
+      area.querySelectorAll('.opt').forEach(opt => {
+        opt.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); opt.click(); }
+        });
+      });
+
     } else if (mode === 'open') {
+      if (appData.open_questions.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
       let html = `<div class="ccard"><h2>✍️ Questions</h2>`;
-      appData.open_questions.forEach(q => html += `<div class="qblock"><p><strong>${q.question}</strong></p><textarea rows="4" style="width:100%; border-radius:12px; padding:10px;"></textarea><button onclick="alert('Correction : ${q.model_answer}')">📖 Voir correction</button></div>`);
+      appData.open_questions.forEach((q, idx) => {
+        html += `<div class="qblock"><p><strong>${escapeHtml(q.question)}</strong></p><textarea rows="4" style="width:100%; border-radius:12px; padding:10px;"></textarea><button onclick="voirCorrection('open',${idx})">📖 Voir correction</button><div class="correction-box" id="corr-open-${idx}" style="display:none;"></div></div>`;
+      });
+      html += `</div>`;
       area.innerHTML = html;
+
     } else if (mode === 'exercise') {
+      if (appData.exercises.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
       let html = `<div class="ccard"><h2>🧮 Exercices</h2>`;
-      appData.exercises.forEach(ex => html += `<div class="qblock"><p><strong>${ex.tag}</strong><br>${ex.statement}</p><textarea rows="4" style="width:100%; padding:10px;"></textarea><button onclick="alert('Solution : ${ex.solution}')">🔍 Voir correction</button></div>`);
+      appData.exercises.forEach((ex, idx) => {
+        html += `<div class="qblock"><p><strong>${escapeHtml(ex.tag)}</strong><br>${escapeHtml(ex.statement)}</p><textarea rows="4" style="width:100%; padding:10px;"></textarea><button onclick="voirCorrection('exercise',${idx})">🔍 Voir correction</button><div class="correction-box" id="corr-exercise-${idx}" style="display:none;"></div></div>`;
+      });
+      html += `</div>`;
       area.innerHTML = html;
+
     } else if (mode === 'mindmap') {
-      let html = `<div class="ccard"><div class="mindmap-container"><div class="mindmap-center">${appData.mindmap.center}</div><div class="mindmap-branches">`;
-      appData.mindmap.branches.forEach(b => html += `<div class="mindmap-branch"><div class="branch-title">${b.label}</div><ul class="branch-leaves">${b.leaves.map(l => `<li>${l}</li>`).join('')}</ul></div>`);
+      let html = `<div class="ccard"><div class="mindmap-container"><div class="mindmap-center">${escapeHtml(appData.mindmap.center)}</div><div class="mindmap-branches">`;
+      if (appData.mindmap.branches.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
+      appData.mindmap.branches.forEach(b => {
+        html += `<div class="mindmap-branch"><div class="branch-title">${escapeHtml(b.label)}</div><ul class="branch-leaves">${(b.leaves||[]).map(l => `<li>${escapeHtml(l)}</li>`).join('')}</ul></div>`;
+      });
       html += `</div></div></div>`;
       area.innerHTML = html;
+
     } else if (mode === 'interro') {
+      if (appData.interro.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
       let html = `<div class="ccard"><h2>⏱️ Interro</h2>`;
-      appData.interro.forEach(q => html += `<div class="qblock"><p><strong>${q.question}</strong></p><textarea rows="3" style="width:100%; padding:10px;"></textarea><button onclick="alert('Réponse : ${q.answer}')">✅ Voir correction</button></div>`);
+      appData.interro.forEach((q, idx) => {
+        html += `<div class="qblock"><p><strong>${escapeHtml(q.question)}</strong></p><textarea rows="3" style="width:100%; padding:10px;"></textarea><button onclick="voirCorrection('interro',${idx})">✅ Voir correction</button><div class="correction-box" id="corr-interro-${idx}" style="display:none;"></div></div>`;
+      });
+      html += `</div>`;
       area.innerHTML = html;
     }
+
     appliquerCouleursDYS();
   }
+
+  // ==================== CORRECTIONS INLINE (sûres) ====================
+  window.voirCorrection = function(mode, idx) {
+    let reponse = '';
+    if (mode === 'open') reponse = appData.open_questions[idx] ? appData.open_questions[idx].model_answer : '';
+    else if (mode === 'exercise') reponse = appData.exercises[idx] ? appData.exercises[idx].solution : '';
+    else if (mode === 'interro') reponse = appData.interro[idx] ? appData.interro[idx].answer : '';
+    const box = document.getElementById(`corr-${mode}-${idx}`);
+    if (!box) return;
+    if (box.style.display !== 'none') { box.style.display = 'none'; return; }
+    box.innerHTML = escapeHtml(reponse);
+    box.style.display = 'block';
+    // Appliquer DYS si actif
+    if (document.body.classList.contains('dys')) {
+      box.dataset.dysOriginal = reponse;
+      const res = colorerTexteDYS(reponse, _compteurDYSGlobal);
+      box.innerHTML = res.html;
+    }
+  };
 
   window.flipFlashcard = () => { fcFlipped = !fcFlipped; setMode('flashcard'); };
   window.prevFlashcard = () => { fcIndex = (fcIndex - 1 + appData.flashcards.length) % appData.flashcards.length; fcFlipped = false; setMode('flashcard'); };
   window.nextFlashcard = () => { fcIndex = (fcIndex + 1) % appData.flashcards.length; fcFlipped = false; setMode('flashcard'); };
+
   window.repondreQCM = (qi, oi) => {
     const q = appData.qcm[qi];
     const fb = document.getElementById(`fb-${qi}`);
-    if (oi === q.correct) { fb.innerHTML = `✅ Bonne réponse ! ${q.explanation}`; fb.style.color = "green"; }
-    else { fb.innerHTML = `❌ Mauvaise réponse. ${q.explanation}`; fb.style.color = "red"; }
+    const block = document.getElementById(`qblock-${qi}`);
+    if (!q || !fb || !block || block.classList.contains('answered')) return;
+    // Colorer les options
+    const opts = block.querySelectorAll('.opt');
+    opts.forEach((opt, i) => {
+      if (i === q.correct) opt.classList.add('correct');
+      else if (i === oi && i !== q.correct) opt.classList.add('wrong');
+    });
+    // Marquer comme répondu
+    block.classList.add('answered');
+    // Feedback
+    const expl = escapeHtml(q.explanation || '');
+    if (oi === q.correct) {
+      fb.innerHTML = `<span style="color:var(--green)">✅ Bonne réponse !</span> ${expl}`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red)">❌ Mauvaise réponse.</span> ${expl}`;
+    }
     appliquerCouleursDYS();
   };
 
-  document.querySelectorAll('.mode-btn').forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode)));
+  // Accessibilité clavier sur les mode-btn
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => setMode(btn.dataset.mode));
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+    });
+  });
 
   // ==================== MODE DYS ====================
   const SONS = ['oin','ein','ien','eau','ain','ion','ill','an','am','in','im','yn','on','om','ou','oi','au','ai','eu','ui','un','em','en','er','ez','ei','ph','ch','gn','gu','qu','th','é','è','ê','à','â','ô','î','ï','û','ù','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
@@ -577,7 +751,7 @@
   function getConsonneMuetteFin(mot) { let m=mot.toLowerCase(); if(m.length<2) return null; let fin=m.slice(-1); return ['t','s','x','n','d','p','g'].includes(fin)?fin:null; }
   function traiterMotDYS(mot,compteurDepart) { if(!mot||!mot.trim()) return {html:mot,compteur:compteurDepart}; let poncAv='',poncFin='',motPur=mot; let mAv=mot.match(/^([«"'(]+)/); if(mAv){poncAv=mAv[0];motPur=mot.slice(poncAv.length);} let mFin=motPur.match(/([.,!?;:…»"')]+)$/); if(mFin){poncFin=mFin[0];motPur=motPur.slice(0,-poncFin.length);} if(!motPur) return {html:poncAv+poncFin,compteur:compteurDepart}; let syllabes=decouperSyllabes(motPur), html=poncAv, compteur=compteurDepart, eMuet=estEMuetFinal(motPur), consMuette=getConsonneMuetteFin(motPur); syllabes.forEach((syl,idx)=>{ let dern=idx===syllabes.length-1; if(dern&&eMuet&&syl.slice(-1)==='e'){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">e</span>`; } else if(dern&&consMuette&&syl.slice(-1)===consMuette){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">${consMuette}</span>`; } else{ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${syl}</span>`; compteur++; } }); return {html:html+poncFin,compteur:compteur}; }
   function colorerTexteDYS(texte,startCompteur){ if(!document.body.classList.contains('dys')) return {html:texte,compteur:startCompteur}; if(!texte) return {html:texte,compteur:startCompteur}; let tokens=texte.split(/(\s+)/g), html='', compteur=startCompteur; for(let tok of tokens){ if(/^\s+$/.test(tok)){ html+=tok; continue; } let res=traiterMotDYS(tok,compteur); html+=res.html; compteur=res.compteur; } return {html,compteur}; }
-  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,li,.kpt,.deft,.exst,.fcq,.qtxt,.opt,.branch-title,.branch-leaves li,.question-text,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
+  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,li,.kpt,.deft,.exst,.fcq,.qtxt,.opt,.branch-title,.branch-leaves li,.question-text,.correction-box,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
   function toggleDyslexia(){ document.body.classList.toggle('dys'); let a=document.body.classList.contains('dys'); let btn=document.getElementById('dysBtn'), txt=document.getElementById('dysBtnText'); if(a){ btn.classList.add('active'); txt.innerHTML='DYS ● ON'; localStorage.setItem('ms_dys_mode','1'); } else{ btn.classList.remove('active'); txt.innerHTML='Mode DYS'; localStorage.setItem('ms_dys_mode','0'); let ca=document.getElementById('carea'); if(ca) ca.querySelectorAll('[data-dys-original]').forEach(el=>el.textContent=el.dataset.dysOriginal); } if(appData&&currentMode) setMode(currentMode); }
   if(localStorage.getItem('ms_dys_mode')==='1') toggleDyslexia();
   document.getElementById('dysBtn').addEventListener('click',toggleDyslexia);
@@ -587,7 +761,7 @@
 
   // ==================== SERVICE WORKER ====================
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/memoscan/sw.js')
+    navigator.serviceWorker.register('sw.js')
       .then(reg => console.log('✅ SW enregistré', reg))
       .catch(err => console.error('❌ Erreur SW:', err));
   }
