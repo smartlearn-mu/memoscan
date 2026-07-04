@@ -194,7 +194,7 @@
   }
 </style>
 </head>
-<body>
+<body class="dys">
 
 <header class="site-header">
   <div class="logo-area">
@@ -275,14 +275,14 @@
 
     <div class="dys-card">
       <div class="dys-demo-label" data-i18n="dys.demo.label">Exemple de phrase de cours</div>
-      <p class="dys-demo" id="dysDemo" data-i18n="dys.demo"><span class="syllabe-bleue">L'eau</span> <span class="syllabe-rouge">s'é</span><span class="syllabe-bleue">va</span><span class="syllabe-rouge">po</span><span class="syllabe-bleue">r</span><span class="lettre-muette">e</span> <span class="syllabe-rouge">en</span> <span class="syllabe-bleue">va</span><span class="syllabe-rouge">peur</span>.</p>
+      <p class="dys-demo" id="dysDemo"></p>
       <div class="dys-legend">
         <span><span class="legend-dot legend-blue"></span> <span data-i18n="dys.legend.syllable">Syllabes alternées en bleu et rouge</span></span>
         <span><span class="legend-dot legend-mute"></span> <span data-i18n="dys.legend.mute">Lettres muettes en gris</span></span>
       </div>
       <div class="dys-chip-row">
         <span class="dys-chip-label" data-i18n="dys.chip.label">Exemple : lettre muette au milieu d'un mot</span>
-        <span class="dys-chip" data-i18n="dys.chip.demo"><span class="syllabe-bleue">pe</span><span class="syllabe-rouge">ti</span><span class="lettre-muette">t</span></span>
+        <span class="dys-chip" id="dysChip"></span>
       </div>
     </div>
 
@@ -344,11 +344,9 @@
       'dys.title': 'Un mode pensé pour les enfants dyslexiques',
       'dys.subtitle': 'Police OpenDyslexic et coloration syllabique pour rendre chaque mot plus facile à lire.',
       'dys.demo.label': 'Exemple de phrase de cours',
-      'dys.demo': '<span class="syllabe-bleue">L\'eau</span> <span class="syllabe-rouge">s\'é</span><span class="syllabe-bleue">va</span><span class="syllabe-rouge">po</span><span class="syllabe-bleue">r</span><span class="lettre-muette">e</span> <span class="syllabe-rouge">en</span> <span class="syllabe-bleue">va</span><span class="syllabe-rouge">peur</span>.',
       'dys.legend.syllable': 'Syllabes alternées en bleu et rouge',
       'dys.legend.mute': 'Lettres muettes en gris',
       'dys.chip.label': "Exemple : lettre muette au milieu d'un mot",
-      'dys.chip.demo': '<span class="syllabe-bleue">pe</span><span class="syllabe-rouge">ti</span><span class="lettre-muette">t</span>',
       'dys.feature1': 'Syllabes alternées en bleu et rouge',
       'dys.feature2': 'Lettres muettes grisées automatiquement',
       'dys.feature3': 'Police adaptée OpenDyslexic',
@@ -420,6 +418,32 @@
     }
   };
 
+  // Moteur DYS copié tel quel depuis index.html : la démo française ci-dessous
+  // est générée par ce code, pas inventée à la main, pour rester fidèle à l'app.
+  const SONS = ['oin','ein','ien','eau','ain','ion','ill','an','am','in','im','yn','on','om','ou','oi','au','ai','eu','ui','un','em','en','er','ez','ei','ph','ch','gn','gu','qu','th','é','è','ê','à','â','ô','î','ï','û','ù','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+  function decouperSyllabes(mot) { let r=[], i=0, m=mot.toLowerCase(); while(i<m.length) { let t=false; for(let s of SONS) if(m.substr(i,s.length)===s) { r.push(mot.substr(i,s.length)); i+=s.length; t=true; break; } if(!t) { r.push(mot[i]); i++; } } return r; }
+  function estEMuetFinal(mot) { let m=mot.toLowerCase(); if(m.length<2||m.slice(-1)!=='e') return false; if(m.slice(-2)==='ée') return true; if(['que','gue','ce','ge'].includes(m.slice(-3))) return true; if('aeiouyàâôîïûù'.includes(m.slice(-2,-1))) return false; if(['le','me','te','se','je','ne','de','ce'].includes(m)) return false; return true; }
+  function getConsonneMuetteFin(mot) { let m=mot.toLowerCase(); if(m.length<2) return null; let fin=m.slice(-1); return ['t','s','x','n','d','p','g'].includes(fin)?fin:null; }
+  function traiterMotDYS(mot,compteurDepart) { if(!mot||!mot.trim()) return {html:mot,compteur:compteurDepart}; let poncAv='',poncFin='',motPur=mot; let mAv=mot.match(/^([«"'(]+)/); if(mAv){poncAv=mAv[0];motPur=mot.slice(poncAv.length);} let mFin=motPur.match(/([.,!?;:…»"')]+)$/); if(mFin){poncFin=mFin[0];motPur=motPur.slice(0,-poncFin.length);} if(!motPur) return {html:poncAv+poncFin,compteur:compteurDepart}; let syllabes=decouperSyllabes(motPur), html=poncAv, compteur=compteurDepart, eMuet=estEMuetFinal(motPur), consMuette=getConsonneMuetteFin(motPur); syllabes.forEach((syl,idx)=>{ let dern=idx===syllabes.length-1; if(dern&&eMuet&&syl.slice(-1)==='e'){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">e</span>`; } else if(dern&&consMuette&&syl.slice(-1)===consMuette){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">${consMuette}</span>`; } else{ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${syl}</span>`; compteur++; } }); return {html:html+poncFin,compteur:compteur}; }
+  function colorerTexteDYS(texte,startCompteur){ if(!texte) return {html:texte,compteur:startCompteur}; let tokens=texte.split(/(\s+)/g), html='', compteur=startCompteur; for(let tok of tokens){ if(/^\s+$/.test(tok)){ html+=tok; continue; } let res=traiterMotDYS(tok,compteur); html+=res.html; compteur=res.compteur; } return {html,compteur}; }
+
+  const dysDemoEl = document.getElementById('dysDemo');
+  const dysChipEl = document.getElementById('dysChip');
+  const dysDemoEn = {
+    demo: '<span class="syllabe-bleue">Wa</span><span class="syllabe-rouge">ter</span> <span class="syllabe-bleue">e</span><span class="syllabe-rouge">va</span><span class="syllabe-bleue">po</span><span class="syllabe-rouge">rates</span> <span class="syllabe-bleue">in</span><span class="syllabe-rouge">to</span> <span class="syllabe-bleue">va</span><span class="syllabe-rouge">por</span>.',
+    chip: '<span class="syllabe-bleue">cas</span><span class="lettre-muette">t</span><span class="syllabe-rouge">le</span>'
+  };
+
+  function updateDysDemo(lang) {
+    if (lang === 'fr') {
+      dysDemoEl.innerHTML = colorerTexteDYS("L'eau s'évapore en vapeur.", 0).html;
+      dysChipEl.innerHTML = colorerTexteDYS('petit', 0).html;
+    } else {
+      dysDemoEl.innerHTML = dysDemoEn.demo;
+      dysChipEl.innerHTML = dysDemoEn.chip;
+    }
+  }
+
   const langBtn = document.getElementById('langBtn');
   const langBtnText = document.getElementById('langBtnText');
   const pageTitle = document.getElementById('pageTitle');
@@ -436,6 +460,8 @@
       const key = el.getAttribute('data-i18n');
       if (dict[key] !== undefined) el.innerHTML = dict[key];
     });
+
+    updateDysDemo(lang);
 
     if (dict['meta.title']) { pageTitle.textContent = dict['meta.title']; }
     if (dict['meta.desc']) { metaDesc.setAttribute('content', dict['meta.desc']); }
