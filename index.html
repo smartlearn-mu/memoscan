@@ -322,6 +322,7 @@
 <script>
   // ==================== CONFIGURATION ====================
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfrICeVrhpkUg2h7X_PUSQB6BX_Y7tX7VhxVn9wSChSkvFsAwtVhnVqiZkrbSffFZ_ig/exec";
+  const APP_TOKEN = "MS_TOKEN_A_REMPLACER";
 
   let currentMode = null, currentInputMode = 'photo', pages = [], pastedText = '', appData = null;
   let fcIndex = 0, fcFlipped = false, _compteurDYSGlobal = 0;
@@ -350,6 +351,17 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
+  }
+
+  function getDeviceId() {
+    let id = localStorage.getItem('ms_device_id');
+    if (!id) {
+      const arr = new Uint8Array(16);
+      crypto.getRandomValues(arr);
+      id = Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+      localStorage.setItem('ms_device_id', id);
+    }
+    return id;
   }
 
   // ==================== ESSAI 2 JOURS ====================
@@ -394,6 +406,30 @@
   }
 
   initTrial();
+
+  async function syncEssaiServeur() {
+    try {
+      const res = await fetch(SCRIPT_URL + '?action=register&id=' + getDeviceId() + '&token=' + encodeURIComponent(APP_TOKEN) + '&source=pwa');
+      const r = await res.json();
+      if (r && r.ok === true) {
+        if (r.paid) {
+          localStorage.setItem('ms_paid', '1');
+          document.getElementById('trialBanner').style.display = 'none';
+        } else if (r.daysLeft <= 0) {
+          localStorage.setItem('ms_trial_start', String(Date.now() - 49 * 3600 * 1000));
+          updateTrialBanner();
+        } else {
+          if (r.start && !isNaN(new Date(r.start).getTime())) {
+            localStorage.setItem('ms_trial_start', String(new Date(r.start).getTime()));
+            updateTrialBanner();
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('syncEssaiServeur hors-ligne ou erreur :', e);
+    }
+  }
+  syncEssaiServeur();
 
   // ==================== MODES DE SAISIE ====================
   function setInputMode(mode) {
@@ -488,8 +524,9 @@
     try {
       const res = await fetch(`${SCRIPT_URL}?action=claude`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
+          token: APP_TOKEN,
           model: "claude-sonnet-4-6",
           max_tokens: 2000,
           messages: [{
@@ -518,8 +555,9 @@
     try {
       const res = await fetch(`${SCRIPT_URL}?action=deepseek`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
+          token: APP_TOKEN,
           messages: [{ role: "user", content: prompt }],
           max_tokens: 4000
         })
@@ -595,6 +633,7 @@
       document.getElementById('modeSection').style.display = 'block';
       generateBtn.disabled = false;
       setMode('cours');
+      fetch(SCRIPT_URL + '?action=activity&id=' + getDeviceId() + '&type=scan&token=' + encodeURIComponent(APP_TOKEN)).catch(() => {});
 
     } catch(e) {
       console.error('Erreur generateExercises:', e);
