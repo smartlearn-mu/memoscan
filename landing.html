@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title id="pageTitle">Memo Scan – Révise malin, même avec des DYS</title>
+
+<!-- ==================== META SEO ==================== -->
+<meta id="metaDesc" name="description" content="Memo Scan transforme une photo de cours en flashcards, QCM, exercices et mind maps générés par IA. Mode spécial enfants dyslexiques. Essai gratuit 2 jours.">
+<meta name="keywords" content="cours à domicile, prof particulier, soutien scolaire, réviser, dyslexique, application éducative, flashcards, QCM, mind map">
+<meta name="author" content="Smart Learn">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#4f6ef7">
+
+<style>
+  @font-face {
+    font-family: 'OpenDyslexic';
+    src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'OpenDyslexic';
+    src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink: #111218; --slate: #1e2130; --paper: #f4f7fc;
+    --accent: #4f6ef7; --al: #eef0fe;
+    --green: #00c48c; --red: #ff4757;
+    --g1: #f8f9fc; --g2: #e8ecf5; --g5: #8b90a7;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { font-family: system-ui, sans-serif; background: var(--paper); color: var(--ink); line-height: 1.5; }
+
+  a { color: inherit; text-decoration: none; }
+  ul { list-style: none; }
+
+  /* ---------- Header ---------- */
+  .site-header {
+    background: white; border-bottom: 1px solid var(--g2);
+    padding: 12px 20px; display: flex; align-items: center;
+    justify-content: space-between; position: sticky; top: 0; z-index: 100;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .logo-area { display: flex; align-items: center; gap: 10px; }
+  .logo-icon { width: 38px; height: 38px; background: var(--accent); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: white; flex-shrink: 0; }
+  .logo-text { font-weight: 800; font-size: 1rem; }
+  .logo-small { font-size: 0.55rem; color: var(--accent); font-weight: 700; letter-spacing: 0.3px; }
+
+  .header-actions { display: flex; align-items: center; gap: 10px; }
+
+  .lang-btn {
+    background: var(--g1); border: 1.5px solid var(--g2); border-radius: 40px;
+    padding: 6px 16px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; gap: 6px; color: var(--ink);
+    font-family: inherit;
+  }
+  .lang-btn:hover { border-color: var(--accent); }
+
+  .btn-header-cta {
+    background: var(--ink); color: white; border: none;
+    border-radius: 40px; padding: 8px 18px; font-weight: 700; font-size: 0.8rem;
+    display: inline-block; cursor: pointer;
+  }
+  .btn-header-cta:hover { background: var(--slate); }
+
+  /* ---------- Layout ---------- */
+  .main-content { max-width: 800px; margin: 0 auto; padding: 20px 16px 10px; }
+  section { margin-bottom: 56px; }
+  .section-title { font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 8px; }
+  .section-subtitle { font-size: 0.95rem; color: var(--g5); text-align: center; max-width: 520px; margin: 0 auto 28px; }
+
+  /* ---------- Hero ---------- */
+  .hero { text-align: center; padding: 40px 12px 8px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--al); color: var(--accent); font-weight: 700; font-size: 0.8rem;
+    border-radius: 40px; padding: 8px 18px; margin-bottom: 20px;
+  }
+  .hero h1 { font-size: 2rem; font-weight: 800; line-height: 1.25; margin-bottom: 16px; }
+  .hero-subtitle { font-size: 1.05rem; color: var(--g5); max-width: 560px; margin: 0 auto 28px; }
+  .hero-ctas { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .btn-primary {
+    display: inline-block; background: var(--accent); color: white;
+    border: none; padding: 16px 36px; border-radius: 60px; font-weight: 800;
+    font-size: 1.05rem; cursor: pointer; transition: 0.2s;
+  }
+  .btn-primary:hover { background: #3d5ce0; }
+  .hero-note { font-size: 0.85rem; color: #067a52; font-weight: 700; }
+
+  /* ---------- Phone mockup ---------- */
+  .phone-frame {
+    background: var(--ink); border-radius: 36px; padding: 14px;
+    max-width: 300px; margin: 0 auto; box-shadow: 0 20px 50px rgba(17,18,24,0.18);
+  }
+  .phone-notch { width: 70px; height: 8px; background: var(--slate); border-radius: 6px; margin: 0 auto 10px; }
+  .phone-screen { background: var(--paper); border-radius: 22px; padding: 16px; }
+  .photo-zone {
+    border: 2px dashed var(--g2); border-radius: 18px; background: white;
+    padding: 22px 10px; text-align: center; margin-bottom: 14px;
+  }
+  .photo-zone-emoji { font-size: 1.8rem; margin-bottom: 6px; }
+  .photo-zone-label { font-size: 0.75rem; font-weight: 700; color: var(--g5); }
+  .phone-mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .phone-mode-card {
+    background: white; border: 2px solid var(--g2); border-radius: 14px;
+    padding: 12px 6px; text-align: center; font-size: 0.72rem; font-weight: 700;
+  }
+  .phone-mode-card:nth-child(1) { border-color: var(--accent); background: var(--al); }
+  .phone-mode-emoji { font-size: 1.3rem; margin-bottom: 4px; }
+
+  /* ---------- Steps ---------- */
+  .steps-grid { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  .step-card {
+    flex: 1; min-width: 200px; background: white; border: 2px solid var(--g2);
+    border-radius: 20px; padding: 24px 18px; text-align: center; position: relative;
+  }
+  .step-number {
+    width: 28px; height: 28px; background: var(--accent); color: white; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-weight: 800;
+    margin: 0 auto 12px; font-size: 0.85rem;
+  }
+  .step-emoji { font-size: 2rem; margin-bottom: 10px; }
+  .step-card h3 { font-size: 1rem; font-weight: 800; margin-bottom: 8px; }
+  .step-card p { font-size: 0.85rem; color: var(--g5); }
+
+  /* ---------- DYS section ---------- */
+  .dys-card {
+    background: white; border: 2px solid var(--g2); border-radius: 24px;
+    padding: 28px 22px; max-width: 560px; margin: 0 auto 20px;
+  }
+  .dys-demo-label { font-size: 0.75rem; font-weight: 700; color: var(--g5); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .dys-demo {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
+    font-size: 1.3rem; line-height: 2; margin-bottom: 20px;
+  }
+  .dys-chip-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 16px; border-top: 1px solid var(--g2); }
+  .dys-chip-label { font-size: 0.8rem; color: var(--g5); font-weight: 600; }
+  .dys-chip {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
+    font-size: 1.15rem; background: var(--g1); border-radius: 12px; padding: 6px 16px;
+  }
+  .syllabe-bleue { color: #1e4bd2; font-weight: 700; }
+  .syllabe-rouge { color: #c62828; font-weight: 700; }
+  .lettre-muette { color: #b0b0b0; opacity: 0.7; }
+
+  .dys-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.78rem; color: var(--g5); }
+  .dys-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .legend-blue { background: #1e4bd2; }
+  .legend-mute { background: #b0b0b0; }
+
+  .dys-features { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; max-width: 640px; margin: 0 auto; }
+  .dys-feature {
+    background: var(--g1); border-radius: 40px; padding: 10px 18px;
+    font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ---------- Pricing ---------- */
+  .pricing-card {
+    background: white; border: 2.5px solid var(--accent); border-radius: 24px;
+    padding: 36px 28px; max-width: 420px; margin: 0 auto; text-align: center;
+    box-shadow: 0 12px 30px rgba(79,110,247,0.12);
+  }
+  .price-tag { font-size: 2.6rem; font-weight: 800; color: var(--accent); }
+  .price-period { font-size: 1.1rem; font-weight: 700; color: var(--g5); }
+  .price-subtitle { font-size: 0.9rem; color: var(--g5); margin-bottom: 24px; }
+  .benefit-list { text-align: left; margin-bottom: 26px; }
+  .benefit-list li { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: 0.92rem; }
+
+  /* ---------- Footer ---------- */
+  .site-footer {
+    text-align: center; padding: 24px 16px; font-size: 0.75rem; color: var(--g5);
+    border-top: 1px solid var(--g2); background: white;
+  }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.5rem; }
+    .hero-subtitle { font-size: 0.95rem; }
+    .section-title { font-size: 1.25rem; }
+    .steps-grid { flex-direction: column; }
+    .dys-demo { font-size: 1.1rem; }
+    .price-tag { font-size: 2.1rem; }
+    .pricing-card { padding: 28px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo-area">
+    <div class="logo-icon" aria-hidden="true">📖</div>
+    <div>
+      <div class="logo-text">Memo Scan</div>
+      <div class="logo-small" data-i18n="header.tagline">BY SMART LEARN</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button type="button" class="lang-btn" id="langBtn" aria-label="Switch to English">
+      <span aria-hidden="true">🌐</span> <span id="langBtnText">EN</span>
+    </button>
+    <a class="btn-header-cta" href="index.html" data-i18n="header.cta">Essayer gratuitement</a>
+  </div>
+</header>
+
+<main class="main-content">
+
+  <section class="hero">
+    <div class="hero-badge" data-i18n="hero.badge">🎯 CE2 à la 6e · adapté aux enfants DYS</div>
+    <h1 data-i18n="hero.title">Prends ton cours en photo.<br>Révise avec de vrais exercices.</h1>
+    <p class="hero-subtitle" data-i18n="hero.subtitle">Memo Scan transforme n'importe quelle leçon en flashcards, QCM, exercices et mind maps générés par IA — en quelques secondes, sur le téléphone de toute la famille.</p>
+    <div class="hero-ctas">
+      <a class="btn-primary" href="index.html" data-i18n="hero.cta">🚀 Essayer 2 jours gratuits</a>
+      <p class="hero-note" data-i18n="hero.note">✅ Sans carte bancaire</p>
+    </div>
+  </section>
+
+  <section class="phone-section">
+    <h2 class="section-title" data-i18n="phone.title">Toutes les révisions, dans une seule appli</h2>
+    <p class="section-subtitle" data-i18n="phone.subtitle">Une photo suffit pour débloquer 4 façons de réviser.</p>
+    <div class="phone-frame" aria-hidden="true">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="photo-zone">
+          <div class="photo-zone-emoji">📸</div>
+          <div class="photo-zone-label" data-i18n="phone.camera.label">Ta photo de cours</div>
+        </div>
+        <div class="phone-mode-grid">
+          <div class="phone-mode-card"><div class="phone-mode-emoji">🃏</div><div data-i18n="phone.mode.flashcards">Flashcards</div></div>
+          <div class="phone-mode-card"><div class="phone-mode-emoji">✅</div><div data-i18n="phone.mode.qcm">QCM</div></div>
+          <div class="phone-mode-card"><div class="phone-mode-emoji">🧮</div><div data-i18n="phone.mode.exercises">Exercices</div></div>
+          <div class="phone-mode-card"><div class="phone-mode-emoji">🗺️</div><div data-i18n="phone.mode.mindmap">Mind map</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="steps-section">
+    <h2 class="section-title" data-i18n="steps.title">Comment ça marche</h2>
+    <p class="section-subtitle" data-i18n="steps.subtitle">Trois étapes, aucune complication.</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-emoji">📸</div>
+        <h3 data-i18n="steps.1.title">Photographie</h3>
+        <p data-i18n="steps.1.desc">Prends en photo ton cahier ou ton livre, même écriture manuscrite — l'IA sait la lire.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-emoji">🤖</div>
+        <h3 data-i18n="steps.2.title">L'IA analyse</h3>
+        <p data-i18n="steps.2.desc">En quelques secondes, le cours est retranscrit, compris et résumé automatiquement.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-emoji">🎯</div>
+        <h3 data-i18n="steps.3.title">Révise</h3>
+        <p data-i18n="steps.3.desc">Choisis flashcards, QCM, exercices ou mind map selon la façon dont tu apprends le mieux.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dys-section">
+    <h2 class="section-title" data-i18n="dys.title">Un mode pensé pour les enfants dyslexiques</h2>
+    <p class="section-subtitle" data-i18n="dys.subtitle">Police OpenDyslexic et coloration syllabique pour rendre chaque mot plus facile à lire.</p>
+
+    <div class="dys-card">
+      <div class="dys-demo-label" data-i18n="dys.demo.label">Exemple de phrase de cours</div>
+      <p class="dys-demo" id="dysDemo" data-i18n="dys.demo"><span class="syllabe-bleue">L'eau</span> <span class="syllabe-rouge">s'é</span><span class="syllabe-bleue">va</span><span class="syllabe-rouge">po</span><span class="syllabe-bleue">r</span><span class="lettre-muette">e</span> <span class="syllabe-rouge">en</span> <span class="syllabe-bleue">va</span><span class="syllabe-rouge">peur</span>.</p>
+      <div class="dys-legend">
+        <span><span class="legend-dot legend-blue"></span> <span data-i18n="dys.legend.syllable">Syllabes alternées en bleu et rouge</span></span>
+        <span><span class="legend-dot legend-mute"></span> <span data-i18n="dys.legend.mute">Lettres muettes en gris</span></span>
+      </div>
+      <div class="dys-chip-row">
+        <span class="dys-chip-label" data-i18n="dys.chip.label">Exemple : lettre muette au milieu d'un mot</span>
+        <span class="dys-chip" data-i18n="dys.chip.demo"><span class="syllabe-bleue">pe</span><span class="syllabe-rouge">ti</span><span class="lettre-muette">t</span></span>
+      </div>
+    </div>
+
+    <div class="dys-features">
+      <div class="dys-feature">👁️ <span data-i18n="dys.feature1">Syllabes alternées en bleu et rouge</span></div>
+      <div class="dys-feature">🔇 <span data-i18n="dys.feature2">Lettres muettes grisées automatiquement</span></div>
+      <div class="dys-feature">🔤 <span data-i18n="dys.feature3">Police adaptée OpenDyslexic</span></div>
+    </div>
+  </section>
+
+  <section class="pricing-section">
+    <h2 class="section-title" data-i18n="pricing.title">Un tarif simple, sans surprise</h2>
+    <div class="pricing-card">
+      <div class="price-tag" data-i18n="pricing.price">29€<span class="price-period">/an</span></div>
+      <div class="price-subtitle" data-i18n="pricing.subprice">soit moins de 2,50€ par mois</div>
+      <ul class="benefit-list">
+        <li>✅ <span data-i18n="pricing.benefit1">Exercices illimités générés par IA</span></li>
+        <li>✅ <span data-i18n="pricing.benefit2">Mode dyslexie inclus, sans supplément</span></li>
+        <li>✅ <span data-i18n="pricing.benefit3">Sans engagement, annulable à tout moment</span></li>
+      </ul>
+      <a class="btn-primary" href="index.html" data-i18n="pricing.cta">Commencer l'essai gratuit</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer" data-i18n="footer.text">Memo Scan · Smart Learn — cours à domicile, prof particulier, soutien scolaire</footer>
+
+<script>
+  // ==================== DICTIONNAIRE DE TRADUCTION ====================
+  const translations = {
+    fr: {
+      'header.tagline': 'BY SMART LEARN',
+      'header.cta': 'Essayer gratuitement',
+
+      'hero.badge': '🎯 CE2 à la 6e · adapté aux enfants DYS',
+      'hero.title': 'Prends ton cours en photo.<br>Révise avec de vrais exercices.',
+      'hero.subtitle': "Memo Scan transforme n'importe quelle leçon en flashcards, QCM, exercices et mind maps générés par IA — en quelques secondes, sur le téléphone de toute la famille.",
+      'hero.cta': '🚀 Essayer 2 jours gratuits',
+      'hero.note': '✅ Sans carte bancaire',
+
+      'phone.title': 'Toutes les révisions, dans une seule appli',
+      'phone.subtitle': 'Une photo suffit pour débloquer 4 façons de réviser.',
+      'phone.camera.label': 'Ta photo de cours',
+      'phone.mode.flashcards': 'Flashcards',
+      'phone.mode.qcm': 'QCM',
+      'phone.mode.exercises': 'Exercices',
+      'phone.mode.mindmap': 'Mind map',
+
+      'steps.title': 'Comment ça marche',
+      'steps.subtitle': 'Trois étapes, aucune complication.',
+      'steps.1.title': '1. Photographie',
+      'steps.1.desc': "Prends en photo ton cahier ou ton livre, même écriture manuscrite — l'IA sait la lire.",
+      'steps.2.title': "2. L'IA analyse",
+      'steps.2.desc': 'En quelques secondes, le cours est retranscrit, compris et résumé automatiquement.',
+      'steps.3.title': '3. Révise',
+      'steps.3.desc': "Choisis flashcards, QCM, exercices ou mind map selon la façon dont tu apprends le mieux.",
+
+      'dys.title': 'Un mode pensé pour les enfants dyslexiques',
+      'dys.subtitle': 'Police OpenDyslexic et coloration syllabique pour rendre chaque mot plus facile à lire.',
+      'dys.demo.label': 'Exemple de phrase de cours',
+      'dys.demo': '<span class="syllabe-bleue">L\'eau</span> <span class="syllabe-rouge">s\'é</span><span class="syllabe-bleue">va</span><span class="syllabe-rouge">po</span><span class="syllabe-bleue">r</span><span class="lettre-muette">e</span> <span class="syllabe-rouge">en</span> <span class="syllabe-bleue">va</span><span class="syllabe-rouge">peur</span>.',
+      'dys.legend.syllable': 'Syllabes alternées en bleu et rouge',
+      'dys.legend.mute': 'Lettres muettes en gris',
+      'dys.chip.label': "Exemple : lettre muette au milieu d'un mot",
+      'dys.chip.demo': '<span class="syllabe-bleue">pe</span><span class="syllabe-rouge">ti</span><span class="lettre-muette">t</span>',
+      'dys.feature1': 'Syllabes alternées en bleu et rouge',
+      'dys.feature2': 'Lettres muettes grisées automatiquement',
+      'dys.feature3': 'Police adaptée OpenDyslexic',
+
+      'pricing.title': 'Un tarif simple, sans surprise',
+      'pricing.price': '29€<span class="price-period">/an</span>',
+      'pricing.subprice': 'soit moins de 2,50€ par mois',
+      'pricing.benefit1': 'Exercices illimités générés par IA',
+      'pricing.benefit2': 'Mode dyslexie inclus, sans supplément',
+      'pricing.benefit3': 'Sans engagement, annulable à tout moment',
+      'pricing.cta': "Commencer l'essai gratuit",
+
+      'footer.text': 'Memo Scan · Smart Learn — cours à domicile, prof particulier, soutien scolaire',
+
+      'meta.title': 'Memo Scan – Révise malin, même avec des DYS',
+      'meta.desc': 'Memo Scan transforme une photo de cours en flashcards, QCM, exercices et mind maps générés par IA. Mode spécial enfants dyslexiques. Essai gratuit 2 jours.'
+    },
+    en: {
+      'header.tagline': 'BY SMART LEARN',
+      'header.cta': 'Try for free',
+
+      'hero.badge': '🎯 Grades 3 to 7 · dyslexia-friendly',
+      'hero.title': 'Snap a photo of your lesson.<br>Revise with real exercises.',
+      'hero.subtitle': "Memo Scan turns any lesson into AI-generated flashcards, quizzes, exercises and mind maps — in seconds, on the whole family's phone.",
+      'hero.cta': '🚀 Try 2 days free',
+      'hero.note': '✅ No credit card required',
+
+      'phone.title': 'Every way to revise, in one app',
+      'phone.subtitle': 'One photo unlocks 4 ways to study.',
+      'phone.camera.label': 'Your lesson photo',
+      'phone.mode.flashcards': 'Flashcards',
+      'phone.mode.qcm': 'Quiz',
+      'phone.mode.exercises': 'Exercises',
+      'phone.mode.mindmap': 'Mind map',
+
+      'steps.title': 'How it works',
+      'steps.subtitle': 'Three steps, no hassle.',
+      'steps.1.title': '1. Photograph',
+      'steps.1.desc': 'Snap a photo of your notebook or textbook — even handwriting. The AI can read it.',
+      'steps.2.title': '2. AI analyzes it',
+      'steps.2.desc': 'In seconds, the lesson is transcribed, understood and summarised automatically.',
+      'steps.3.title': '3. Revise',
+      'steps.3.desc': "Pick flashcards, quizzes, exercises or a mind map — whatever suits how you learn best.",
+
+      'dys.title': 'A mode built for dyslexic children',
+      'dys.subtitle': 'OpenDyslexic font and syllable coloring make every word easier to read.',
+      'dys.demo.label': 'Example lesson sentence',
+      'dys.demo': '<span class="syllabe-bleue">Wa</span><span class="syllabe-rouge">ter</span> <span class="syllabe-bleue">e</span><span class="syllabe-rouge">va</span><span class="syllabe-bleue">po</span><span class="syllabe-rouge">rates</span> <span class="syllabe-bleue">in</span><span class="syllabe-rouge">to</span> <span class="syllabe-bleue">va</span><span class="syllabe-rouge">por</span>.',
+      'dys.legend.syllable': 'Alternating blue and red syllables',
+      'dys.legend.mute': 'Silent letters in grey',
+      'dys.chip.label': 'Example: a silent letter in the middle of a word',
+      'dys.chip.demo': '<span class="syllabe-bleue">cas</span><span class="lettre-muette">t</span><span class="syllabe-rouge">le</span>',
+      'dys.feature1': 'Alternating blue and red syllables',
+      'dys.feature2': 'Silent letters automatically greyed out',
+      'dys.feature3': 'Dyslexia-friendly OpenDyslexic font',
+
+      'pricing.title': 'Simple pricing, no surprises',
+      'pricing.price': '29€<span class="price-period">/year</span>',
+      'pricing.subprice': 'less than €2.50 a month',
+      'pricing.benefit1': 'Unlimited AI-generated exercises',
+      'pricing.benefit2': 'Dyslexia mode included, no extra cost',
+      'pricing.benefit3': 'No commitment, cancel anytime',
+      'pricing.cta': 'Start your free trial',
+
+      'footer.text': 'Memo Scan · Smart Learn — home tutoring, private lessons, academic support',
+
+      'meta.title': 'Memo Scan – Smart revision, even for dyslexic kids',
+      'meta.desc': 'Memo Scan turns a photo of a lesson into AI-generated flashcards, quizzes, exercises and mind maps. Special mode for dyslexic children. 2-day free trial.'
+    }
+  };
+
+  const langBtn = document.getElementById('langBtn');
+  const langBtnText = document.getElementById('langBtnText');
+  const pageTitle = document.getElementById('pageTitle');
+  const metaDesc = document.getElementById('metaDesc');
+
+  function otherLang(lang) { return lang === 'fr' ? 'en' : 'fr'; }
+
+  function applyLang(lang) {
+    const dict = translations[lang] || translations.fr;
+
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      const key = el.getAttribute('data-i18n');
+      if (dict[key] !== undefined) el.innerHTML = dict[key];
+    });
+
+    if (dict['meta.title']) { pageTitle.textContent = dict['meta.title']; }
+    if (dict['meta.desc']) { metaDesc.setAttribute('content', dict['meta.desc']); }
+
+    const target = otherLang(lang);
+    langBtnText.textContent = target.toUpperCase();
+    langBtn.setAttribute('aria-label', target === 'en' ? 'Switch to English' : 'Passer en français');
+
+    localStorage.setItem('ms_landing_lang', lang);
+  }
+
+  langBtn.addEventListener('click', function () {
+    const current = document.documentElement.lang === 'en' ? 'en' : 'fr';
+    applyLang(otherLang(current));
+  });
+
+  const savedLang = localStorage.getItem('ms_landing_lang');
+  applyLang(savedLang === 'en' || savedLang === 'fr' ? savedLang : 'fr');
+</script>
+</body>
+</html>
