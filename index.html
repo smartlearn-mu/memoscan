@@ -294,6 +294,7 @@
   <div id="previewContainer" class="preview-images"></div>
 
   <button class="generate-btn" id="generateBtn" disabled>🔍 Générer mes exercices</button>
+  <p id="generateHint" style="text-align:center; font-size:0.8rem; color:var(--g5); margin-top:-10px; margin-bottom:20px;"></p>
 
   <div id="loadingDiv" style="display:none; text-align:center; padding:20px;">
     <div class="spinner"></div>
@@ -446,6 +447,12 @@
   function updateGenerateButton() {
     if (currentInputMode === 'text') generateBtn.disabled = !pastedText.trim();
     else generateBtn.disabled = pages.length === 0;
+
+    const hint = document.getElementById('generateHint');
+    if (!generateBtn.disabled) { hint.textContent = ''; return; }
+    if (currentInputMode === 'text') hint.textContent = '👆 Colle ton cours dans la zone de texte ci-dessus pour activer le bouton';
+    else if (currentInputMode === 'photo') hint.textContent = '👆 Prends une photo de ton cours ci-dessus pour activer le bouton';
+    else hint.textContent = '👆 Choisis une photo dans ta galerie ci-dessus pour activer le bouton';
   }
 
   // ==================== UPLOAD IMAGES (ordre garanti) ====================
