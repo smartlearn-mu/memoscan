@@ -322,7 +322,7 @@
 <script>
   // ==================== CONFIGURATION ====================
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfrICeVrhpkUg2h7X_PUSQB6BX_Y7tX7VhxVn9wSChSkvFsAwtVhnVqiZkrbSffFZ_ig/exec";
-  const APP_TOKEN = "MS_TOKEN_A_REMPLACER";
+  const APP_TOKEN = "ms_7f3a1e9c4b6d2058";
 
   let currentMode = null, currentInputMode = 'photo', pages = [], pastedText = '', appData = null;
   let fcIndex = 0, fcFlipped = false, _compteurDYSGlobal = 0;
@@ -565,7 +565,7 @@
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const data = await res.json();
       console.log('Réponse DeepSeek:', data);
-      if (data.error) throw new Error(`API DeepSeek: ${data.error}`);
+      if (data.error) throw new Error(`API DeepSeek: ${typeof data.error === 'object' ? (data.error.message || JSON.stringify(data.error)) : data.error}`);
       if (data.choices && data.choices[0] && data.choices[0].message) return data.choices[0].message.content;
       throw new Error(`Format de réponse DeepSeek inattendu: ${JSON.stringify(data)}`);
     } catch (error) {
