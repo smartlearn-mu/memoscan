@@ -257,6 +257,12 @@
 <div id="trialBanner" class="trial-banner">
   <span>🎓 2 jours gratuits</span>
   <button id="payBtn">💳 29€/an</button>
+  <button id="codeToggleBtn">🎁 J'ai un code</button>
+</div>
+<div id="codeForm" style="display:none; background:white; border-bottom:1px solid var(--g2); padding:10px 20px; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;">
+  <input type="text" id="codeInput" placeholder="Ton code" style="padding:8px 12px; border:1.5px solid var(--g2); border-radius:40px; font-size:0.85rem;">
+  <button id="codeSubmitBtn" style="background:var(--accent); color:white; border:none; border-radius:40px; padding:8px 16px; font-weight:700; font-size:0.85rem; cursor:pointer;">Valider</button>
+  <span id="codeMsg" style="font-size:0.8rem;"></span>
 </div>
 
 <div class="main-content">
@@ -819,6 +825,35 @@
   if(localStorage.getItem('ms_dys_mode')==='1') toggleDyslexia();
   document.getElementById('dysBtn').addEventListener('click',toggleDyslexia);
   document.getElementById('payBtn').addEventListener('click',()=>alert("💳 Paiement 29€/an via Wise\nContact: smartlearn.mu@gmail.com"));
+
+  // ==================== CODE AMIS / FAMILLE ====================
+  document.getElementById('codeToggleBtn').addEventListener('click', () => {
+    const f = document.getElementById('codeForm');
+    f.style.display = f.style.display === 'none' ? 'flex' : 'none';
+  });
+
+  document.getElementById('codeSubmitBtn').addEventListener('click', async () => {
+    const code = document.getElementById('codeInput').value.trim();
+    const msg = document.getElementById('codeMsg');
+    if (!code) return;
+    msg.style.color = 'var(--g5)';
+    msg.textContent = '⏳ Vérification...';
+    try {
+      const res = await fetch(SCRIPT_URL + '?action=redeemCode&id=' + getDeviceId() + '&code=' + encodeURIComponent(code) + '&token=' + encodeURIComponent(APP_TOKEN));
+      const r = await res.json();
+      if (r.ok) {
+        localStorage.setItem('ms_paid', '1');
+        document.getElementById('trialBanner').style.display = 'none';
+        document.getElementById('codeForm').style.display = 'none';
+      } else {
+        msg.style.color = 'var(--red)';
+        msg.textContent = '❌ ' + (r.error || 'Code invalide');
+      }
+    } catch (e) {
+      msg.style.color = 'var(--red)';
+      msg.textContent = '❌ Erreur réseau, réessaie';
+    }
+  });
 
   setInputMode('photo');
 
