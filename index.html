@@ -225,6 +225,7 @@
     .branch-title { font-weight: 800; text-align: center; padding-bottom: 10px; border-bottom: 2px solid var(--accent); color: var(--accent); }
     .branch-leaves li { padding: 8px 0; display: flex; align-items: center; gap: 8px; list-style: none; }
     .branch-leaves li::before { content: "•"; color: var(--accent); font-weight: bold; }
+    .branch-leaves li .leaf-text { min-width: 0; flex: 1; overflow-wrap: break-word; }
 
     .spinner { display: inline-block; width: 22px; height: 22px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; margin-left: 8px; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -462,10 +463,12 @@
     else generateBtn.disabled = pages.length === 0;
 
     const hint = document.getElementById('generateHint');
-    if (!generateBtn.disabled) { hint.textContent = ''; return; }
+    delete hint.dataset.dysOriginal;
+    if (!generateBtn.disabled) { hint.textContent = ''; appliquerCouleursDYSInterface(); return; }
     if (currentInputMode === 'text') hint.textContent = '👆 Colle ton cours dans la zone de texte ci-dessus pour activer le bouton';
     else if (currentInputMode === 'photo') hint.textContent = '👆 Prends une photo de ton cours ci-dessus pour activer le bouton';
     else hint.textContent = '👆 Choisis une photo dans ta galerie ci-dessus pour activer le bouton';
+    appliquerCouleursDYSInterface();
   }
 
   // ==================== UPLOAD IMAGES (ordre garanti) ====================
@@ -731,7 +734,7 @@
       let html = `<div class="ccard"><div class="mindmap-container"><div class="mindmap-center">${escapeHtml(appData.mindmap.center)}</div><div class="mindmap-branches">`;
       if (appData.mindmap.branches.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
       appData.mindmap.branches.forEach(b => {
-        html += `<div class="mindmap-branch"><div class="branch-title">${escapeHtml(b.label)}</div><ul class="branch-leaves">${(b.leaves||[]).map(l => `<li>${escapeHtml(l)}</li>`).join('')}</ul></div>`;
+        html += `<div class="mindmap-branch"><div class="branch-title">${escapeHtml(b.label)}</div><ul class="branch-leaves">${(b.leaves||[]).map(l => `<li><span class="leaf-text">${escapeHtml(l)}</span></li>`).join('')}</ul></div>`;
       });
       html += `</div></div></div>`;
       area.innerHTML = html;
@@ -810,8 +813,9 @@
   function getConsonneMuetteFin(mot) { let m=mot.toLowerCase(); if(m.length<2) return null; let fin=m.slice(-1); return ['t','s','x','n','d','p','g'].includes(fin)?fin:null; }
   function traiterMotDYS(mot,compteurDepart) { if(!mot||!mot.trim()) return {html:mot,compteur:compteurDepart}; let poncAv='',poncFin='',motPur=mot; let mAv=mot.match(/^([«"'(]+)/); if(mAv){poncAv=mAv[0];motPur=mot.slice(poncAv.length);} let mFin=motPur.match(/([.,!?;:…»"')]+)$/); if(mFin){poncFin=mFin[0];motPur=motPur.slice(0,-poncFin.length);} if(!motPur) return {html:poncAv+poncFin,compteur:compteurDepart}; let syllabes=decouperSyllabes(motPur), html=poncAv, compteur=compteurDepart, eMuet=estEMuetFinal(motPur), consMuette=getConsonneMuetteFin(motPur); syllabes.forEach((syl,idx)=>{ let dern=idx===syllabes.length-1; if(dern&&eMuet&&syl.slice(-1)==='e'){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">e</span>`; } else if(dern&&consMuette&&syl.slice(-1)===consMuette){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">${consMuette}</span>`; } else{ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${syl}</span>`; compteur++; } }); return {html:html+poncFin,compteur:compteur}; }
   function colorerTexteDYS(texte,startCompteur){ if(!document.body.classList.contains('dys')) return {html:texte,compteur:startCompteur}; if(!texte) return {html:texte,compteur:startCompteur}; let tokens=texte.split(/(\s+)/g), html='', compteur=startCompteur; for(let tok of tokens){ if(/^\s+$/.test(tok)){ html+=tok; continue; } let res=traiterMotDYS(tok,compteur); html+=res.html; compteur=res.compteur; } return {html,compteur}; }
-  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,li,.kpt,.deft,.exst,.fcq,.qtxt,.opt,.branch-title,.branch-leaves li,.question-text,.correction-box,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
-  function toggleDyslexia(){ document.body.classList.toggle('dys'); let a=document.body.classList.contains('dys'); let btn=document.getElementById('dysBtn'), txt=document.getElementById('dysBtnText'); if(a){ btn.classList.add('active'); txt.innerHTML='DYS ● ON'; localStorage.setItem('ms_dys_mode','1'); } else{ btn.classList.remove('active'); txt.innerHTML='Mode DYS'; localStorage.setItem('ms_dys_mode','0'); let ca=document.getElementById('carea'); if(ca) ca.querySelectorAll('[data-dys-original]').forEach(el=>el.textContent=el.dataset.dysOriginal); } if(appData&&currentMode) setMode(currentMode); }
+  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,li,.kpt,.deft,.exst,.fcq,.qtxt,.opt,.branch-title,.branch-leaves li .leaf-text,.question-text,.correction-box,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
+  function appliquerCouleursDYSInterface(){ if(!document.body.classList.contains('dys')) return; let compteur=0; let els=document.querySelectorAll('.hero h2,.hero p,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,#generateHint,.footer'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,compteur); el.innerHTML=res.html; compteur=res.compteur; } }); }
+  function toggleDyslexia(){ document.body.classList.toggle('dys'); let a=document.body.classList.contains('dys'); let btn=document.getElementById('dysBtn'), txt=document.getElementById('dysBtnText'); if(a){ btn.classList.add('active'); txt.innerHTML='DYS ● ON'; localStorage.setItem('ms_dys_mode','1'); appliquerCouleursDYSInterface(); } else{ btn.classList.remove('active'); txt.innerHTML='Mode DYS'; localStorage.setItem('ms_dys_mode','0'); document.querySelectorAll('[data-dys-original]').forEach(el=>el.textContent=el.dataset.dysOriginal); } if(appData&&currentMode) setMode(currentMode); }
   if(localStorage.getItem('ms_dys_mode')==='1') toggleDyslexia();
   document.getElementById('dysBtn').addEventListener('click',toggleDyslexia);
   document.getElementById('payBtn').addEventListener('click',()=>alert("💳 Paiement 29€/an via Wise\nContact: smartlearn.mu@gmail.com"));
