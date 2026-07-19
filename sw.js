@@ -1,5 +1,5 @@
-const CACHE_NAME = 'memoscan-v2';
-const ASSETS = ['./', './index.html', './manifest.json'];
+const CACHE_NAME = 'memoscan-v3';
+const ASSETS = ['./', './index.html', './manifest.json', './mu.html', './manifest-mu.json'];
 
 // Installation : mise en cache des assets
 self.addEventListener('install', event => {

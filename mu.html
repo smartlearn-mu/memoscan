@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Memo Scan Maurice – Ton prof particulier 24h/24</title>
+
+  <!-- ==================== META SEO ==================== -->
+  <meta name="description" content="Ton prof particulier 24h/24 à Maurice : photographie ton cours, il prépare tes exercices et t'interroge. Rs 990 par an. Essai gratuit 24 h.">
+  <meta name="keywords" content="prof particulier Maurice, leçons particulières, private tuition Mauritius, tuition, soutien scolaire, réviser, dyslexique, aide aux devoirs">
+  <meta name="author" content="Smart Learn">
+  <meta name="robots" content="index, follow">
+
+  <!-- ==================== PARTAGE (WhatsApp, réseaux sociaux) ==================== -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Memo Scan Maurice – Ton prof particulier 24h/24">
+  <meta property="og:description" content="Ton prof particulier 24h/24 à Maurice : photographie ton cours, il prépare tes exercices et t'interroge. Rs 990 par an. Essai gratuit 24 h.">
+  <meta property="og:image" content="https://smartlearn-mu.github.io/memoscan/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://smartlearn-mu.github.io/memoscan/mu.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Memo Scan Maurice – Ton prof particulier 24h/24">
+  <meta name="twitter:description" content="Ton prof particulier 24h/24 à Maurice : photographie ton cours, il prépare tes exercices et t'interroge. Rs 990 par an. Essai gratuit 24 h.">
+  <meta name="twitter:image" content="https://smartlearn-mu.github.io/memoscan/og-image.png">
+
+  <!-- ==================== PWA ==================== -->
+  <link rel="manifest" href="manifest-mu.json">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <meta name="theme-color" content="#4f6ef7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Memo Scan">
+  
+  <style>
+    @font-face {
+      font-family: 'OpenDyslexic';
+      src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Regular.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'OpenDyslexic';
+      src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Bold.woff') format('woff');
+      font-weight: bold;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --ink: #111218; --slate: #1e2130; --paper: #f4f7fc;
+      --accent: #4f6ef7; --al: #eef0fe; --gold: #f5a623;
+      --green: #00c48c; --red: #ff4757;
+      --g1: #f8f9fc; --g2: #e8ecf5; --g5: #8b90a7;
+    }
+
+    body { font-family: system-ui, sans-serif; background: var(--paper); color: var(--ink); }
+
+    .header {
+      background: white; border-bottom: 1px solid var(--g2);
+      padding: 12px 20px; display: flex; align-items: center;
+      justify-content: space-between; position: sticky; top: 0; z-index: 100;
+    }
+
+    .logo-area { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 38px; height: 38px; background: var(--accent); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: white; }
+    .logo-text { font-weight: 800; font-size: 1rem; }
+    .logo-small { font-size: 0.55rem; color: var(--accent); }
+
+    .dys-btn {
+      background: var(--g1); border: 1.5px solid var(--g2); border-radius: 40px;
+      padding: 6px 16px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .dys-btn.active { background: var(--accent); color: white; }
+
+    .trial-banner {
+      background: #e8c87a; color: #1e2130; padding: 10px 20px;
+      text-align: center; font-size: 0.8rem; font-weight: 600;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      flex-wrap: wrap;
+    }
+    .trial-banner button { background: #1e2130; color: #e8c87a; border: none;
+      border-radius: 40px; padding: 4px 14px; cursor: pointer; }
+
+    .input-modes {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .mode-card {
+      flex: 1;
+      background: white;
+      border: 2px solid var(--g2);
+      border-radius: 20px;
+      padding: 20px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .mode-card.active {
+      border-color: var(--accent);
+      background: var(--al);
+      box-shadow: 0 4px 12px rgba(79,110,247,0.15);
+    }
+
+    .mode-card-emoji { font-size: 2rem; margin-bottom: 8px; }
+    .mode-card-title { font-weight: 700; font-size: 0.9rem; }
+    .mode-card-desc { font-size: 0.7rem; color: var(--g5); margin-top: 4px; }
+
+    .upload-zone {
+      display: none;
+      margin-bottom: 20px;
+    }
+
+    .upload-zone.active {
+      display: block;
+    }
+
+    .upload-area {
+      border: 2px dashed var(--g2);
+      border-radius: 20px;
+      padding: 40px 20px;
+      text-align: center;
+      background: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .upload-area:hover {
+      border-color: var(--accent);
+      background: var(--al);
+    }
+
+    .upload-emoji { font-size: 2.5rem; margin-bottom: 12px; }
+    .upload-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+    .upload-desc { font-size: 0.75rem; color: var(--g5); }
+
+    .paste-textarea {
+      width: 100%;
+      min-height: 180px;
+      padding: 16px;
+      border: 2px solid var(--g2);
+      border-radius: 20px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      resize: vertical;
+      background: white;
+    }
+    .paste-textarea:focus { border-color: var(--accent); outline: none; }
+
+    .preview-images {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .preview-img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid var(--g2);
+    }
+
+    .generate-btn {
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 60px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin: 20px 0;
+      transition: 0.2s;
+    }
+    .generate-btn:disabled { background: var(--g2); color: var(--g5); cursor: not-allowed; }
+
+    #modeSection { margin-top: 30px; background: white; border-radius: 24px; padding: 20px 16px; }
+    .mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+    .mode-btn {
+      background: var(--g1); border: 2px solid var(--g2); border-radius: 16px;
+      padding: 14px 10px; text-align: center; cursor: pointer;
+      transition: 0.2s;
+    }
+    .mode-btn.active { background: var(--accent); color: white; }
+    .mode-emoji { font-size: 1.6rem; margin-bottom: 6px; }
+    .mode-title { font-weight: 700; font-size: 0.85rem; }
+
+    .carea { margin-top: 16px; }
+    .ccard { background: white; border: 2px solid var(--g2); border-radius: 20px; padding: 24px; margin-bottom: 16px; }
+    .kpc { background: var(--g1); border-radius: 14px; padding: 14px; margin-bottom: 10px; display: flex; gap: 12px; }
+    .kpn { width: 28px; height: 28px; background: var(--accent); color: white; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-weight: 800; }
+
+    .fcwrap { perspective: 800px; height: 220px; cursor: pointer; margin-bottom: 12px; }
+    .fcin { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.4s; }
+    .fcin.fl { transform: rotateY(180deg); }
+    .fcf { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 20px;
+      display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; }
+    .fcfront { background: var(--ink); color: white; }
+    .fcback { background: var(--accent); color: white; transform: rotateY(180deg); }
+
+    .qblock { background: white; border: 2px solid var(--g2); border-radius: 18px; padding: 18px; margin-bottom: 14px; }
+    .opt { padding: 12px 14px; border: 1.5px solid var(--g2); border-radius: 50px; margin: 8px 0; cursor: pointer; background: var(--g1); }
+    .opt.correct { background: #d4f5e2; border-color: var(--green); color: #006644; font-weight: 700; }
+    .opt.wrong { background: #fde8e8; border-color: var(--red); color: #a00; }
+    .qblock.answered .opt { pointer-events: none; }
+    .correction-box { background: var(--al); border-radius: 12px; padding: 12px; margin-top: 8px; font-size: 0.9rem; border: 1px solid var(--accent); }
+
+    .mindmap-container { display: flex; flex-direction: column; align-items: center; }
+    .mindmap-center { background: var(--accent); color: white; font-weight: bold; padding: 14px 28px; border-radius: 60px; margin-bottom: 28px; }
+    .mindmap-branches { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+    .mindmap-branch { flex: 1; min-width: 170px; background: var(--g1); border-radius: 18px; padding: 16px; border: 2px solid var(--g2); position: relative; }
+    .mindmap-branch::before { content: ''; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); width: 2px; height: 14px; background: var(--accent); }
+    .branch-title { font-weight: 800; text-align: center; padding-bottom: 10px; border-bottom: 2px solid var(--accent); color: var(--accent); }
+    .branch-leaves li { padding: 8px 0; display: flex; align-items: center; gap: 8px; list-style: none; }
+    .branch-leaves li::before { content: "•"; color: var(--accent); font-weight: bold; }
+    .branch-leaves li .leaf-text { min-width: 0; flex: 1; overflow-wrap: break-word; }
+
+    .spinner { display: inline-block; width: 22px; height: 22px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; margin-left: 8px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    body.dys { font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif; }
+    body.dys .main-content, body.dys .ccard, body.dys #modeSection { background: #fdf8e7 !important; }
+    body.dys, body.dys p, body.dys li, body.dys .kpt, body.dys .opt, body.dys button { font-size: 1.2rem !important; line-height: 2.2 !important; }
+    body.dys .syllabe-bleue { color: #1e4bd2 !important; font-weight: 700; }
+    body.dys .syllabe-rouge { color: #c62828 !important; font-weight: 700; }
+    body.dys .lettre-muette { color: #b0b0b0 !important; opacity: 0.7; }
+
+    .main-content { max-width: 800px; margin: 0 auto; padding: 20px 16px 40px; }
+    .hero { background: linear-gradient(135deg, var(--ink), var(--slate)); border-radius: 24px; padding: 24px; margin-bottom: 28px; color: white; text-align: center; }
+    .hero h2 { font-size: 1.3rem; margin-bottom: 6px; }
+    .hero p { font-size: 0.8rem; opacity: 0.8; }
+    .footer { text-align: center; padding: 20px; font-size: 0.7rem; color: var(--g5); border-top: 1px solid var(--g2); margin-top: 30px; background: white; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-area">
+    <div class="logo-icon">📖</div>
+    <div><div class="logo-text">Memo Scan</div><div class="logo-small">BY SMART LEARN</div></div>
+  </div>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <button class="dys-btn" id="langBtn">🌐 <span id="langBtnText">EN</span></button>
+    <button class="dys-btn" id="dysBtn"><span>🎨</span> <span id="dysBtnText">Mode DYS</span></button>
+  </div>
+</div>
+
+<div id="trialBanner" class="trial-banner">
+  <span>🎓 24 h gratuites</span>
+  <button id="payBtn" data-i18n="pay.btn">💳 Rs 990/an</button>
+  <button id="codeToggleBtn" data-i18n="code.btn">🔓 J'ai un code</button>
+</div>
+<div id="payInfo" style="display:none; background:white; border-bottom:1px solid var(--g2); padding:14px 20px; text-align:center; font-size:0.85rem; line-height:1.7;"></div>
+<div id="codeForm" style="display:none; background:white; border-bottom:1px solid var(--g2); padding:10px 20px; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;">
+  <input type="text" id="codeInput" data-i18n-placeholder="code.placeholder" placeholder="Ton code de déblocage" style="padding:8px 12px; border:1.5px solid var(--g2); border-radius:40px; font-size:0.85rem;">
+  <button id="codeSubmitBtn" data-i18n="code.submit" style="background:var(--accent); color:white; border:none; border-radius:40px; padding:8px 16px; font-weight:700; font-size:0.85rem; cursor:pointer;">Valider</button>
+  <span id="codeMsg" style="font-size:0.8rem;"></span>
+</div>
+
+<div class="main-content">
+  <div class="hero">
+    <h2 data-i18n="hero.title">🎓 Ton prof particulier, 24h/24, dans ta poche</h2>
+    <p data-i18n="hero.subtitle">Il lit ton cours, prépare tes exercices et t'interroge — même la veille du contrôle.</p>
+  </div>
+
+  <div class="input-modes">
+    <div class="mode-card" data-mode="photo" id="modePhotoCard" role="button" tabindex="0">
+      <div class="mode-card-emoji">📸</div>
+      <div class="mode-card-title" data-i18n="inputmode.photo.title">Prendre une photo</div>
+      <div class="mode-card-desc" data-i18n="inputmode.photo.desc">Appareil photo</div>
+    </div>
+    <div class="mode-card" data-mode="gallery" id="modeGalleryCard" role="button" tabindex="0">
+      <div class="mode-card-emoji">🖼️</div>
+      <div class="mode-card-title" data-i18n="inputmode.gallery.title">Choisir une photo</div>
+      <div class="mode-card-desc" data-i18n="inputmode.gallery.desc">Galerie</div>
+    </div>
+    <div class="mode-card" data-mode="text" id="modeTextCard" role="button" tabindex="0">
+      <div class="mode-card-emoji">📝</div>
+      <div class="mode-card-title" data-i18n="inputmode.text.title">Copier-coller</div>
+      <div class="mode-card-desc" data-i18n="inputmode.text.desc">Texte</div>
+    </div>
+  </div>
+
+  <div class="upload-zone" id="photoZone">
+    <div class="upload-area" id="cameraArea">
+      <div class="upload-emoji">📸</div>
+      <div class="upload-title" data-i18n="upload.camera.title">Prendre une photo</div>
+      <div class="upload-desc" data-i18n="upload.camera.desc">Clique pour ouvrir l'appareil photo</div>
+    </div>
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
+  </div>
+
+  <div class="upload-zone" id="galleryZone">
+    <div class="upload-area" id="galleryArea">
+      <div class="upload-emoji">🖼️</div>
+      <div class="upload-title" data-i18n="upload.gallery.title">Choisir une photo</div>
+      <div class="upload-desc" data-i18n="upload.gallery.desc">Clique pour sélectionner dans ta galerie</div>
+    </div>
+    <input type="file" id="galleryInput" accept="image/*" multiple style="display:none">
+  </div>
+
+  <div class="upload-zone" id="textZone">
+    <textarea class="paste-textarea" id="pasteText" data-i18n-placeholder="textarea.placeholder" placeholder="Colle ton cours ici... (tu peux le copier d'un PDF, d'un site web ou de tes notes)"></textarea>
+  </div>
+
+  <div id="previewContainer" class="preview-images"></div>
+
+  <button class="generate-btn" id="generateBtn" data-i18n="generate.btn" disabled>🔍 Générer mes exercices</button>
+  <p id="generateHint" style="text-align:center; font-size:0.8rem; color:var(--g5); margin-top:-10px; margin-bottom:20px;"></p>
+
+  <div id="loadingDiv" style="display:none; text-align:center; padding:20px;">
+    <div class="spinner"></div>
+    <p data-i18n="loading.text">📖 Ton prof lit ton cours et prépare tes exercices...</p>
+  </div>
+
+  <div id="errorDiv" style="display:none; background:#fde8e8; border:1.5px solid var(--red); border-radius:16px; padding:14px 18px; margin-bottom:16px; font-size:0.9rem;"></div>
+
+  <div id="modeSection" style="display:none;">
+    <div class="mode-grid">
+      <div class="mode-btn" data-mode="cours" role="button" tabindex="0"><div class="mode-emoji">📋</div><div class="mode-title" data-i18n="modegrid.cours">Cours corrigé</div></div>
+      <div class="mode-btn" data-mode="resume" role="button" tabindex="0"><div class="mode-emoji">🗂️</div><div class="mode-title" data-i18n="modegrid.resume">Résumé</div></div>
+      <div class="mode-btn" data-mode="flashcard" role="button" tabindex="0"><div class="mode-emoji">🃏</div><div class="mode-title" data-i18n="modegrid.flashcard">Flashcards</div></div>
+      <div class="mode-btn" data-mode="qcm" role="button" tabindex="0"><div class="mode-emoji">✅</div><div class="mode-title" data-i18n="modegrid.qcm">QCM</div></div>
+      <div class="mode-btn" data-mode="open" role="button" tabindex="0"><div class="mode-emoji">✍️</div><div class="mode-title" data-i18n="modegrid.open">Questions</div></div>
+      <div class="mode-btn" data-mode="exercise" role="button" tabindex="0"><div class="mode-emoji">🧮</div><div class="mode-title" data-i18n="modegrid.exercise">Exercices</div></div>
+      <div class="mode-btn" data-mode="mindmap" role="button" tabindex="0"><div class="mode-emoji">🗺️</div><div class="mode-title" data-i18n="modegrid.mindmap">Mind Map</div></div>
+      <div class="mode-btn" data-mode="interro" role="button" tabindex="0"><div class="mode-emoji">⏱️</div><div class="mode-title" data-i18n="modegrid.interro">Interro</div></div>
+    </div>
+    <div id="carea" class="carea"></div>
+  </div>
+
+  <div class="footer" data-i18n="footer.text">Memo Scan · Smart Learn — ton prof particulier de poche · leçons particulières, révisions, aide aux devoirs</div>
+</div>
+
+<script>
+  // ==================== CONFIGURATION ====================
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfrICeVrhpkUg2h7X_PUSQB6BX_Y7tX7VhxVn9wSChSkvFsAwtVhnVqiZkrbSffFZ_ig/exec";
+  const APP_TOKEN = "ms_7f3a1e9c4b6d2058";
+
+  let currentMode = null, currentInputMode = 'photo', pages = [], pastedText = '', appData = null;
+  let fcIndex = 0, fcFlipped = false, _compteurDYSGlobal = 0;
+
+  // ==================== I18N (FR/EN) ====================
+  const T = {
+    fr: {
+      'pay.btn': '💳 Rs 990/an',
+      'code.btn': "🔓 J'ai un code",
+      'code.placeholder': 'Ton code de déblocage',
+      'code.submit': 'Valider',
+      'code.checking': '⏳ Vérification...',
+      'code.invalid': 'Code invalide',
+      'code.network': '❌ Erreur réseau, réessaie',
+
+      'hero.title': '🎓 Ton prof particulier, 24h/24, dans ta poche',
+      'hero.subtitle': "Il lit ton cours, prépare tes exercices et t'interroge — même la veille du contrôle.",
+
+      'inputmode.photo.title': 'Prendre une photo',
+      'inputmode.photo.desc': 'Appareil photo',
+      'inputmode.gallery.title': 'Choisir une photo',
+      'inputmode.gallery.desc': 'Galerie',
+      'inputmode.text.title': 'Copier-coller',
+      'inputmode.text.desc': 'Texte',
+
+      'upload.camera.title': 'Prendre une photo',
+      'upload.camera.desc': "Clique pour ouvrir l'appareil photo",
+      'upload.gallery.title': 'Choisir une photo',
+      'upload.gallery.desc': 'Clique pour sélectionner dans ta galerie',
+
+      'textarea.placeholder': "Colle ton cours ici... (tu peux le copier d'un PDF, d'un site web ou de tes notes)",
+
+      'generate.btn': '🔍 Générer mes exercices',
+      'loading.text': '📖 Ton prof lit ton cours et prépare tes exercices...',
+
+      'modegrid.cours': 'Cours corrigé',
+      'modegrid.resume': 'Résumé',
+      'modegrid.flashcard': 'Flashcards',
+      'modegrid.qcm': 'QCM',
+      'modegrid.open': 'Questions',
+      'modegrid.exercise': 'Exercices',
+      'modegrid.mindmap': 'Mind Map',
+      'modegrid.interro': 'Interro',
+
+      'footer.text': 'Memo Scan · Smart Learn — ton prof particulier de poche · leçons particulières, révisions, aide aux devoirs',
+
+      'trial.left': '🎓 Essai gratuit : il te reste {h} h',
+      'trial.lastHour': "⏳ Dernière heure d'essai !",
+      'trial.expired': '🔒 Essai terminé — paie par Juice pour recevoir ton code',
+      'trial.expired.error': '🔒 Essai terminé ! Paie Rs 990/an par Juice MCB au 5845 9402 puis entre ton code de déblocage.',
+
+      'pay.info.body': '💳 <strong>Rs 990/an</strong> — le prix d\'un seul mois de leçons particulières, pour toute l\'année.<br>Paie par <strong>Juice MCB</strong> au <strong>5845 9402</strong> (Smart Learn), envoie ta preuve sur WhatsApp et reçois ton code de déblocage en quelques minutes.<br><a href="{WA_LINK}" target="_blank" rel="noopener" style="display:inline-block; margin-top:10px; background:#25D366; color:white; border-radius:40px; padding:8px 18px; font-weight:700; text-decoration:none;">📲 Envoyer ma preuve sur WhatsApp</a>',
+      'wa.text': 'Bonjour, je viens de payer Memo Scan par Juice MCB. Voici ma preuve de paiement.',
+
+      'hint.text': '👆 Colle ton cours dans la zone de texte ci-dessus pour activer le bouton',
+      'hint.photo': '👆 Prends une photo de ton cours ci-dessus pour activer le bouton',
+      'hint.gallery': '👆 Choisis une photo dans ta galerie ci-dessus pour activer le bouton',
+
+      'err.pasteEmpty': 'Colle ton cours dans le texte',
+      'err.noPhoto': 'Ajoute au moins une photo',
+      'err.oopsPrefix': "😕 Oups, ça n'a pas marché : ",
+
+      'msgvide.text': '😅 Pas de contenu pour ce mode. Réessaie de générer !',
+
+      'corr.open.btn': '📖 Voir correction',
+      'corr.exercise.btn': '🔍 Voir correction',
+      'corr.interro.btn': '✅ Voir correction',
+
+      'qcm.correct': '✅ Bonne réponse !',
+      'qcm.wrong': '❌ Mauvaise réponse.',
+      'resume.definition': '📖 Définition :',
+
+      'section.qcm': '✅ QCM',
+      'section.open': '✍️ Questions',
+      'section.exercise': '🧮 Exercices',
+      'section.interro': '⏱️ Interro'
+    },
+    en: {
+      'pay.btn': '💳 Rs 990/yr',
+      'code.btn': '🔓 I have a code',
+      'code.placeholder': 'Your unlock code',
+      'code.submit': 'Submit',
+      'code.checking': '⏳ Checking...',
+      'code.invalid': 'Invalid code',
+      'code.network': '❌ Network error, try again',
+
+      'hero.title': '🎓 Your own private tutor, 24/7, in your pocket',
+      'hero.subtitle': 'It reads your lesson, builds your exercises and quizzes you — even the night before a test.',
+
+      'inputmode.photo.title': 'Take a photo',
+      'inputmode.photo.desc': 'Camera',
+      'inputmode.gallery.title': 'Choose a photo',
+      'inputmode.gallery.desc': 'Gallery',
+      'inputmode.text.title': 'Copy-paste',
+      'inputmode.text.desc': 'Text',
+
+      'upload.camera.title': 'Take a photo',
+      'upload.camera.desc': 'Tap to open the camera',
+      'upload.gallery.title': 'Choose a photo',
+      'upload.gallery.desc': 'Tap to pick one from your gallery',
+
+      'textarea.placeholder': 'Paste your lesson here... (from a PDF, a website or your notes)',
+
+      'generate.btn': '🔍 Generate my exercises',
+      'loading.text': '📖 Your tutor is reading your lesson and preparing your exercises...',
+
+      'modegrid.cours': 'Corrected lesson',
+      'modegrid.resume': 'Summary',
+      'modegrid.flashcard': 'Flashcards',
+      'modegrid.qcm': 'Quiz',
+      'modegrid.open': 'Questions',
+      'modegrid.exercise': 'Exercises',
+      'modegrid.mindmap': 'Mind Map',
+      'modegrid.interro': 'Quick test',
+
+      'footer.text': 'Memo Scan · Smart Learn — your pocket private tutor · private tuition, revision, homework help',
+
+      'trial.left': '🎓 Free trial: {h} h left',
+      'trial.lastHour': '⏳ Last hour of your trial!',
+      'trial.expired': '🔒 Trial ended — pay via Juice to get your code',
+      'trial.expired.error': '🔒 Trial ended! Pay Rs 990/yr via Juice MCB to 5845 9402 then enter your unlock code.',
+
+      'pay.info.body': '💳 <strong>Rs 990/yr</strong> — the price of one month of private tuition, for the whole year.<br>Pay via <strong>Juice MCB</strong> to <strong>5845 9402</strong> (Smart Learn), send your proof on WhatsApp and get your unlock code within minutes.<br><a href="{WA_LINK}" target="_blank" rel="noopener" style="display:inline-block; margin-top:10px; background:#25D366; color:white; border-radius:40px; padding:8px 18px; font-weight:700; text-decoration:none;">📲 Send my proof on WhatsApp</a>',
+      'wa.text': 'Hello, I just paid for Memo Scan via Juice MCB. Here is my proof of payment.',
+
+      'hint.text': '👆 Paste your lesson in the text box above to activate the button',
+      'hint.photo': '👆 Take a photo of your lesson above to activate the button',
+      'hint.gallery': '👆 Choose a photo from your gallery above to activate the button',
+
+      'err.pasteEmpty': 'Paste your lesson in the text box',
+      'err.noPhoto': 'Add at least one photo',
+      'err.oopsPrefix': '😕 Oops, something went wrong: ',
+
+      'msgvide.text': '😅 No content for this mode. Try generating again!',
+
+      'corr.open.btn': '📖 See answer',
+      'corr.exercise.btn': '🔍 See answer',
+      'corr.interro.btn': '✅ See answer',
+
+      'qcm.correct': '✅ Correct!',
+      'qcm.wrong': '❌ Wrong answer.',
+      'resume.definition': '📖 Definition:',
+
+      'section.qcm': '✅ Quiz',
+      'section.open': '✍️ Questions',
+      'section.exercise': '🧮 Exercises',
+      'section.interro': '⏱️ Quick test'
+    }
+  };
+
+  let currentLang = (localStorage.getItem('ms_mu_lang') === 'en') ? 'en' : 'fr';
+
+  function t(key) {
+    const dict = T[currentLang] || T.fr;
+    if (dict[key] !== undefined) return dict[key];
+    return (T.fr[key] !== undefined) ? T.fr[key] : key;
+  }
+
+  function renderPayInfo() {
+    const waLink = 'https://wa.me/23058459402?text=' + encodeURIComponent(t('wa.text'));
+    document.getElementById('payInfo').innerHTML = t('pay.info.body').replace('{WA_LINK}', waLink);
+  }
+
+  function applyStaticI18n() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      el.innerHTML = t(key);
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      el.setAttribute('placeholder', t(key));
+    });
+  }
+
+  function applyLang(lang) {
+    currentLang = (lang === 'en') ? 'en' : 'fr';
+    localStorage.setItem('ms_mu_lang', currentLang);
+    document.documentElement.lang = currentLang;
+    document.getElementById('langBtnText').textContent = currentLang === 'fr' ? 'EN' : 'FR';
+
+    // Retirer le cache DYS des éléments d'interface pour éviter que l'ancienne langue ne réapparaisse
+    const dysInterfaceSelector = '.hero h2,.hero p,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,#generateHint,.footer,#payBtn,#codeToggleBtn,#codeSubmitBtn,.generate-btn';
+    document.querySelectorAll(dysInterfaceSelector).forEach(el => delete el.dataset.dysOriginal);
+
+    applyStaticI18n();
+    renderPayInfo();
+    updateGenerateButton();
+    updateTrialBanner();
+
+    if (document.body.classList.contains('dys')) appliquerCouleursDYSInterface();
+    if (appData && currentMode) setMode(currentMode);
+  }
+
+  // DOM elements
+  const modePhotoCard = document.getElementById('modePhotoCard');
+  const modeGalleryCard = document.getElementById('modeGalleryCard');
+  const modeTextCard = document.getElementById('modeTextCard');
+  const photoZone = document.getElementById('photoZone');
+  const galleryZone = document.getElementById('galleryZone');
+  const textZone = document.getElementById('textZone');
+  const cameraArea = document.getElementById('cameraArea');
+  const cameraInput = document.getElementById('cameraInput');
+  const galleryArea = document.getElementById('galleryArea');
+  const galleryInput = document.getElementById('galleryInput');
+  const previewContainer = document.getElementById('previewContainer');
+  const generateBtn = document.getElementById('generateBtn');
+  const pasteTextarea = document.getElementById('pasteText');
+
+  // ==================== UTILITAIRES ====================
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function getDeviceId() {
+    let id = localStorage.getItem('ms_device_id');
+    if (!id) {
+      const arr = new Uint8Array(16);
+      crypto.getRandomValues(arr);
+      id = Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+      localStorage.setItem('ms_device_id', id);
+    }
+    return id;
+  }
+
+  // ==================== ESSAI 24 H ====================
+  function initTrial() {
+    if (localStorage.getItem('ms_paid') === '1') {
+      document.getElementById('trialBanner').style.display = 'none';
+      return;
+    }
+    if (!localStorage.getItem('ms_mu_trial_start')) {
+      localStorage.setItem('ms_mu_trial_start', String(Date.now()));
+    }
+    updateTrialBanner();
+    setInterval(updateTrialBanner, 60000);
+  }
+
+  function updateTrialBanner() {
+    if (localStorage.getItem('ms_paid') === '1') return;
+    const start = parseInt(localStorage.getItem('ms_mu_trial_start') || '0', 10);
+    const elapsed = Date.now() - start;
+    const ONE_DAY = 24 * 60 * 60 * 1000;
+    const remaining = ONE_DAY - elapsed;
+    const banner = document.getElementById('trialBanner');
+    const span = banner.querySelector('span');
+    if (remaining <= 0) {
+      span.textContent = t('trial.expired');
+    } else {
+      const hoursLeft = Math.ceil(remaining / (60 * 60 * 1000));
+      if (hoursLeft <= 1) {
+        span.textContent = t('trial.lastHour');
+      } else {
+        span.textContent = t('trial.left').replace('{h}', hoursLeft);
+      }
+    }
+  }
+
+  function isTrialExpired() {
+    if (localStorage.getItem('ms_paid') === '1') return false;
+    const start = parseInt(localStorage.getItem('ms_mu_trial_start') || '0', 10);
+    return (Date.now() - start) >= 24 * 60 * 60 * 1000;
+  }
+
+  initTrial();
+
+  async function syncEssaiServeur() {
+    try {
+      const res = await fetch(SCRIPT_URL + '?action=register&id=' + getDeviceId() + '&token=' + encodeURIComponent(APP_TOKEN) + '&source=pwa-mu');
+      const r = await res.json();
+      if (r && r.ok === true) {
+        if (r.paid) {
+          localStorage.setItem('ms_paid', '1');
+          document.getElementById('trialBanner').style.display = 'none';
+        } else if (r.daysLeft <= 0) {
+          localStorage.setItem('ms_mu_trial_start', String(Date.now() - 25 * 3600 * 1000));
+          updateTrialBanner();
+        } else {
+          if (r.start && !isNaN(new Date(r.start).getTime())) {
+            localStorage.setItem('ms_mu_trial_start', String(new Date(r.start).getTime()));
+            updateTrialBanner();
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('syncEssaiServeur hors-ligne ou erreur :', e);
+    }
+  }
+  syncEssaiServeur();
+
+  // ==================== MODES DE SAISIE ====================
+  function setInputMode(mode) {
+    currentInputMode = mode;
+    modePhotoCard.classList.toggle('active', mode === 'photo');
+    modeGalleryCard.classList.toggle('active', mode === 'gallery');
+    modeTextCard.classList.toggle('active', mode === 'text');
+    photoZone.classList.toggle('active', mode === 'photo');
+    galleryZone.classList.toggle('active', mode === 'gallery');
+    textZone.classList.toggle('active', mode === 'text');
+    updateGenerateButton();
+  }
+
+  function updateGenerateButton() {
+    if (currentInputMode === 'text') generateBtn.disabled = !pastedText.trim();
+    else generateBtn.disabled = pages.length === 0;
+
+    const hint = document.getElementById('generateHint');
+    delete hint.dataset.dysOriginal;
+    if (!generateBtn.disabled) { hint.textContent = ''; appliquerCouleursDYSInterface(); return; }
+    if (currentInputMode === 'text') hint.textContent = t('hint.text');
+    else if (currentInputMode === 'photo') hint.textContent = t('hint.photo');
+    else hint.textContent = t('hint.gallery');
+    appliquerCouleursDYSInterface();
+  }
+
+  // ==================== UPLOAD IMAGES (ordre garanti) ====================
+  function handleImageUpload(files) {
+    if (!files || files.length === 0) return;
+    const fileList = Array.from(files).filter(f => f.type.startsWith('image/'));
+    if (fileList.length === 0) return;
+    pages = new Array(fileList.length).fill(null);
+    previewContainer.innerHTML = '';
+    // Pré-créer les éléments preview pour maintenir l'ordre
+    const previews = fileList.map(() => {
+      const img = document.createElement('img');
+      img.className = 'preview-img';
+      previewContainer.appendChild(img);
+      return img;
+    });
+    let done = 0;
+    fileList.forEach((file, idx) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imgEl = new Image();
+        imgEl.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX = 1200;
+          let w = imgEl.width, h = imgEl.height;
+          if (w > MAX || h > MAX) {
+            if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+            else { w = Math.round(w * MAX / h); h = MAX; }
+          }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(imgEl, 0, 0, w, h);
+          const compressed = canvas.toDataURL('image/jpeg', 0.85);
+          pages[idx] = { src: compressed, base64: compressed.split(',')[1], mime: 'image/jpeg' };
+          previews[idx].src = compressed;
+          done++;
+          if (done === fileList.length) {
+            // Filtrer les éventuels trous (ne devrait pas arriver)
+            pages = pages.filter(p => p !== null);
+            updateGenerateButton();
+          }
+        };
+        imgEl.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // PHOTO
+  cameraArea.addEventListener('click', () => cameraInput.click());
+  cameraInput.addEventListener('change', (e) => { if (e.target.files?.length) handleImageUpload(e.target.files); });
+
+  // GALERIE
+  galleryArea.addEventListener('click', () => galleryInput.click());
+  galleryInput.addEventListener('change', (e) => { if (e.target.files?.length) handleImageUpload(e.target.files); });
+
+  // TEXTE
+  pasteTextarea.addEventListener('input', () => {
+    pastedText = pasteTextarea.value;
+    updateGenerateButton();
+  });
+
+  // Clics sur les cartes de saisie
+  modePhotoCard.addEventListener('click', () => setInputMode('photo'));
+  modeGalleryCard.addEventListener('click', () => setInputMode('gallery'));
+  modeTextCard.addEventListener('click', () => setInputMode('text'));
+
+  // Accessibilité clavier sur les mode-card (Enter/Espace)
+  document.querySelectorAll('.mode-card').forEach(card => {
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+    });
+  });
+
+  // ==================== APPELS API ====================
+  async function callClaudeVision(imageBase64) {
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=claude`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          token: APP_TOKEN,
+          model: "claude-sonnet-4-6",
+          max_tokens: 2000,
+          messages: [{
+            role: "user",
+            content: [
+              { type: "image", source: { type: "base64", media_type: "image/jpeg", data: imageBase64 } },
+              { type: "text", text: "Retranscris TOUT le texte de cette image mot pour mot. Ne dis JAMAIS que l'écriture est illisible." }
+            ]
+          }]
+        })
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      const data = await res.json();
+      console.log('Réponse Claude:', data);
+      if (data.error) throw new Error(`API Claude: ${data.error.message || JSON.stringify(data.error)}`);
+      if (data.content && data.content[0] && data.content[0].text) return data.content[0].text;
+      if (data.completion) return data.completion;
+      throw new Error(`Format de réponse inattendu: ${JSON.stringify(data)}`);
+    } catch (error) {
+      console.error('Erreur callClaudeVision:', error);
+      throw error;
+    }
+  }
+
+  async function callDeepSeek(prompt) {
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=deepseek`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          token: APP_TOKEN,
+          messages: [{ role: "user", content: prompt }],
+          max_tokens: 4000
+        })
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      const data = await res.json();
+      console.log('Réponse DeepSeek:', data);
+      if (data.error) throw new Error(`API DeepSeek: ${typeof data.error === 'object' ? (data.error.message || JSON.stringify(data.error)) : data.error}`);
+      if (data.choices && data.choices[0] && data.choices[0].message) return data.choices[0].message.content;
+      throw new Error(`Format de réponse DeepSeek inattendu: ${JSON.stringify(data)}`);
+    } catch (error) {
+      console.error('Erreur callDeepSeek:', error);
+      throw error;
+    }
+  }
+
+  // ==================== NORMALISATION appData ====================
+  function normaliserAppData(d) {
+    if (!d) return d;
+    if (!Array.isArray(d.key_points)) d.key_points = [];
+    if (!Array.isArray(d.to_remember)) d.to_remember = [];
+    if (!Array.isArray(d.flashcards)) d.flashcards = [];
+    if (!Array.isArray(d.qcm)) d.qcm = [];
+    if (!Array.isArray(d.open_questions)) d.open_questions = [];
+    if (!Array.isArray(d.exercises)) d.exercises = [];
+    if (!Array.isArray(d.interro)) d.interro = [];
+    if (!d.mindmap || typeof d.mindmap !== 'object') {
+      d.mindmap = { center: d.topic || 'Cours', branches: [] };
+    }
+    if (!Array.isArray(d.mindmap.branches)) d.mindmap.branches = [];
+    return d;
+  }
+
+  function afficherErreur(message) {
+    const div = document.getElementById('errorDiv');
+    div.textContent = message;
+    div.style.display = 'block';
+  }
+
+  async function generateExercises() {
+    document.getElementById('errorDiv').style.display = 'none';
+    if (isTrialExpired()) {
+      afficherErreur(t('trial.expired.error'));
+      document.getElementById('payInfo').style.display = 'block';
+      return;
+    }
+    document.getElementById('loadingDiv').style.display = 'block';
+    generateBtn.disabled = true;
+
+    try {
+      let coursTexte = '';
+      if (currentInputMode === 'text') {
+        coursTexte = pastedText;
+        if (!coursTexte.trim()) throw new Error(t('err.pasteEmpty'));
+      } else {
+        if (pages.length === 0) throw new Error(t('err.noPhoto'));
+        for (let i = 0; i < pages.length; i++) {
+          const text = await callClaudeVision(pages[i].base64);
+          coursTexte += `--- PAGE ${i+1} ---\n${text}\n\n`;
+        }
+      }
+
+      const prompt = `Cours:\n${coursTexte}\n\nGénère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
+
+      const jsonRes = await callDeepSeek(prompt);
+      const match = jsonRes.match(/\{[\s\S]*\}/);
+      if (!match) throw new Error('Pas de JSON trouvé dans la réponse');
+
+      appData = normaliserAppData(JSON.parse(match[0]));
+      fcIndex = 0;
+      fcFlipped = false;
+
+      document.getElementById('loadingDiv').style.display = 'none';
+      document.getElementById('modeSection').style.display = 'block';
+      generateBtn.disabled = false;
+      setMode('cours');
+      fetch(SCRIPT_URL + '?action=activity&id=' + getDeviceId() + '&type=scan&token=' + encodeURIComponent(APP_TOKEN)).catch(() => {});
+
+    } catch(e) {
+      console.error('Erreur generateExercises:', e);
+      afficherErreur(t('err.oopsPrefix') + e.message);
+      document.getElementById('loadingDiv').style.display = 'none';
+      generateBtn.disabled = false;
+    }
+  }
+
+  generateBtn.addEventListener('click', generateExercises);
+
+  // ==================== AFFICHAGE DES MODES ====================
+  function getMsgVide() { return `<div class="ccard"><p>${t('msgvide.text')}</p></div>`; }
+
+  function setMode(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
+    const area = document.getElementById('carea');
+
+    if (mode === 'cours') {
+      area.innerHTML = `<div class="ccard">${appData.corrected_course}</div>`;
+
+    } else if (mode === 'resume') {
+      let html = `<div class="ccard"><h2>📌 ${escapeHtml(appData.topic)}</h2>`;
+      if (appData.key_points.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
+      appData.key_points.forEach((p, i) => html += `<div class="kpc"><div class="kpn">${i+1}</div><div>${escapeHtml(p)}</div></div>`);
+      if (appData.definition) html += `<div class="kpc"><strong>${t('resume.definition')}</strong> ${escapeHtml(appData.definition)}</div>`;
+      html += `</div>`;
+      area.innerHTML = html;
+
+    } else if (mode === 'flashcard') {
+      if (appData.flashcards.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
+      const card = appData.flashcards[fcIndex];
+      area.innerHTML = `<div class="ccard"><div class="fcwrap" onclick="flipFlashcard()"><div class="fcin ${fcFlipped ? 'fl' : ''}"><div class="fcf fcfront">${escapeHtml(card.question)}</div><div class="fcf fcback">${escapeHtml(card.answer)}</div></div></div><div style="display:flex; justify-content:space-between;"><button onclick="prevFlashcard()">◀</button><span style="font-size:0.8rem;align-self:center;">${fcIndex+1}/${appData.flashcards.length}</span><button onclick="nextFlashcard()">▶</button></div></div>`;
+
+    } else if (mode === 'qcm') {
+      if (appData.qcm.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
+      let html = `<div class="ccard"><h2>${t('section.qcm')}</h2>`;
+      appData.qcm.forEach((q, qi) => {
+        html += `<div class="qblock" id="qblock-${qi}"><p><strong>${escapeHtml(q.question)}</strong></p>`;
+        q.options.forEach((opt, oi) => {
+          html += `<div class="opt" role="button" tabindex="0" data-qi="${qi}" data-oi="${oi}" onclick="repondreQCM(${qi},${oi})">${String.fromCharCode(65+oi)}. ${escapeHtml(opt)}</div>`;
+        });
+        html += `<div id="fb-${qi}"></div></div>`;
+      });
+      html += `</div>`;
+      area.innerHTML = html;
+      // Accessibilité clavier sur les opts
+      area.querySelectorAll('.opt').forEach(opt => {
+        opt.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); opt.click(); }
+        });
+      });
+
+    } else if (mode === 'open') {
+      if (appData.open_questions.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
+      let html = `<div class="ccard"><h2>${t('section.open')}</h2>`;
+      appData.open_questions.forEach((q, idx) => {
+        html += `<div class="qblock"><p><strong>${escapeHtml(q.question)}</strong></p><textarea rows="4" style="width:100%; border-radius:12px; padding:10px;"></textarea><button onclick="voirCorrection('open',${idx})">${t('corr.open.btn')}</button><div class="correction-box" id="corr-open-${idx}" style="display:none;"></div></div>`;
+      });
+      html += `</div>`;
+      area.innerHTML = html;
+
+    } else if (mode === 'exercise') {
+      if (appData.exercises.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
+      let html = `<div class="ccard"><h2>${t('section.exercise')}</h2>`;
+      appData.exercises.forEach((ex, idx) => {
+        html += `<div class="qblock"><p><strong>${escapeHtml(ex.tag)}</strong><br>${escapeHtml(ex.statement)}</p><textarea rows="4" style="width:100%; padding:10px;"></textarea><button onclick="voirCorrection('exercise',${idx})">${t('corr.exercise.btn')}</button><div class="correction-box" id="corr-exercise-${idx}" style="display:none;"></div></div>`;
+      });
+      html += `</div>`;
+      area.innerHTML = html;
+
+    } else if (mode === 'mindmap') {
+      let html = `<div class="ccard"><div class="mindmap-container"><div class="mindmap-center">${escapeHtml(appData.mindmap.center)}</div><div class="mindmap-branches">`;
+      if (appData.mindmap.branches.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
+      appData.mindmap.branches.forEach(b => {
+        html += `<div class="mindmap-branch"><div class="branch-title">${escapeHtml(b.label)}</div><ul class="branch-leaves">${(b.leaves||[]).map(l => `<li><span class="leaf-text">${escapeHtml(l)}</span></li>`).join('')}</ul></div>`;
+      });
+      html += `</div></div></div>`;
+      area.innerHTML = html;
+
+    } else if (mode === 'interro') {
+      if (appData.interro.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
+      let html = `<div class="ccard"><h2>${t('section.interro')}</h2>`;
+      appData.interro.forEach((q, idx) => {
+        html += `<div class="qblock"><p><strong>${escapeHtml(q.question)}</strong></p><textarea rows="3" style="width:100%; padding:10px;"></textarea><button onclick="voirCorrection('interro',${idx})">${t('corr.interro.btn')}</button><div class="correction-box" id="corr-interro-${idx}" style="display:none;"></div></div>`;
+      });
+      html += `</div>`;
+      area.innerHTML = html;
+    }
+
+    appliquerCouleursDYS();
+  }
+
+  // ==================== CORRECTIONS INLINE (sûres) ====================
+  window.voirCorrection = function(mode, idx) {
+    let reponse = '';
+    if (mode === 'open') reponse = appData.open_questions[idx] ? appData.open_questions[idx].model_answer : '';
+    else if (mode === 'exercise') reponse = appData.exercises[idx] ? appData.exercises[idx].solution : '';
+    else if (mode === 'interro') reponse = appData.interro[idx] ? appData.interro[idx].answer : '';
+    const box = document.getElementById(`corr-${mode}-${idx}`);
+    if (!box) return;
+    if (box.style.display !== 'none') { box.style.display = 'none'; return; }
+    box.innerHTML = escapeHtml(reponse);
+    box.style.display = 'block';
+    // Appliquer DYS si actif
+    if (document.body.classList.contains('dys')) {
+      box.dataset.dysOriginal = reponse;
+      const res = colorerTexteDYS(reponse, _compteurDYSGlobal);
+      box.innerHTML = res.html;
+    }
+  };
+
+  window.flipFlashcard = () => { fcFlipped = !fcFlipped; setMode('flashcard'); };
+  window.prevFlashcard = () => { fcIndex = (fcIndex - 1 + appData.flashcards.length) % appData.flashcards.length; fcFlipped = false; setMode('flashcard'); };
+  window.nextFlashcard = () => { fcIndex = (fcIndex + 1) % appData.flashcards.length; fcFlipped = false; setMode('flashcard'); };
+
+  window.repondreQCM = (qi, oi) => {
+    const q = appData.qcm[qi];
+    const fb = document.getElementById(`fb-${qi}`);
+    const block = document.getElementById(`qblock-${qi}`);
+    if (!q || !fb || !block || block.classList.contains('answered')) return;
+    // Colorer les options
+    const opts = block.querySelectorAll('.opt');
+    opts.forEach((opt, i) => {
+      if (i === q.correct) opt.classList.add('correct');
+      else if (i === oi && i !== q.correct) opt.classList.add('wrong');
+    });
+    // Marquer comme répondu
+    block.classList.add('answered');
+    // Feedback
+    const expl = escapeHtml(q.explanation || '');
+    if (oi === q.correct) {
+      fb.innerHTML = `<span style="color:var(--green)">${t('qcm.correct')}</span> ${expl}`;
+    } else {
+      fb.innerHTML = `<span style="color:var(--red)">${t('qcm.wrong')}</span> ${expl}`;
+    }
+    appliquerCouleursDYS();
+  };
+
+  // Accessibilité clavier sur les mode-btn
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => setMode(btn.dataset.mode));
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+    });
+  });
+
+  // ==================== MODE DYS ====================
+  const SONS = ['oin','ein','ien','eau','ain','ion','ill','an','am','in','im','yn','on','om','ou','oi','au','ai','eu','ui','un','em','en','er','ez','ei','ph','ch','gn','gu','qu','th','é','è','ê','à','â','ô','î','ï','û','ù','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+  function decouperSyllabes(mot) { let r=[], i=0, m=mot.toLowerCase(); while(i<m.length) { let t=false; for(let s of SONS) if(m.substr(i,s.length)===s) { r.push(mot.substr(i,s.length)); i+=s.length; t=true; break; } if(!t) { r.push(mot[i]); i++; } } return r; }
+  function estEMuetFinal(mot) { let m=mot.toLowerCase(); if(m.length<2||m.slice(-1)!=='e') return false; if(m.slice(-2)==='ée') return true; if(['que','gue','ce','ge'].includes(m.slice(-3))) return true; if('aeiouyàâôîïûù'.includes(m.slice(-2,-1))) return false; if(['le','me','te','se','je','ne','de','ce'].includes(m)) return false; return true; }
+  function getConsonneMuetteFin(mot) { let m=mot.toLowerCase(); if(m.length<2) return null; let fin=m.slice(-1); return ['t','s','x','n','d','p','g'].includes(fin)?fin:null; }
+  function traiterMotDYS(mot,compteurDepart) { if(!mot||!mot.trim()) return {html:mot,compteur:compteurDepart}; let poncAv='',poncFin='',motPur=mot; let mAv=mot.match(/^([«"'(]+)/); if(mAv){poncAv=mAv[0];motPur=mot.slice(poncAv.length);} let mFin=motPur.match(/([.,!?;:…»"')]+)$/); if(mFin){poncFin=mFin[0];motPur=motPur.slice(0,-poncFin.length);} if(!motPur) return {html:poncAv+poncFin,compteur:compteurDepart}; let syllabes=decouperSyllabes(motPur), html=poncAv, compteur=compteurDepart, eMuet=estEMuetFinal(motPur), consMuette=getConsonneMuetteFin(motPur); syllabes.forEach((syl,idx)=>{ let dern=idx===syllabes.length-1; if(dern&&eMuet&&syl.slice(-1)==='e'){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">e</span>`; } else if(dern&&consMuette&&syl.slice(-1)===consMuette){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">${consMuette}</span>`; } else{ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${syl}</span>`; compteur++; } }); return {html:html+poncFin,compteur:compteur}; }
+  function colorerTexteDYS(texte,startCompteur){ if(!document.body.classList.contains('dys')) return {html:texte,compteur:startCompteur}; if(!texte) return {html:texte,compteur:startCompteur}; let tokens=texte.split(/(\s+)/g), html='', compteur=startCompteur; for(let tok of tokens){ if(/^\s+$/.test(tok)){ html+=tok; continue; } let res=traiterMotDYS(tok,compteur); html+=res.html; compteur=res.compteur; } return {html,compteur}; }
+  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,li,.kpt,.deft,.exst,.fcq,.qtxt,.opt,.branch-title,.branch-leaves li .leaf-text,.question-text,.correction-box,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
+  function appliquerCouleursDYSInterface(){ if(!document.body.classList.contains('dys')) return; let compteur=0; let els=document.querySelectorAll('.hero h2,.hero p,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,#generateHint,.footer'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,compteur); el.innerHTML=res.html; compteur=res.compteur; } }); }
+  function toggleDyslexia(){ document.body.classList.toggle('dys'); let a=document.body.classList.contains('dys'); let btn=document.getElementById('dysBtn'), txt=document.getElementById('dysBtnText'); if(a){ btn.classList.add('active'); txt.innerHTML='DYS ● ON'; localStorage.setItem('ms_dys_mode','1'); appliquerCouleursDYSInterface(); } else{ btn.classList.remove('active'); txt.innerHTML='Mode DYS'; localStorage.setItem('ms_dys_mode','0'); document.querySelectorAll('[data-dys-original]').forEach(el=>el.textContent=el.dataset.dysOriginal); } if(appData&&currentMode) setMode(currentMode); }
+  if(localStorage.getItem('ms_dys_mode')==='1') toggleDyslexia();
+  document.getElementById('dysBtn').addEventListener('click',toggleDyslexia);
+
+  document.getElementById('payBtn').addEventListener('click', () => {
+    const info = document.getElementById('payInfo');
+    info.style.display = (info.style.display === 'none' || !info.style.display) ? 'block' : 'none';
+  });
+
+  document.getElementById('codeToggleBtn').addEventListener('click', () => {
+    const f = document.getElementById('codeForm');
+    f.style.display = f.style.display === 'none' ? 'flex' : 'none';
+  });
+  document.getElementById('codeSubmitBtn').addEventListener('click', async () => {
+    const code = document.getElementById('codeInput').value.trim();
+    const msg = document.getElementById('codeMsg');
+    if (!code) return;
+    msg.style.color = 'var(--g5)'; msg.textContent = t('code.checking');
+    try {
+      const res = await fetch(SCRIPT_URL + '?action=redeemCode&id=' + getDeviceId() + '&code=' + encodeURIComponent(code) + '&token=' + encodeURIComponent(APP_TOKEN));
+      const r = await res.json();
+      if (r.ok) {
+        localStorage.setItem('ms_paid', '1');
+        document.getElementById('trialBanner').style.display = 'none';
+        document.getElementById('codeForm').style.display = 'none';
+        document.getElementById('payInfo').style.display = 'none';
+      } else { msg.style.color = 'var(--red)'; msg.textContent = '❌ ' + (r.error || t('code.invalid')); }
+    } catch (e) { msg.style.color = 'var(--red)'; msg.textContent = t('code.network'); }
+  });
+
+  document.getElementById('langBtn').addEventListener('click', () => {
+    applyLang(currentLang === 'fr' ? 'en' : 'fr');
+  });
+
+  applyLang(currentLang);
+  setInputMode('photo');
+
+  // ==================== SERVICE WORKER ====================
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('✅ SW enregistré', reg))
+      .catch(err => console.error('❌ Erreur SW:', err));
+  }
+</script>
+</body>
+</html>
