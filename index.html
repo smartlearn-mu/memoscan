@@ -582,7 +582,7 @@
         body: JSON.stringify({
           token: APP_TOKEN,
           messages: [{ role: "user", content: prompt }],
-          max_tokens: 4000
+          max_tokens: 8000
         })
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
@@ -642,7 +642,7 @@
         }
       }
 
-      const prompt = `Cours:\n${coursTexte}\n\nGénère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
+      const prompt = `Cours:\n${coursTexte}\n\nTu es un professeur particulier exigeant. En te basant UNIQUEMENT sur le contenu du cours ci-dessus (n'invente aucune notion absente du cours), prépare un entraînement complet. Quantités attendues si le contenu le permet : 8 à 12 flashcards couvrant toutes les notions, 6 à 8 questions de QCM avec des pièges plausibles, 4 à 6 questions ouvertes dont les 2 dernières plus difficiles (expliquer, comparer, appliquer), 3 à 5 exercices, 5 à 8 questions d'interro. Si le cours est court, réduis ces quantités plutôt que d'inventer. Génère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
 
       const jsonRes = await callDeepSeek(prompt);
       const match = jsonRes.match(/\{[\s\S]*\}/);
