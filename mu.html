@@ -52,16 +52,16 @@
 
     :root {
       --ink: #111218; --slate: #1e2130; --paper: #f4f7fc;
-      --accent: #4f6ef7; --al: #eef0fe; --gold: #f5a623;
+      --accent: #4f6ef7; --accent-deep: #3d5ce0; --al: #eef0fe; --gold: #f5a623;
       --green: #00c48c; --red: #ff4757;
-      --g1: #f8f9fc; --g2: #e8ecf5; --g5: #8b90a7;
+      --g1: #f8f9fc; --g2: #e8ecf5; --g5: #8b90a7; --g6: #565d75;
     }
 
     body { font-family: system-ui, sans-serif; background: var(--paper); color: var(--ink); }
 
     .header {
       background: white; border-bottom: 1px solid var(--g2);
-      padding: 12px 20px; display: flex; align-items: center;
+      padding: 8px 14px; display: flex; align-items: center;
       justify-content: space-between; position: sticky; top: 0; z-index: 100;
     }
 
@@ -73,24 +73,27 @@
 
     .dys-btn {
       background: var(--g1); border: 1.5px solid var(--g2); border-radius: 40px;
-      padding: 6px 16px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
-      display: flex; align-items: center; gap: 6px;
+      padding: 8px 12px; font-size: 0.8rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; min-height: 44px;
     }
-    .dys-btn.active { background: var(--accent); color: white; }
+    .dys-btn.active { background: var(--accent-deep); color: white; }
 
     .trial-banner {
-      background: #e8c87a; color: #1e2130; padding: 10px 20px;
+      background: #e8c87a; color: #1e2130; padding: 5px 10px;
       text-align: center; font-size: 0.8rem; font-weight: 600;
-      display: flex; align-items: center; justify-content: center; gap: 12px;
-      flex-wrap: wrap;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      flex-wrap: nowrap;
     }
-    .trial-banner button { background: #1e2130; color: #e8c87a; border: none;
-      border-radius: 40px; padding: 4px 14px; cursor: pointer; }
+    .trial-banner span { white-space: nowrap; }
+    .trial-banner.expired { padding: 12px 20px; font-weight: 700; flex-wrap: wrap; }
+    .trial-banner.expired span { white-space: normal; }
+    .trial-banner button { background: #1e2130; color: #e8c87a; border: none; font-size: 0.8rem;
+      border-radius: 40px; padding: 4px 12px; min-height: 40px; cursor: pointer; white-space: nowrap; }
 
     .input-modes {
       display: flex;
-      gap: 12px;
-      margin-bottom: 24px;
+      gap: 10px;
+      margin-bottom: 14px;
       flex-wrap: wrap;
     }
 
@@ -98,8 +101,8 @@
       flex: 1;
       background: white;
       border: 2px solid var(--g2);
-      border-radius: 20px;
-      padding: 20px 12px;
+      border-radius: 16px;
+      padding: 12px 8px;
       text-align: center;
       cursor: pointer;
       transition: 0.2s;
@@ -111,9 +114,9 @@
       box-shadow: 0 4px 12px rgba(79,110,247,0.15);
     }
 
-    .mode-card-emoji { font-size: 2rem; margin-bottom: 8px; }
-    .mode-card-title { font-weight: 700; font-size: 0.9rem; }
-    .mode-card-desc { font-size: 0.7rem; color: var(--g5); margin-top: 4px; }
+    .mode-card-emoji { font-size: 1.5rem; margin-bottom: 4px; }
+    .mode-card-title { font-weight: 700; font-size: 0.95rem; }
+    .mode-card-desc { font-size: 0.875rem; color: var(--g6); margin-top: 4px; }
 
     .upload-zone {
       display: none;
@@ -126,8 +129,8 @@
 
     .upload-area {
       border: 2px dashed var(--g2);
-      border-radius: 20px;
-      padding: 40px 20px;
+      border-radius: 16px;
+      padding: 22px 16px;
       text-align: center;
       background: white;
       cursor: pointer;
@@ -139,9 +142,9 @@
       background: var(--al);
     }
 
-    .upload-emoji { font-size: 2.5rem; margin-bottom: 12px; }
-    .upload-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
-    .upload-desc { font-size: 0.75rem; color: var(--g5); }
+    .upload-emoji { font-size: 1.7rem; margin-bottom: 6px; }
+    .upload-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+    .upload-desc { font-size: 0.875rem; color: var(--g6); }
 
     .paste-textarea {
       width: 100%;
@@ -150,7 +153,7 @@
       border: 2px solid var(--g2);
       border-radius: 20px;
       font-family: inherit;
-      font-size: 0.9rem;
+      font-size: 16px;
       resize: vertical;
       background: white;
     }
@@ -172,7 +175,7 @@
 
     .generate-btn {
       width: 100%;
-      background: var(--accent);
+      background: var(--accent-deep);
       color: white;
       border: none;
       padding: 16px;
@@ -180,26 +183,30 @@
       font-weight: 800;
       font-size: 1.1rem;
       cursor: pointer;
-      margin: 20px 0;
+      margin: 12px 0;
       transition: 0.2s;
     }
-    .generate-btn:disabled { background: var(--g2); color: var(--g5); cursor: not-allowed; }
+    .generate-btn:disabled { background: var(--g2); color: var(--g6); cursor: not-allowed; }
 
     #modeSection { margin-top: 30px; background: white; border-radius: 24px; padding: 20px 16px; }
-    .mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+    .mode-groups { display: flex; flex-direction: column; gap: 18px; margin-bottom: 24px; }
+    .mode-group-label { font-size: 0.8rem; text-transform: uppercase; color: var(--g6); letter-spacing: 0.4px; font-weight: 700; margin-bottom: 10px; }
+    .mode-pills { display: flex; flex-wrap: wrap; gap: 10px; }
     .mode-btn {
-      background: var(--g1); border: 2px solid var(--g2); border-radius: 16px;
-      padding: 14px 10px; text-align: center; cursor: pointer;
-      transition: 0.2s;
+      display: inline-flex; align-items: center; gap: 6px;
+      min-height: 44px; padding: 10px 14px; border-radius: 40px;
+      background: white; border: 1.5px solid var(--g2);
+      cursor: pointer; font-size: 0.875rem; font-weight: 700; transition: 0.2s;
     }
-    .mode-btn.active { background: var(--accent); color: white; }
-    .mode-emoji { font-size: 1.6rem; margin-bottom: 6px; }
-    .mode-title { font-weight: 700; font-size: 0.85rem; }
+    .mode-btn.active { background: var(--accent-deep); color: white; border-color: var(--accent-deep); }
+    /* Teintes douces par famille de modes (zone enfant) */
+    .mode-group.learn .mode-btn:not(.active) { background: var(--al); }
+    .mode-group.practice .mode-btn:not(.active) { background: #fdf6e3; }
 
     .carea { margin-top: 16px; }
     .ccard { background: white; border: 2px solid var(--g2); border-radius: 20px; padding: 24px; margin-bottom: 16px; }
     .kpc { background: var(--g1); border-radius: 14px; padding: 14px; margin-bottom: 10px; display: flex; gap: 12px; }
-    .kpn { width: 28px; height: 28px; background: var(--accent); color: white; border-radius: 10px;
+    .kpn { width: 28px; height: 28px; background: var(--accent-deep); color: white; border-radius: 10px;
       display: flex; align-items: center; justify-content: center; font-weight: 800; }
 
     .fcwrap { perspective: 800px; height: 220px; cursor: pointer; margin-bottom: 12px; }
@@ -209,6 +216,11 @@
       display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; }
     .fcfront { background: var(--ink); color: white; }
     .fcback { background: var(--accent); color: white; transform: rotateY(180deg); }
+    .fcnav { display: flex; align-items: center; gap: 10px; }
+    .fcnav-btn { flex: 1; min-height: 48px; background: white; border: 1.5px solid var(--g2);
+      border-radius: 14px; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
+    .fcnav-count { font-size: 0.85rem; color: var(--g6); min-width: 46px; text-align: center; }
+    .fchint { text-align: center; font-size: 0.8rem; color: var(--g6); margin-top: 10px; }
 
     .qblock { background: white; border: 2px solid var(--g2); border-radius: 18px; padding: 18px; margin-bottom: 14px; }
     .opt { padding: 12px 14px; border: 1.5px solid var(--g2); border-radius: 50px; margin: 8px 0; cursor: pointer; background: var(--g1); }
@@ -237,11 +249,11 @@
     body.dys .syllabe-rouge { color: #c62828 !important; font-weight: 700; }
     body.dys .lettre-muette { color: #b0b0b0 !important; opacity: 0.7; }
 
-    .main-content { max-width: 800px; margin: 0 auto; padding: 20px 16px 40px; }
-    .hero { background: linear-gradient(135deg, var(--ink), var(--slate)); border-radius: 24px; padding: 24px; margin-bottom: 28px; color: white; text-align: center; }
-    .hero h2 { font-size: 1.3rem; margin-bottom: 6px; }
-    .hero p { font-size: 0.8rem; opacity: 0.8; }
-    .footer { text-align: center; padding: 20px; font-size: 0.7rem; color: var(--g5); border-top: 1px solid var(--g2); margin-top: 30px; background: white; }
+    .main-content { max-width: 800px; margin: 0 auto; padding: 12px 16px 40px; }
+    .hero { background: var(--ink); border-radius: 18px; padding: 10px 12px; margin-bottom: 14px; color: white; }
+    .hero-guide { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .hero-step { background: rgba(255,255,255,0.14); border-radius: 40px; padding: 8px 14px; font-size: 0.875rem; font-weight: 600; }
+    .footer { text-align: center; padding: 20px; font-size: 0.78rem; color: var(--g6); border-top: 1px solid var(--g2); margin-top: 30px; background: white; }
   </style>
 </head>
 <body>
@@ -260,19 +272,21 @@
 <div id="trialBanner" class="trial-banner">
   <span>🎓 24 h gratuites</span>
   <button id="payBtn" data-i18n="pay.btn">💳 Rs 990/an</button>
-  <button id="codeToggleBtn" data-i18n="code.btn">🔓 J'ai un code</button>
 </div>
-<div id="payInfo" style="display:none; background:white; border-bottom:1px solid var(--g2); padding:14px 20px; text-align:center; font-size:0.85rem; line-height:1.7;"></div>
+<div id="payInfo" style="display:none; background:white; border-bottom:1px solid var(--g2); padding:14px 20px; text-align:center; font-size:0.875rem; line-height:1.7;"></div>
 <div id="codeForm" style="display:none; background:white; border-bottom:1px solid var(--g2); padding:10px 20px; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;">
-  <input type="text" id="codeInput" data-i18n-placeholder="code.placeholder" placeholder="Ton code de déblocage" style="padding:8px 12px; border:1.5px solid var(--g2); border-radius:40px; font-size:0.85rem;">
-  <button id="codeSubmitBtn" data-i18n="code.submit" style="background:var(--accent); color:white; border:none; border-radius:40px; padding:8px 16px; font-weight:700; font-size:0.85rem; cursor:pointer;">Valider</button>
+  <input type="text" id="codeInput" data-i18n-placeholder="code.placeholder" placeholder="Ton code de déblocage" style="padding:8px 12px; border:1.5px solid var(--g2); border-radius:40px; font-size:16px;">
+  <button id="codeSubmitBtn" data-i18n="code.submit" style="background:var(--accent-deep); color:white; border:none; border-radius:40px; padding:8px 16px; font-weight:700; font-size:0.85rem; cursor:pointer;">Valider</button>
   <span id="codeMsg" style="font-size:0.8rem;"></span>
 </div>
 
 <div class="main-content">
   <div class="hero">
-    <h2 data-i18n="hero.title">🎓 Ton prof particulier, 24h/24, dans ta poche</h2>
-    <p data-i18n="hero.subtitle">Il lit ton cours, prépare tes exercices et t'interroge — même la veille du contrôle.</p>
+    <div class="hero-guide">
+      <span class="hero-step" data-i18n="hero.step1">1 📸 Photographie</span>
+      <span class="hero-step" data-i18n="hero.step2">2 ⚡ Génère</span>
+      <span class="hero-step" data-i18n="hero.step3">3 🎯 Révise</span>
+    </div>
   </div>
 
   <div class="input-modes">
@@ -318,7 +332,7 @@
   <div id="previewContainer" class="preview-images"></div>
 
   <button class="generate-btn" id="generateBtn" data-i18n="generate.btn" disabled>🔍 Générer mes exercices</button>
-  <p id="generateHint" style="text-align:center; font-size:0.8rem; color:var(--g5); margin-top:-10px; margin-bottom:20px;"></p>
+  <p id="generateHint" style="text-align:center; font-size:0.8rem; color:var(--g6); margin-top:-10px; margin-bottom:20px;"></p>
 
   <div id="loadingDiv" style="display:none; text-align:center; padding:20px;">
     <div class="spinner"></div>
@@ -328,15 +342,25 @@
   <div id="errorDiv" style="display:none; background:#fde8e8; border:1.5px solid var(--red); border-radius:16px; padding:14px 18px; margin-bottom:16px; font-size:0.9rem;"></div>
 
   <div id="modeSection" style="display:none;">
-    <div class="mode-grid">
-      <div class="mode-btn" data-mode="cours" role="button" tabindex="0"><div class="mode-emoji">📋</div><div class="mode-title" data-i18n="modegrid.cours">Cours corrigé</div></div>
-      <div class="mode-btn" data-mode="resume" role="button" tabindex="0"><div class="mode-emoji">🗂️</div><div class="mode-title" data-i18n="modegrid.resume">Résumé</div></div>
-      <div class="mode-btn" data-mode="flashcard" role="button" tabindex="0"><div class="mode-emoji">🃏</div><div class="mode-title" data-i18n="modegrid.flashcard">Flashcards</div></div>
-      <div class="mode-btn" data-mode="qcm" role="button" tabindex="0"><div class="mode-emoji">✅</div><div class="mode-title" data-i18n="modegrid.qcm">QCM</div></div>
-      <div class="mode-btn" data-mode="open" role="button" tabindex="0"><div class="mode-emoji">✍️</div><div class="mode-title" data-i18n="modegrid.open">Questions</div></div>
-      <div class="mode-btn" data-mode="exercise" role="button" tabindex="0"><div class="mode-emoji">🧮</div><div class="mode-title" data-i18n="modegrid.exercise">Exercices</div></div>
-      <div class="mode-btn" data-mode="mindmap" role="button" tabindex="0"><div class="mode-emoji">🗺️</div><div class="mode-title" data-i18n="modegrid.mindmap">Mind Map</div></div>
-      <div class="mode-btn" data-mode="interro" role="button" tabindex="0"><div class="mode-emoji">⏱️</div><div class="mode-title" data-i18n="modegrid.interro">Interro</div></div>
+    <div class="mode-groups">
+      <div class="mode-group learn">
+        <div class="mode-group-label" data-i18n="group.learn">📖 Apprendre</div>
+        <div class="mode-pills">
+          <div class="mode-btn" data-mode="cours" role="button" tabindex="0">📋 <span class="mode-title" data-i18n="modegrid.cours">Cours corrigé</span></div>
+          <div class="mode-btn" data-mode="resume" role="button" tabindex="0">🗂️ <span class="mode-title" data-i18n="modegrid.resume">Résumé</span></div>
+          <div class="mode-btn" data-mode="mindmap" role="button" tabindex="0">🗺️ <span class="mode-title" data-i18n="modegrid.mindmap">Mind Map</span></div>
+        </div>
+      </div>
+      <div class="mode-group practice">
+        <div class="mode-group-label" data-i18n="group.practice">🎯 S'entraîner</div>
+        <div class="mode-pills">
+          <div class="mode-btn" data-mode="flashcard" role="button" tabindex="0">🃏 <span class="mode-title" data-i18n="modegrid.flashcard">Flashcards</span></div>
+          <div class="mode-btn" data-mode="qcm" role="button" tabindex="0">✅ <span class="mode-title" data-i18n="modegrid.qcm">QCM</span></div>
+          <div class="mode-btn" data-mode="open" role="button" tabindex="0">✍️ <span class="mode-title" data-i18n="modegrid.open">Questions</span></div>
+          <div class="mode-btn" data-mode="exercise" role="button" tabindex="0">🧮 <span class="mode-title" data-i18n="modegrid.exercise">Exercices</span></div>
+          <div class="mode-btn" data-mode="interro" role="button" tabindex="0">⏱️ <span class="mode-title" data-i18n="modegrid.interro">Interro</span></div>
+        </div>
+      </div>
     </div>
     <div id="carea" class="carea"></div>
   </div>
@@ -363,8 +387,9 @@
       'code.invalid': 'Code invalide',
       'code.network': '❌ Erreur réseau, réessaie',
 
-      'hero.title': '🎓 Ton prof particulier, 24h/24, dans ta poche',
-      'hero.subtitle': "Il lit ton cours, prépare tes exercices et t'interroge — même la veille du contrôle.",
+      'hero.step1': '1 📸 Photographie',
+      'hero.step2': '2 ⚡ Génère',
+      'hero.step3': '3 🎯 Révise',
 
       'inputmode.photo.title': 'Prendre une photo',
       'inputmode.photo.desc': 'Appareil photo',
@@ -392,9 +417,16 @@
       'modegrid.mindmap': 'Mind Map',
       'modegrid.interro': 'Interro',
 
+      'group.learn': '📖 Apprendre',
+      'group.practice': '🎯 S\'entraîner',
+
+      'flashcard.prev': '◀ Précédente',
+      'flashcard.next': 'Suivante ▶',
+      'flashcard.hint': '👆 Touche la carte pour la retourner',
+
       'footer.text': 'Memo Scan · Smart Learn — ton prof particulier de poche · leçons particulières, révisions, aide aux devoirs',
 
-      'trial.left': '🎓 Essai gratuit : il te reste {h} h',
+      'trial.left': '🎓 Essai gratuit — {h} h restantes',
       'trial.lastHour': "⏳ Dernière heure d'essai !",
       'trial.expired': '🔒 Essai terminé — paie par Juice pour recevoir ton code',
       'trial.expired.error': '🔒 Essai terminé ! Paie Rs 990/an par Juice MCB au 5845 9402 puis entre ton code de déblocage.',
@@ -415,9 +447,12 @@
       'corr.open.btn': '📖 Voir correction',
       'corr.exercise.btn': '🔍 Voir correction',
       'corr.interro.btn': '✅ Voir correction',
+      'corr.gentle.prefix': '💡 Regarde bien : ',
 
-      'qcm.correct': '✅ Bonne réponse !',
-      'qcm.wrong': '❌ Mauvaise réponse.',
+      'qcm.correct1': '🎉 Bravo !',
+      'qcm.correct2': '💪 Bien joué !',
+      'qcm.correct3': '⭐ Excellent !',
+      'qcm.wrong.gentle': '😊 Presque ! La bonne réponse est en vert.',
       'resume.definition': '📖 Définition :',
 
       'section.qcm': '✅ QCM',
@@ -434,8 +469,9 @@
       'code.invalid': 'Invalid code',
       'code.network': '❌ Network error, try again',
 
-      'hero.title': '🎓 Your own private tutor, 24/7, in your pocket',
-      'hero.subtitle': 'It reads your lesson, builds your exercises and quizzes you — even the night before a test.',
+      'hero.step1': '1 📸 Snap',
+      'hero.step2': '2 ⚡ Generate',
+      'hero.step3': '3 🎯 Revise',
 
       'inputmode.photo.title': 'Take a photo',
       'inputmode.photo.desc': 'Camera',
@@ -463,6 +499,13 @@
       'modegrid.mindmap': 'Mind Map',
       'modegrid.interro': 'Quick test',
 
+      'group.learn': '📖 Learn',
+      'group.practice': '🎯 Practice',
+
+      'flashcard.prev': '◀ Previous',
+      'flashcard.next': 'Next ▶',
+      'flashcard.hint': '👆 Tap the card to flip it',
+
       'footer.text': 'Memo Scan · Smart Learn — your pocket private tutor · private tuition, revision, homework help',
 
       'trial.left': '🎓 Free trial: {h} h left',
@@ -486,9 +529,12 @@
       'corr.open.btn': '📖 See answer',
       'corr.exercise.btn': '🔍 See answer',
       'corr.interro.btn': '✅ See answer',
+      'corr.gentle.prefix': '💡 Take a look: ',
 
-      'qcm.correct': '✅ Correct!',
-      'qcm.wrong': '❌ Wrong answer.',
+      'qcm.correct1': '🎉 Well done!',
+      'qcm.correct2': '💪 Nice one!',
+      'qcm.correct3': '⭐ Excellent!',
+      'qcm.wrong.gentle': '😊 Almost! The right answer is in green.',
       'resume.definition': '📖 Definition:',
 
       'section.qcm': '✅ Quiz',
@@ -508,7 +554,8 @@
 
   function renderPayInfo() {
     const waLink = 'https://wa.me/23058459402?text=' + encodeURIComponent(t('wa.text'));
-    document.getElementById('payInfo').innerHTML = t('pay.info.body').replace('{WA_LINK}', waLink);
+    const codeBtnHtml = `<div style="margin-top:14px;"><button id="codeToggleBtn" data-i18n="code.btn" style="background:white; color:var(--accent-deep); border:1.5px solid var(--accent-deep); border-radius:40px; padding:10px 18px; font-weight:700; font-size:0.85rem; cursor:pointer; min-height:44px;">${t('code.btn')}</button></div>`;
+    document.getElementById('payInfo').innerHTML = t('pay.info.body').replace('{WA_LINK}', waLink) + codeBtnHtml;
   }
 
   function applyStaticI18n() {
@@ -529,7 +576,7 @@
     document.getElementById('langBtnText').textContent = currentLang === 'fr' ? 'EN' : 'FR';
 
     // Retirer le cache DYS des éléments d'interface pour éviter que l'ancienne langue ne réapparaisse
-    const dysInterfaceSelector = '.hero h2,.hero p,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,#generateHint,.footer,#payBtn,#codeToggleBtn,#codeSubmitBtn,.generate-btn';
+    const dysInterfaceSelector = '.hero-step,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,.mode-group-label,#generateHint,.footer,#payBtn,#codeToggleBtn,#codeSubmitBtn,.generate-btn';
     document.querySelectorAll(dysInterfaceSelector).forEach(el => delete el.dataset.dysOriginal);
 
     applyStaticI18n();
@@ -601,7 +648,9 @@
     const span = banner.querySelector('span');
     if (remaining <= 0) {
       span.textContent = t('trial.expired');
+      banner.classList.add('expired');
     } else {
+      banner.classList.remove('expired');
       const hoursLeft = Math.ceil(remaining / (60 * 60 * 1000));
       if (hoursLeft <= 1) {
         span.textContent = t('trial.lastHour');
@@ -889,7 +938,7 @@
     } else if (mode === 'flashcard') {
       if (appData.flashcards.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
       const card = appData.flashcards[fcIndex];
-      area.innerHTML = `<div class="ccard"><div class="fcwrap" onclick="flipFlashcard()"><div class="fcin ${fcFlipped ? 'fl' : ''}"><div class="fcf fcfront">${escapeHtml(card.question)}</div><div class="fcf fcback">${escapeHtml(card.answer)}</div></div></div><div style="display:flex; justify-content:space-between;"><button onclick="prevFlashcard()">◀</button><span style="font-size:0.8rem;align-self:center;">${fcIndex+1}/${appData.flashcards.length}</span><button onclick="nextFlashcard()">▶</button></div></div>`;
+      area.innerHTML = `<div class="ccard"><div class="fcwrap" onclick="flipFlashcard()"><div class="fcin ${fcFlipped ? 'fl' : ''}"><div class="fcf fcfront">${escapeHtml(card.question)}</div><div class="fcf fcback">${escapeHtml(card.answer)}</div></div></div><div class="fcnav"><button class="fcnav-btn" onclick="prevFlashcard()">${t('flashcard.prev')}</button><span class="fcnav-count">${fcIndex+1}/${appData.flashcards.length}</span><button class="fcnav-btn" onclick="nextFlashcard()">${t('flashcard.next')}</button></div><p class="fchint">${t('flashcard.hint')}</p></div>`;
 
     } else if (mode === 'qcm') {
       if (appData.qcm.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
@@ -959,12 +1008,13 @@
     const box = document.getElementById(`corr-${mode}-${idx}`);
     if (!box) return;
     if (box.style.display !== 'none') { box.style.display = 'none'; return; }
-    box.innerHTML = escapeHtml(reponse);
+    const texteAffiche = t('corr.gentle.prefix') + reponse;
+    box.innerHTML = escapeHtml(texteAffiche);
     box.style.display = 'block';
     // Appliquer DYS si actif
     if (document.body.classList.contains('dys')) {
-      box.dataset.dysOriginal = reponse;
-      const res = colorerTexteDYS(reponse, _compteurDYSGlobal);
+      box.dataset.dysOriginal = texteAffiche;
+      const res = colorerTexteDYS(texteAffiche, _compteurDYSGlobal);
       box.innerHTML = res.html;
     }
   };
@@ -989,9 +1039,11 @@
     // Feedback
     const expl = escapeHtml(q.explanation || '');
     if (oi === q.correct) {
-      fb.innerHTML = `<span style="color:var(--green)">${t('qcm.correct')}</span> ${expl}`;
+      const praises = [t('qcm.correct1'), t('qcm.correct2'), t('qcm.correct3')];
+      const praise = praises[Math.floor(Math.random() * praises.length)];
+      fb.innerHTML = `<span style="color:var(--green)">${praise}</span> ${expl}`;
     } else {
-      fb.innerHTML = `<span style="color:var(--red)">${t('qcm.wrong')}</span> ${expl}`;
+      fb.innerHTML = `<span style="color:var(--red)">${t('qcm.wrong.gentle')}</span> ${expl}`;
     }
     appliquerCouleursDYS();
   };
@@ -1011,8 +1063,8 @@
   function getConsonneMuetteFin(mot) { let m=mot.toLowerCase(); if(m.length<2) return null; let fin=m.slice(-1); return ['t','s','x','n','d','p','g'].includes(fin)?fin:null; }
   function traiterMotDYS(mot,compteurDepart) { if(!mot||!mot.trim()) return {html:mot,compteur:compteurDepart}; let poncAv='',poncFin='',motPur=mot; let mAv=mot.match(/^([«"'(]+)/); if(mAv){poncAv=mAv[0];motPur=mot.slice(poncAv.length);} let mFin=motPur.match(/([.,!?;:…»"')]+)$/); if(mFin){poncFin=mFin[0];motPur=motPur.slice(0,-poncFin.length);} if(!motPur) return {html:poncAv+poncFin,compteur:compteurDepart}; let syllabes=decouperSyllabes(motPur), html=poncAv, compteur=compteurDepart, eMuet=estEMuetFinal(motPur), consMuette=getConsonneMuetteFin(motPur); syllabes.forEach((syl,idx)=>{ let dern=idx===syllabes.length-1; if(dern&&eMuet&&syl.slice(-1)==='e'){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">e</span>`; } else if(dern&&consMuette&&syl.slice(-1)===consMuette){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">${consMuette}</span>`; } else{ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${syl}</span>`; compteur++; } }); return {html:html+poncFin,compteur:compteur}; }
   function colorerTexteDYS(texte,startCompteur){ if(!document.body.classList.contains('dys')) return {html:texte,compteur:startCompteur}; if(!texte) return {html:texte,compteur:startCompteur}; let tokens=texte.split(/(\s+)/g), html='', compteur=startCompteur; for(let tok of tokens){ if(/^\s+$/.test(tok)){ html+=tok; continue; } let res=traiterMotDYS(tok,compteur); html+=res.html; compteur=res.compteur; } return {html,compteur}; }
-  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,li,.kpt,.deft,.exst,.fcq,.qtxt,.opt,.branch-title,.branch-leaves li .leaf-text,.question-text,.correction-box,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
-  function appliquerCouleursDYSInterface(){ if(!document.body.classList.contains('dys')) return; let compteur=0; let els=document.querySelectorAll('.hero h2,.hero p,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,#generateHint,.footer'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,compteur); el.innerHTML=res.html; compteur=res.compteur; } }); }
+  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,li,.kpt,.deft,.exst,.fcq,.qtxt,.opt,.branch-title,.branch-leaves li .leaf-text,.question-text,.correction-box,.fchint,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
+  function appliquerCouleursDYSInterface(){ if(!document.body.classList.contains('dys')) return; let compteur=0; let els=document.querySelectorAll('.hero-step,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,.mode-group-label,#generateHint,.footer'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,compteur); el.innerHTML=res.html; compteur=res.compteur; } }); }
   function toggleDyslexia(){ document.body.classList.toggle('dys'); let a=document.body.classList.contains('dys'); let btn=document.getElementById('dysBtn'), txt=document.getElementById('dysBtnText'); if(a){ btn.classList.add('active'); txt.innerHTML='DYS ● ON'; localStorage.setItem('ms_dys_mode','1'); appliquerCouleursDYSInterface(); } else{ btn.classList.remove('active'); txt.innerHTML='Mode DYS'; localStorage.setItem('ms_dys_mode','0'); document.querySelectorAll('[data-dys-original]').forEach(el=>el.textContent=el.dataset.dysOriginal); } if(appData&&currentMode) setMode(currentMode); }
   if(localStorage.getItem('ms_dys_mode')==='1') toggleDyslexia();
   document.getElementById('dysBtn').addEventListener('click',toggleDyslexia);
@@ -1022,15 +1074,19 @@
     info.style.display = (info.style.display === 'none' || !info.style.display) ? 'block' : 'none';
   });
 
-  document.getElementById('codeToggleBtn').addEventListener('click', () => {
-    const f = document.getElementById('codeForm');
-    f.style.display = f.style.display === 'none' ? 'flex' : 'none';
+  // Délégation : #codeToggleBtn est recréé à chaque renderPayInfo() (innerHTML),
+  // un listener direct serait perdu au premier changement de langue / re-render.
+  document.getElementById('payInfo').addEventListener('click', (e) => {
+    if (e.target.closest('#codeToggleBtn')) {
+      const f = document.getElementById('codeForm');
+      f.style.display = f.style.display === 'none' ? 'flex' : 'none';
+    }
   });
   document.getElementById('codeSubmitBtn').addEventListener('click', async () => {
     const code = document.getElementById('codeInput').value.trim();
     const msg = document.getElementById('codeMsg');
     if (!code) return;
-    msg.style.color = 'var(--g5)'; msg.textContent = t('code.checking');
+    msg.style.color = 'var(--g6)'; msg.textContent = t('code.checking');
     try {
       const res = await fetch(SCRIPT_URL + '?action=redeemCode&id=' + getDeviceId() + '&code=' + encodeURIComponent(code) + '&token=' + encodeURIComponent(APP_TOKEN));
       const r = await res.json();
