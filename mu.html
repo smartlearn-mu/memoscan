@@ -440,6 +440,7 @@
 
       'err.pasteEmpty': 'Colle ton cours dans le texte',
       'err.noPhoto': 'Ajoute au moins une photo',
+      'err.generation': "la préparation a raté, réessaie dans un instant",
       'err.oopsPrefix': "😕 Oups, ça n'a pas marché : ",
 
       'msgvide.text': '😅 Pas de contenu pour ce mode. Réessaie de générer !',
@@ -522,6 +523,7 @@
 
       'err.pasteEmpty': 'Paste your lesson in the text box',
       'err.noPhoto': 'Add at least one photo',
+      'err.generation': 'preparation failed, please try again in a moment',
       'err.oopsPrefix': '😕 Oops, something went wrong: ',
 
       'msgvide.text': '😅 No content for this mode. Try generating again!',
@@ -612,6 +614,33 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
+  }
+
+  // Extraction tolerante : le modele renvoie parfois un JSON entoure de
+  // fences, avec des echappements invalides ou des virgules terminales
+  function extraireJSON(texte) {
+    if (!texte) return null;
+    let t = String(texte).replace(/```json/gi, '').replace(/```/g, '');
+    const debut = t.indexOf('{'), fin = t.lastIndexOf('}');
+    if (debut === -1 || fin <= debut) return null;
+    t = t.slice(debut, fin + 1);
+    try { return JSON.parse(t); } catch (e) {}
+    let r = t.replace(/\\'/g, "'").split('').map(function(ch){ var c = ch.charCodeAt(0); return (c < 32 && c !== 9 && c !== 10 && c !== 13) ? ' ' : ch; }).join('');
+    try { return JSON.parse(r); } catch (e) {}
+    r = r.replace(/,\s*([}\]])/g, '$1');
+    try { return JSON.parse(r); } catch (e) { return null; }
+  }
+
+  // Previent le proprietaire d'un incident (feuille Erreurs + email groupe).
+  // Silencieux et non bloquant : ne doit jamais degrader l'experience eleve.
+  function signalerErreur(type, detail) {
+    try {
+      fetch(SCRIPT_URL + '?action=logErreur&id=' + getDeviceId()
+        + '&token=' + encodeURIComponent(APP_TOKEN)
+        + '&type=' + encodeURIComponent(type)
+        + '&app=mu'
+        + '&detail=' + encodeURIComponent(String(detail || '').slice(0, 300))).catch(() => {});
+    } catch (e) {}
   }
 
   function getDeviceId() {
@@ -891,11 +920,16 @@
 
       const prompt = `Cours:\n${coursTexte}\n\nTu es un professeur particulier exigeant. En te basant UNIQUEMENT sur le contenu du cours ci-dessus (n'invente aucune notion absente du cours), prépare un entraînement complet. Quantités attendues si le contenu le permet : 8 à 12 flashcards couvrant toutes les notions, 6 à 8 questions de QCM avec des pièges plausibles, 4 à 6 questions ouvertes dont les 2 dernières plus difficiles (expliquer, comparer, appliquer), 3 à 5 exercices, 5 à 8 questions d'interro. Si le cours est court, réduis ces quantités plutôt que d'inventer. Génère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
 
-      const jsonRes = await callDeepSeek(prompt);
-      const match = jsonRes.match(/\{[\s\S]*\}/);
-      if (!match) throw new Error('Pas de JSON trouvé dans la réponse');
+      let donnees = extraireJSON(await callDeepSeek(prompt));
+      if (!donnees) {
+        // Seconde chance automatique : le generateur produit parfois une
+        // reponse malformee, un nouvel essai suffit presque toujours
+        signalerErreur('json_1er_essai', '');
+        donnees = extraireJSON(await callDeepSeek(prompt));
+      }
+      if (!donnees) throw new Error(t('err.generation'));
 
-      appData = normaliserAppData(JSON.parse(match[0]));
+      appData = normaliserAppData(donnees);
       fcIndex = 0;
       fcFlipped = false;
 
@@ -907,6 +941,7 @@
 
     } catch(e) {
       console.error('Erreur generateExercises:', e);
+      signalerErreur('generation_echouee', e.message);
       afficherErreur(t('err.oopsPrefix') + e.message);
       document.getElementById('loadingDiv').style.display = 'none';
       generateBtn.disabled = false;
