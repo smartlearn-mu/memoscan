@@ -189,8 +189,6 @@
     .generate-btn:disabled { background: var(--g2); color: var(--g6); cursor: not-allowed; }
 
     #modeSection { margin-top: 30px; background: white; border-radius: 24px; padding: 20px 16px; }
-    .mode-groups { display: flex; flex-direction: column; gap: 18px; margin-bottom: 24px; }
-    .mode-group-label { font-size: 0.8rem; text-transform: uppercase; color: var(--g6); letter-spacing: 0.4px; font-weight: 700; margin-bottom: 10px; }
     .mode-pills { display: flex; flex-wrap: wrap; gap: 10px; }
     .mode-btn {
       display: inline-flex; align-items: center; gap: 6px;
@@ -199,9 +197,33 @@
       cursor: pointer; font-size: 0.875rem; font-weight: 700; transition: 0.2s;
     }
     .mode-btn.active { background: var(--accent-deep); color: white; border-color: var(--accent-deep); }
-    /* Teintes douces par famille de modes (zone enfant) */
-    .mode-group.learn .mode-btn:not(.active) { background: var(--al); }
-    .mode-group.practice .mode-btn:not(.active) { background: #fdf6e3; }
+
+    /* ===== Grille bento des modes ===== */
+    .mode-bento { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+    .bento-tile {
+      border-radius: 14px; cursor: pointer; transition: 0.2s;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; min-height: 44px; border: none;
+    }
+    .bento-cours {
+      grid-column: 1 / -1; background: var(--accent-deep); color: white;
+      padding: 16px; min-height: 84px;
+    }
+    .bento-cours .bento-emoji { font-size: 20px; }
+    .bento-cours .bento-title { font-size: 15px; font-weight: 800; margin-top: 4px; }
+    .bento-cours .bento-sub { font-size: 0.8rem; opacity: 0.88; margin-top: 2px; }
+    .bento-cours.active { background: var(--ink); }
+    .bento-half {
+      background: var(--al); color: var(--ink);
+      min-height: 76px; padding: 12px; font-weight: 700; gap: 6px;
+    }
+    .bento-half.active { background: var(--accent-deep); color: white; }
+    .bento-pratique {
+      grid-column: 1 / -1; background: #fdf6e3; color: #7a5b0c;
+      min-height: 56px; padding: 14px; font-weight: 800; font-size: 1rem;
+    }
+    .bento-pratique-pills { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; }
+    .bento-pratique-pills .mode-btn:not(.active) { background: #fdf6e3; }
 
     .carea { margin-top: 16px; }
     .ccard { background: white; border: 2px solid var(--g2); border-radius: 20px; padding: 24px; margin-bottom: 16px; }
@@ -228,6 +250,22 @@
     .opt.wrong { background: #fde8e8; border-color: var(--red); color: #a00; }
     .qblock.answered .opt { pointer-events: none; }
     .correction-box { background: var(--al); border-radius: 12px; padding: 12px; margin-top: 8px; font-size: 0.9rem; border: 1px solid var(--accent); }
+    .hint-box { background: var(--al); border-radius: 12px; padding: 10px 12px; margin-top: 8px; font-size: 0.9rem; }
+    .hint-zone:empty { margin: 0; }
+
+    /* ===== Carte progression / série ===== */
+    .progress-card { background: white; border: 1px solid var(--g2); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
+    .progress-streak { background: #fdf6e3; color: #7a5b0c; border-radius: 20px; padding: 4px 12px; font-size: 0.8rem; font-weight: 700; }
+
+    /* ===== Micro-célébration fin de QCM ===== */
+    .celebrate-card { margin-top: 16px; text-align: center; padding: 20px 16px; border-top: 1px solid var(--g2); animation: celebrateIn 0.3s ease-out; }
+    @keyframes celebrateIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .celebrate-badge { width: 54px; height: 54px; border-radius: 50%; background: #d4f5e2; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 12px; }
+    .celebrate-score { font-weight: 800; font-size: 1rem; margin-bottom: 6px; }
+    .celebrate-phrase { font-size: 0.875rem; color: var(--g6); margin-bottom: 14px; }
+    .celebrate-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .celebrate-actions button { min-height: 44px; padding: 10px 18px; border-radius: 40px; font-weight: 700; font-size: 0.875rem; cursor: pointer; border: 1.5px solid var(--g2); background: white; color: var(--ink); }
+    .celebrate-actions button.celebrate-next { background: var(--accent-deep); color: white; border-color: var(--accent-deep); }
 
     .mindmap-container { display: flex; flex-direction: column; align-items: center; }
     .mindmap-center { background: var(--accent); color: white; font-weight: bold; padding: 14px 28px; border-radius: 60px; margin-bottom: 28px; }
@@ -342,24 +380,28 @@
   <div id="errorDiv" style="display:none; background:#fde8e8; border:1.5px solid var(--red); border-radius:16px; padding:14px 18px; margin-bottom:16px; font-size:0.9rem;"></div>
 
   <div id="modeSection" style="display:none;">
-    <div class="mode-groups">
-      <div class="mode-group learn">
-        <div class="mode-group-label" data-i18n="group.learn">📖 Apprendre</div>
-        <div class="mode-pills">
-          <div class="mode-btn" data-mode="cours" role="button" tabindex="0">📋 <span class="mode-title" data-i18n="modegrid.cours">Cours corrigé</span></div>
-          <div class="mode-btn" data-mode="resume" role="button" tabindex="0">🗂️ <span class="mode-title" data-i18n="modegrid.resume">Résumé</span></div>
-          <div class="mode-btn" data-mode="mindmap" role="button" tabindex="0">🗺️ <span class="mode-title" data-i18n="modegrid.mindmap">Mind Map</span></div>
-        </div>
+    <div id="progressCard" class="progress-card" style="display:none;"></div>
+    <div class="mode-bento">
+      <div class="bento-tile bento-cours mode-btn" data-mode="cours" role="button" tabindex="0">
+        <div class="bento-emoji">📋</div>
+        <div class="bento-title mode-title" data-i18n="modegrid.cours">Cours corrigé</div>
+        <div class="bento-sub" data-i18n="bento.cours.sub">Ta leçon remise au propre</div>
       </div>
-      <div class="mode-group practice">
-        <div class="mode-group-label" data-i18n="group.practice">🎯 S'entraîner</div>
-        <div class="mode-pills">
-          <div class="mode-btn" data-mode="flashcard" role="button" tabindex="0">🃏 <span class="mode-title" data-i18n="modegrid.flashcard">Flashcards</span></div>
-          <div class="mode-btn" data-mode="qcm" role="button" tabindex="0">✅ <span class="mode-title" data-i18n="modegrid.qcm">QCM</span></div>
-          <div class="mode-btn" data-mode="open" role="button" tabindex="0">✍️ <span class="mode-title" data-i18n="modegrid.open">Questions</span></div>
-          <div class="mode-btn" data-mode="exercise" role="button" tabindex="0">🧮 <span class="mode-title" data-i18n="modegrid.exercise">Exercices</span></div>
-          <div class="mode-btn" data-mode="interro" role="button" tabindex="0">⏱️ <span class="mode-title" data-i18n="modegrid.interro">Interro</span></div>
-        </div>
+      <div class="bento-tile bento-half mode-btn" data-mode="resume" role="button" tabindex="0">
+        <span>🗂️</span> <span class="mode-title" data-i18n="modegrid.resume">Résumé</span>
+      </div>
+      <div class="bento-tile bento-half mode-btn" data-mode="mindmap" role="button" tabindex="0">
+        <span>🗺️</span> <span class="mode-title" data-i18n="modegrid.mindmap">Mind Map</span>
+      </div>
+      <div class="bento-tile bento-pratique" id="bentoPratiqueToggle" role="button" tabindex="0" aria-expanded="false">
+        <span class="mode-title" data-i18n="bento.pratique">🎯 S'entraîner · 5 activités</span>
+      </div>
+      <div class="mode-pills bento-pratique-pills" id="bentoPratiquePills" style="display:none;">
+        <div class="mode-btn" data-mode="flashcard" role="button" tabindex="0">🃏 <span class="mode-title" data-i18n="modegrid.flashcard">Flashcards</span></div>
+        <div class="mode-btn" data-mode="qcm" role="button" tabindex="0">✅ <span class="mode-title" data-i18n="modegrid.qcm">QCM</span></div>
+        <div class="mode-btn" data-mode="open" role="button" tabindex="0">✍️ <span class="mode-title" data-i18n="modegrid.open">Questions</span></div>
+        <div class="mode-btn" data-mode="exercise" role="button" tabindex="0">🧮 <span class="mode-title" data-i18n="modegrid.exercise">Exercices</span></div>
+        <div class="mode-btn" data-mode="interro" role="button" tabindex="0">⏱️ <span class="mode-title" data-i18n="modegrid.interro">Interro</span></div>
       </div>
     </div>
     <div id="carea" class="carea"></div>
@@ -375,6 +417,10 @@
 
   let currentMode = null, currentInputMode = 'photo', pages = [], pastedText = '', appData = null;
   let fcIndex = 0, fcFlipped = false, _compteurDYSGlobal = 0;
+  let hintProgress = {}; // clef "mode-idx" -> niveau d'indice affiché (0 à 3)
+  let qcmRepondu = {}; // clef qi -> true/false (bonne/mauvaise réponse), pour le bilan de fin de QCM
+  let pratiqueOuverte = false; // état déplié/replié de la tuile bento "S'entraîner"
+  const PRATIQUE_MODES = ['flashcard', 'qcm', 'open', 'exercise', 'interro'];
 
   // ==================== I18N (FR/EN) ====================
   const T = {
@@ -459,7 +505,26 @@
       'section.qcm': '✅ QCM',
       'section.open': '✍️ Questions',
       'section.exercise': '🧮 Exercices',
-      'section.interro': '⏱️ Interro'
+      'section.interro': '⏱️ Interro',
+
+      'hint.btn1': '💡 Un indice',
+      'hint.btn2': '💡 Encore un indice',
+      'hint.btnAnswer': '📖 Voir la réponse',
+
+      'bento.cours.sub': 'Ta leçon remise au propre',
+      'bento.pratique': "🎯 S'entraîner · 5 activités",
+
+      'progress.title': 'Cette semaine',
+      'progress.streak': '🔥 {n} jour{s}',
+      'progress.days': 'L · M · M · J · V · S · D',
+      'progress.count': '{n} cours révisé{s} cette semaine',
+
+      'celebrate.score': '{n} bonne{s} réponse{s} sur {total}',
+      'celebrate.perfect': 'Sans faute, bravo !',
+      'celebrate.good': 'Tu progresses vite sur ce chapitre',
+      'celebrate.encourage': 'Refais le quiz pour ancrer tes réponses',
+      'celebrate.retry': 'Refaire',
+      'celebrate.next': 'Continuer'
     },
     en: {
       'pay.btn': '💳 Rs 990/yr',
@@ -542,7 +607,26 @@
       'section.qcm': '✅ Quiz',
       'section.open': '✍️ Questions',
       'section.exercise': '🧮 Exercises',
-      'section.interro': '⏱️ Quick test'
+      'section.interro': '⏱️ Quick test',
+
+      'hint.btn1': '💡 A hint',
+      'hint.btn2': '💡 Another hint',
+      'hint.btnAnswer': '📖 See the answer',
+
+      'bento.cours.sub': 'Your lesson, cleaned up',
+      'bento.pratique': '🎯 Practice · 5 activities',
+
+      'progress.title': 'This week',
+      'progress.streak': '🔥 {n}-day streak',
+      'progress.days': 'M · T · W · T · F · S · S',
+      'progress.count': '{n} lesson{s} reviewed this week',
+
+      'celebrate.score': '{n} correct answer{s} out of {total}',
+      'celebrate.perfect': 'Perfect score, well done!',
+      'celebrate.good': "You're making fast progress",
+      'celebrate.encourage': 'Try again to lock in your answers',
+      'celebrate.retry': 'Retry',
+      'celebrate.next': 'Continue'
     }
   };
 
@@ -552,6 +636,12 @@
     const dict = T[currentLang] || T.fr;
     if (dict[key] !== undefined) return dict[key];
     return (T.fr[key] !== undefined) ? T.fr[key] : key;
+  }
+
+  // Traduction avec un nombre : remplace {n} et accorde les marques {s}
+  // (« 1 bonne réponse » vs « 3 bonnes réponses »)
+  function avecNombre(key, n) {
+    return t(key).replace(/\{n\}/g, n).replace(/\{s\}/g, Math.abs(n) > 1 ? 's' : '');
   }
 
   function renderPayInfo() {
@@ -578,13 +668,14 @@
     document.getElementById('langBtnText').textContent = currentLang === 'fr' ? 'EN' : 'FR';
 
     // Retirer le cache DYS des éléments d'interface pour éviter que l'ancienne langue ne réapparaisse
-    const dysInterfaceSelector = '.hero-step,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,.mode-group-label,#generateHint,.footer,#payBtn,#codeToggleBtn,#codeSubmitBtn,.generate-btn';
+    const dysInterfaceSelector = '.hero-step,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,.mode-group-label,#generateHint,.footer,#payBtn,#codeToggleBtn,#codeSubmitBtn,.generate-btn,.bento-sub,.progress-title,.progress-streak,.progress-count,.progress-day-label';
     document.querySelectorAll(dysInterfaceSelector).forEach(el => delete el.dataset.dysOriginal);
 
     applyStaticI18n();
     renderPayInfo();
     updateGenerateButton();
     updateTrialBanner();
+    if (appData) renderProgressCard();
 
     if (document.body.classList.contains('dys')) appliquerCouleursDYSInterface();
     if (appData && currentMode) setMode(currentMode);
@@ -880,7 +971,9 @@
     if (!Array.isArray(d.flashcards)) d.flashcards = [];
     if (!Array.isArray(d.qcm)) d.qcm = [];
     if (!Array.isArray(d.open_questions)) d.open_questions = [];
+    d.open_questions.forEach(q => { if (!Array.isArray(q.hints)) q.hints = []; });
     if (!Array.isArray(d.exercises)) d.exercises = [];
+    d.exercises.forEach(ex => { if (!Array.isArray(ex.hints)) ex.hints = []; });
     if (!Array.isArray(d.interro)) d.interro = [];
     if (!d.mindmap || typeof d.mindmap !== 'object') {
       d.mindmap = { center: d.topic || 'Cours', branches: [] };
@@ -893,6 +986,84 @@
     const div = document.getElementById('errorDiv');
     div.textContent = message;
     div.style.display = 'block';
+  }
+
+  // ==================== PROGRESSION & SÉRIE (100% local) ====================
+  function dateISO(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  function enregistrerJourActif() {
+    let jours = [];
+    try { jours = JSON.parse(localStorage.getItem('ms_mu_jours') || '[]'); } catch (e) { jours = []; }
+    if (!Array.isArray(jours)) jours = [];
+    const iso = dateISO(new Date());
+    if (!jours.includes(iso)) jours.push(iso);
+    jours.sort();
+    if (jours.length > 60) jours = jours.slice(jours.length - 60);
+    localStorage.setItem('ms_mu_jours', JSON.stringify(jours));
+  }
+
+  function calculerProgression() {
+    let jours = [];
+    try { jours = JSON.parse(localStorage.getItem('ms_mu_jours') || '[]'); } catch (e) { jours = []; }
+    if (!Array.isArray(jours)) jours = [];
+    const set = new Set(jours);
+
+    const now = new Date();
+    const dow = now.getDay(); // 0 = dimanche ... 6 = samedi
+    const offsetLundi = (dow === 0) ? 6 : (dow - 1);
+    const lundi = new Date(now);
+    lundi.setHours(0, 0, 0, 0);
+    lundi.setDate(lundi.getDate() - offsetLundi);
+
+    const joursSemaine = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(lundi);
+      d.setDate(lundi.getDate() + i);
+      joursSemaine.push(set.has(dateISO(d)));
+    }
+    const scansSemaine = joursSemaine.filter(Boolean).length;
+
+    // Série : jours consécutifs en remontant depuis aujourd'hui (ou hier si rien
+    // aujourd'hui, pour ne pas casser la série en cours de journée)
+    let serie = 0;
+    const curseur = new Date(now);
+    curseur.setHours(0, 0, 0, 0);
+    if (!set.has(dateISO(curseur))) curseur.setDate(curseur.getDate() - 1);
+    while (set.has(dateISO(curseur))) {
+      serie++;
+      curseur.setDate(curseur.getDate() - 1);
+    }
+
+    return { scansSemaine, serie, joursSemaine };
+  }
+
+  function renderProgressCard() {
+    const card = document.getElementById('progressCard');
+    if (!card) return;
+    const { scansSemaine, serie, joursSemaine } = calculerProgression();
+    const initiales = t('progress.days').split(' · ');
+    let barsHtml = '';
+    joursSemaine.forEach((actif, i) => {
+      barsHtml += `<div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;">
+        <div style="width:100%; height:26px; border-radius:6px; background:${actif ? 'var(--accent)' : 'var(--g2)'}; transition:0.2s;"></div>
+        <span class="progress-day-label" style="font-size:0.7rem; color:var(--g6);">${escapeHtml(initiales[i] || '')}</span>
+      </div>`;
+    });
+    const streakHtml = serie >= 2
+      ? `<span class="progress-streak">${escapeHtml(avecNombre('progress.streak', serie))}</span>`
+      : '';
+    card.innerHTML = `
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; gap:8px;">
+        <strong class="progress-title" style="font-size:0.95rem;">${escapeHtml(t('progress.title'))}</strong>
+        ${streakHtml}
+      </div>
+      <div style="display:flex; gap:6px;">${barsHtml}</div>
+      <p class="progress-count" style="font-size:0.75rem; color:var(--g6); margin-top:10px;">${escapeHtml(avecNombre('progress.count', scansSemaine))}</p>
+    `;
+    card.style.display = 'block';
+    appliquerCouleursDYSInterface();
   }
 
   async function generateExercises() {
@@ -918,7 +1089,7 @@
         }
       }
 
-      const prompt = `Cours:\n${coursTexte}\n\nTu es un professeur particulier exigeant. En te basant UNIQUEMENT sur le contenu du cours ci-dessus (n'invente aucune notion absente du cours), prépare un entraînement complet. Quantités attendues si le contenu le permet : 8 à 12 flashcards couvrant toutes les notions, 6 à 8 questions de QCM avec des pièges plausibles, 4 à 6 questions ouvertes dont les 2 dernières plus difficiles (expliquer, comparer, appliquer), 3 à 5 exercices, 5 à 8 questions d'interro. Si le cours est court, réduis ces quantités plutôt que d'inventer. Génère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
+      const prompt = `Cours:\n${coursTexte}\n\nTu es un professeur particulier exigeant. En te basant UNIQUEMENT sur le contenu du cours ci-dessus (n'invente aucune notion absente du cours), prépare un entraînement complet. Quantités attendues si le contenu le permet : 8 à 12 flashcards couvrant toutes les notions, 6 à 8 questions de QCM avec des pièges plausibles, 4 à 6 questions ouvertes dont les 2 dernières plus difficiles (expliquer, comparer, appliquer), 3 à 5 exercices, 5 à 8 questions d'interro. Si le cours est court, réduis ces quantités plutôt que d'inventer. Pratique l'apprentissage guidé : pour chaque question ouverte et chaque exercice, écris deux indices gradués (champ hints) pour un élève de 10-12 ans qui bloque. Le premier relance sa réflexion par une question qui recentre, sans rien dévoiler. Le second oriente vers l'endroit du cours où chercher, mais ne contient JAMAIS un élément de la réponse attendue : il dit où chercher, jamais quoi répondre. Génère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","hints":["indice1","indice2"],"model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","hints":["indice1","indice2"],"solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
 
       let donnees = extraireJSON(await callDeepSeek(prompt));
       if (!donnees) {
@@ -932,11 +1103,16 @@
       appData = normaliserAppData(donnees);
       fcIndex = 0;
       fcFlipped = false;
+      hintProgress = {};
+      qcmRepondu = {};
+      pratiqueOuverte = false;
 
       document.getElementById('loadingDiv').style.display = 'none';
       document.getElementById('modeSection').style.display = 'block';
       generateBtn.disabled = false;
       setMode('cours');
+      enregistrerJourActif();
+      renderProgressCard();
       fetch(SCRIPT_URL + '?action=activity&id=' + getDeviceId() + '&type=scan&token=' + encodeURIComponent(APP_TOKEN)).catch(() => {});
 
     } catch(e) {
@@ -953,10 +1129,55 @@
   // ==================== AFFICHAGE DES MODES ====================
   function getMsgVide() { return `<div class="ccard"><p>${t('msgvide.text')}</p></div>`; }
 
+  // Apprentissage guidé : indices progressifs avant la correction (modes 'open' et 'exercise')
+  function renderIndiceZone(mode, idx, hints) {
+    const key = mode + '-' + idx;
+    if (!Array.isArray(hints) || hints.length === 0) {
+      // Pas d'indices générés : on garde le bouton de correction direct existant
+      return `<button onclick="voirCorrection('${mode}',${idx})">${t('corr.' + mode + '.btn')}</button><div class="correction-box" id="corr-${mode}-${idx}" style="display:none;"></div>`;
+    }
+    const level = hintProgress[key] || 0;
+    let hintsHtml = '';
+    if (level >= 1 && hints[0]) hintsHtml += `<div class="hint-box">💡 ${escapeHtml(hints[0])}</div>`;
+    if (level >= 2 && hints[1]) hintsHtml += `<div class="hint-box">💡 ${escapeHtml(hints[1])}</div>`;
+    let btnHtml = '';
+    if (level < 3) {
+      const label = level === 0 ? t('hint.btn1') : (level === 1 ? t('hint.btn2') : t('hint.btnAnswer'));
+      btnHtml = `<button id="hintbtn-${key}" onclick="clicIndice('${mode}',${idx})">${label}</button>`;
+    }
+    return `<div class="hint-zone" id="hintzone-${key}">${hintsHtml}</div>${btnHtml}<div class="correction-box" id="corr-${mode}-${idx}" style="display:none;"></div>`;
+  }
+
+  window.clicIndice = function(mode, idx) {
+    const key = mode + '-' + idx;
+    const level = hintProgress[key] || 0;
+    const liste = mode === 'open' ? appData.open_questions : appData.exercises;
+    const item = liste && liste[idx];
+    const hints = item ? item.hints : [];
+    const zone = document.getElementById('hintzone-' + key);
+    const btn = document.getElementById('hintbtn-' + key);
+    if (level === 0) {
+      if (zone && hints && hints[0]) zone.insertAdjacentHTML('beforeend', `<div class="hint-box">💡 ${escapeHtml(hints[0])}</div>`);
+      if (btn) btn.textContent = t('hint.btn2');
+      hintProgress[key] = 1;
+    } else if (level === 1) {
+      if (zone && hints && hints[1]) zone.insertAdjacentHTML('beforeend', `<div class="hint-box">💡 ${escapeHtml(hints[1])}</div>`);
+      if (btn) btn.textContent = t('hint.btnAnswer');
+      hintProgress[key] = 2;
+    } else if (level === 2) {
+      voirCorrection(mode, idx);
+      if (btn) btn.remove();
+      hintProgress[key] = 3;
+    }
+    appliquerCouleursDYS();
+  };
+
   function setMode(mode) {
     currentMode = mode;
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
     document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
+    // Un mode d'entraînement actif garde la tuile bento "S'entraîner" dépliée
+    if (PRATIQUE_MODES.includes(mode)) setPratiqueOuverte(true);
     const area = document.getElementById('carea');
 
     if (mode === 'cours') {
@@ -993,12 +1214,13 @@
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); opt.click(); }
         });
       });
+      verifierFinQCM();
 
     } else if (mode === 'open') {
       if (appData.open_questions.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
       let html = `<div class="ccard"><h2>${t('section.open')}</h2>`;
       appData.open_questions.forEach((q, idx) => {
-        html += `<div class="qblock"><p><strong>${escapeHtml(q.question)}</strong></p><textarea rows="4" style="width:100%; border-radius:12px; padding:10px;"></textarea><button onclick="voirCorrection('open',${idx})">${t('corr.open.btn')}</button><div class="correction-box" id="corr-open-${idx}" style="display:none;"></div></div>`;
+        html += `<div class="qblock"><p><strong>${escapeHtml(q.question)}</strong></p><textarea rows="4" style="width:100%; border-radius:12px; padding:10px;"></textarea>${renderIndiceZone('open', idx, q.hints)}</div>`;
       });
       html += `</div>`;
       area.innerHTML = html;
@@ -1007,7 +1229,7 @@
       if (appData.exercises.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
       let html = `<div class="ccard"><h2>${t('section.exercise')}</h2>`;
       appData.exercises.forEach((ex, idx) => {
-        html += `<div class="qblock"><p><strong>${escapeHtml(ex.tag)}</strong><br>${escapeHtml(ex.statement)}</p><textarea rows="4" style="width:100%; padding:10px;"></textarea><button onclick="voirCorrection('exercise',${idx})">${t('corr.exercise.btn')}</button><div class="correction-box" id="corr-exercise-${idx}" style="display:none;"></div></div>`;
+        html += `<div class="qblock"><p><strong>${escapeHtml(ex.tag)}</strong><br>${escapeHtml(ex.statement)}</p><textarea rows="4" style="width:100%; padding:10px;"></textarea>${renderIndiceZone('exercise', idx, ex.hints)}</div>`;
       });
       html += `</div>`;
       area.innerHTML = html;
@@ -1071,6 +1293,7 @@
     });
     // Marquer comme répondu
     block.classList.add('answered');
+    qcmRepondu[qi] = (oi === q.correct);
     // Feedback
     const expl = escapeHtml(q.explanation || '');
     if (oi === q.correct) {
@@ -1081,6 +1304,50 @@
       fb.innerHTML = `<span style="color:var(--red)">${t('qcm.wrong.gentle')}</span> ${expl}`;
     }
     appliquerCouleursDYS();
+    verifierFinQCM();
+  };
+
+  // ==================== MICRO-CÉLÉBRATION FIN DE QCM ====================
+  function verifierFinQCM() {
+    if (!appData || !Array.isArray(appData.qcm) || appData.qcm.length === 0) return;
+    const total = appData.qcm.length;
+    const area = document.getElementById('carea');
+    if (!area) return;
+    const repondus = area.querySelectorAll('.qblock.answered').length;
+    if (repondus < total) return;
+    const bonnes = Object.values(qcmRepondu).filter(Boolean).length;
+    afficherBilanQCM(bonnes, total);
+  }
+
+  function afficherBilanQCM(bonnes, total) {
+    const area = document.getElementById('carea');
+    const ccard = area ? area.querySelector('.ccard') : null;
+    if (!ccard || document.getElementById('qcmBilan')) return;
+    const pct = total > 0 ? (bonnes / total) : 0;
+    const emoji = pct >= 0.5 ? '✅' : '😊';
+    const phraseKey = pct === 1 ? 'celebrate.perfect' : (pct >= 0.5 ? 'celebrate.good' : 'celebrate.encourage');
+    const div = document.createElement('div');
+    div.id = 'qcmBilan';
+    div.className = 'celebrate-card';
+    div.innerHTML = `
+      <div class="celebrate-badge">${emoji}</div>
+      <p class="celebrate-score">${escapeHtml(avecNombre('celebrate.score', bonnes).replace('{total}', total))}</p>
+      <p class="celebrate-phrase">${escapeHtml(t(phraseKey))}</p>
+      <div class="celebrate-actions">
+        <button onclick="reprendreQCM()">${t('celebrate.retry')}</button>
+        <button class="celebrate-next" onclick="continuerApresQCM()">${t('celebrate.next')}</button>
+      </div>
+    `;
+    ccard.appendChild(div);
+    appliquerCouleursDYS();
+  }
+
+  window.reprendreQCM = function() {
+    qcmRepondu = {};
+    setMode('qcm');
+  };
+  window.continuerApresQCM = function() {
+    setMode('interro');
   };
 
   // Accessibilité clavier sur les mode-btn
@@ -1091,6 +1358,20 @@
     });
   });
 
+  // ==================== GRILLE BENTO : tuile "S'entraîner" dépliable ====================
+  function setPratiqueOuverte(val) {
+    pratiqueOuverte = val;
+    const pills = document.getElementById('bentoPratiquePills');
+    const toggle = document.getElementById('bentoPratiqueToggle');
+    if (pills) pills.style.display = val ? 'flex' : 'none';
+    if (toggle) toggle.setAttribute('aria-expanded', val ? 'true' : 'false');
+  }
+  const bentoPratiqueToggle = document.getElementById('bentoPratiqueToggle');
+  bentoPratiqueToggle.addEventListener('click', () => setPratiqueOuverte(!pratiqueOuverte));
+  bentoPratiqueToggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bentoPratiqueToggle.click(); }
+  });
+
   // ==================== MODE DYS ====================
   const SONS = ['oin','ein','ien','eau','ain','ion','ill','an','am','in','im','yn','on','om','ou','oi','au','ai','eu','ui','un','em','en','er','ez','ei','ph','ch','gn','gu','qu','th','é','è','ê','à','â','ô','î','ï','û','ù','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
   function decouperSyllabes(mot) { let r=[], i=0, m=mot.toLowerCase(); while(i<m.length) { let t=false; for(let s of SONS) if(m.substr(i,s.length)===s) { r.push(mot.substr(i,s.length)); i+=s.length; t=true; break; } if(!t) { r.push(mot[i]); i++; } } return r; }
@@ -1098,8 +1379,8 @@
   function getConsonneMuetteFin(mot) { let m=mot.toLowerCase(); if(m.length<2) return null; let fin=m.slice(-1); return ['t','s','x','n','d','p','g'].includes(fin)?fin:null; }
   function traiterMotDYS(mot,compteurDepart) { if(!mot||!mot.trim()) return {html:mot,compteur:compteurDepart}; let poncAv='',poncFin='',motPur=mot; let mAv=mot.match(/^([«"'(]+)/); if(mAv){poncAv=mAv[0];motPur=mot.slice(poncAv.length);} let mFin=motPur.match(/([.,!?;:…»"')]+)$/); if(mFin){poncFin=mFin[0];motPur=motPur.slice(0,-poncFin.length);} if(!motPur) return {html:poncAv+poncFin,compteur:compteurDepart}; let syllabes=decouperSyllabes(motPur), html=poncAv, compteur=compteurDepart, eMuet=estEMuetFinal(motPur), consMuette=getConsonneMuetteFin(motPur); syllabes.forEach((syl,idx)=>{ let dern=idx===syllabes.length-1; if(dern&&eMuet&&syl.slice(-1)==='e'){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">e</span>`; } else if(dern&&consMuette&&syl.slice(-1)===consMuette){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">${consMuette}</span>`; } else{ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${syl}</span>`; compteur++; } }); return {html:html+poncFin,compteur:compteur}; }
   function colorerTexteDYS(texte,startCompteur){ if(!document.body.classList.contains('dys')) return {html:texte,compteur:startCompteur}; if(!texte) return {html:texte,compteur:startCompteur}; let tokens=texte.split(/(\s+)/g), html='', compteur=startCompteur; for(let tok of tokens){ if(/^\s+$/.test(tok)){ html+=tok; continue; } let res=traiterMotDYS(tok,compteur); html+=res.html; compteur=res.compteur; } return {html,compteur}; }
-  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,li,.kpt,.deft,.exst,.fcq,.qtxt,.opt,.branch-title,.branch-leaves li .leaf-text,.question-text,.correction-box,.fchint,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
-  function appliquerCouleursDYSInterface(){ if(!document.body.classList.contains('dys')) return; let compteur=0; let els=document.querySelectorAll('.hero-step,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,.mode-group-label,#generateHint,.footer'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,compteur); el.innerHTML=res.html; compteur=res.compteur; } }); }
+  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,li,.kpt,.deft,.exst,.fcq,.qtxt,.opt,.branch-title,.branch-leaves li .leaf-text,.question-text,.correction-box,.hint-box,.fchint,.celebrate-score,.celebrate-phrase,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
+  function appliquerCouleursDYSInterface(){ if(!document.body.classList.contains('dys')) return; let compteur=0; let els=document.querySelectorAll('.hero-step,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,.mode-group-label,#generateHint,.footer,.bento-sub,.progress-title,.progress-streak,.progress-count,.progress-day-label'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,compteur); el.innerHTML=res.html; compteur=res.compteur; } }); }
   function toggleDyslexia(){ document.body.classList.toggle('dys'); let a=document.body.classList.contains('dys'); let btn=document.getElementById('dysBtn'), txt=document.getElementById('dysBtnText'); if(a){ btn.classList.add('active'); txt.innerHTML='DYS ● ON'; localStorage.setItem('ms_dys_mode','1'); appliquerCouleursDYSInterface(); } else{ btn.classList.remove('active'); txt.innerHTML='Mode DYS'; localStorage.setItem('ms_dys_mode','0'); document.querySelectorAll('[data-dys-original]').forEach(el=>el.textContent=el.dataset.dysOriginal); } if(appData&&currentMode) setMode(currentMode); }
   if(localStorage.getItem('ms_dys_mode')==='1') toggleDyslexia();
   document.getElementById('dysBtn').addEventListener('click',toggleDyslexia);
