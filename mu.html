@@ -1000,7 +1000,9 @@
       ? ' Write the bracketed descriptions in English.'
       : ' Rédige les descriptions entre crochets en français.';
     try {
-      const res = await fetch(`${SCRIPT_URL}?action=claude`, {
+      // L'identifiant accompagne l'appel : sans lui le serveur ne peut ni
+      // appliquer le quota de l'appareil, ni imputer le coût à cet élève.
+      const res = await fetch(`${SCRIPT_URL}?action=claude&id=${getDeviceId()}`, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
@@ -1038,7 +1040,7 @@
 
   async function callDeepSeek(prompt) {
     try {
-      const res = await fetch(`${SCRIPT_URL}?action=deepseek`, {
+      const res = await fetch(`${SCRIPT_URL}?action=deepseek&id=${getDeviceId()}`, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
