@@ -432,6 +432,7 @@
       'code.checking': '⏳ Vérification...',
       'code.invalid': 'Code invalide',
       'code.network': '❌ Erreur réseau, réessaie',
+      'quota.atteint': "Tu as scanné {n} pages aujourd'hui, c'est le maximum. Le compteur repart à zéro demain.",
 
       'hero.step1': '1 📸 Photographie',
       'hero.step2': '2 ⚡ Génère',
@@ -533,6 +534,7 @@
       'code.submit': 'Submit',
       'code.checking': '⏳ Checking...',
       'code.invalid': 'Invalid code',
+      'quota.atteint': "You've scanned {n} pages today, that's the maximum. The counter resets tomorrow.",
       'code.network': '❌ Network error, try again',
 
       'hero.step1': '1 📸 Snap',
@@ -941,6 +943,32 @@
   });
 
   // ==================== APPELS API ====================
+  // Garde-fou anti-abus. Un élève très assidu scanne 4 à 6 pages par jour ;
+  // 30 laisse donc passer les veilles de contrôle sans jamais le gêner, mais
+  // bloque un abonnement partagé entre plusieurs élèves. Ce compteur est local
+  // et donc contournable : il sert à éviter des appels payants inutiles et à
+  // expliquer la situation à l'élève. Le vrai plafond est celui du serveur.
+  const LIMITE_PAGES_JOUR = 30;
+
+  function quotaJour() {
+    const jour = new Date().toISOString().slice(0, 10);
+    try {
+      const brut = JSON.parse(localStorage.getItem('ms_mu_scan_jour') || '{}');
+      if (brut && brut.d === jour && typeof brut.n === 'number' && brut.n >= 0) return brut;
+    } catch (e) {}
+    return { d: jour, n: 0 };
+  }
+
+  function quotaRestant() {
+    return Math.max(0, LIMITE_PAGES_JOUR - quotaJour().n);
+  }
+
+  function incrementerQuota() {
+    const q = quotaJour();
+    q.n += 1;
+    try { localStorage.setItem('ms_mu_scan_jour', JSON.stringify(q)); } catch (e) {}
+  }
+
   // Le modèle fait parfois précéder la transcription d'une phrase d'annonce
   // ("Voici la retranscription complète :") et l'encadre de séparateurs. Sans
   // ce nettoyage, ce parasite part tel quel dans le prompt de génération.
@@ -955,6 +983,9 @@
   }
 
   async function callClaudeVision(imageBase64) {
+    if (quotaRestant() <= 0) {
+      throw new Error(avecNombre('quota.atteint', LIMITE_PAGES_JOUR));
+    }
     try {
       const res = await fetch(`${SCRIPT_URL}?action=claude`, {
         method: 'POST',
@@ -981,8 +1012,10 @@
       const data = await res.json();
       console.log('Réponse Claude:', data);
       if (data.error) throw new Error(`API Claude: ${data.error.message || JSON.stringify(data.error)}`);
-      if (data.content && data.content[0] && data.content[0].text) return nettoyerTranscription(data.content[0].text);
-      if (data.completion) return nettoyerTranscription(data.completion);
+      // Le quota ne se décompte que sur une lecture réellement aboutie : une
+      // panne réseau ou une erreur d'API ne doit pas coûter une page à l'élève.
+      if (data.content && data.content[0] && data.content[0].text) { incrementerQuota(); return nettoyerTranscription(data.content[0].text); }
+      if (data.completion) { incrementerQuota(); return nettoyerTranscription(data.completion); }
       throw new Error(`Format de réponse inattendu: ${JSON.stringify(data)}`);
     } catch (error) {
       console.error('Erreur callClaudeVision:', error);
