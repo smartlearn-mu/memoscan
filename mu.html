@@ -941,6 +941,19 @@
   });
 
   // ==================== APPELS API ====================
+  // Le modèle fait parfois précéder la transcription d'une phrase d'annonce
+  // ("Voici la retranscription complète :") et l'encadre de séparateurs. Sans
+  // ce nettoyage, ce parasite part tel quel dans le prompt de génération.
+  function nettoyerTranscription(t) {
+    if (!t) return '';
+    let r = t.trim();
+    const intro = /^[^\n]{0,120}(retranscription|transcription|voici le texte|here is the|transcribed text)[^\n]{0,80}:\s*\n/i;
+    if (intro.test(r)) r = r.replace(intro, '');
+    r = r.replace(/^\s*(?:-{3,}|_{3,}|\*{3,})\s*\n/, '');
+    r = r.replace(/\n\s*(?:-{3,}|_{3,}|\*{3,})\s*$/, '');
+    return r.trim();
+  }
+
   async function callClaudeVision(imageBase64) {
     try {
       const res = await fetch(`${SCRIPT_URL}?action=claude`, {
@@ -948,13 +961,18 @@
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           token: APP_TOKEN,
+          // Haiku suffit sur un cours imprimé ou proprement écrit et coûte 3x moins
+          // que Sonnet. Sur une écriture manuscrite difficile il produit environ deux
+          // erreurs par page, plausibles et sans signal (« FLUCTUATION » pour
+          // « FRUSTRATION ») là où Sonnet lit juste et signale ses doutes. Arbitrage
+          // assumé : repasser à claude-sonnet-4-6 si des cours mal transcrits remontent.
           model: "claude-haiku-4-5",
           max_tokens: 2000,
           messages: [{
             role: "user",
             content: [
               { type: "image", source: { type: "base64", media_type: "image/jpeg", data: imageBase64 } },
-              { type: "text", text: "Retranscris TOUT le texte de cette image mot pour mot. Si l'image contient une figure géométrique, un schéma, un graphique ou un tableau, décris-le précisément en texte entre crochets, avec toutes les mesures, noms de points, angles et unités visibles sur le dessin — par exemple [Figure : triangle ABC rectangle en A, AB = 4 cm, AC = 3 cm, hypoténuse BC = 5 cm]. Ne dis JAMAIS que l'écriture est illisible." }
+              { type: "text", text: "Retranscris TOUT le texte de cette image mot pour mot. Si l'image contient une figure géométrique, un schéma, un graphique ou un tableau, décris-le précisément en texte entre crochets, avec toutes les mesures, noms de points, angles et unités visibles sur le dessin — par exemple [Figure : triangle ABC rectangle en A, AB = 4 cm, AC = 3 cm, hypoténuse BC = 5 cm]. Ne dis JAMAIS que l'écriture est illisible. Réponds uniquement avec le texte transcrit : aucune phrase d'introduction, aucun commentaire, aucune ligne de séparation." }
             ]
           }]
         })
@@ -963,8 +981,8 @@
       const data = await res.json();
       console.log('Réponse Claude:', data);
       if (data.error) throw new Error(`API Claude: ${data.error.message || JSON.stringify(data.error)}`);
-      if (data.content && data.content[0] && data.content[0].text) return data.content[0].text;
-      if (data.completion) return data.completion;
+      if (data.content && data.content[0] && data.content[0].text) return nettoyerTranscription(data.content[0].text);
+      if (data.completion) return nettoyerTranscription(data.completion);
       throw new Error(`Format de réponse inattendu: ${JSON.stringify(data)}`);
     } catch (error) {
       console.error('Erreur callClaudeVision:', error);
