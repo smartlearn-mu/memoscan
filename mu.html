@@ -1007,12 +1007,16 @@
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           token: APP_TOKEN,
-          // Haiku suffit sur un cours imprimé ou proprement écrit et coûte 3x moins
-          // que Sonnet. Sur une écriture manuscrite difficile il produit environ deux
-          // erreurs par page, plausibles et sans signal (« FLUCTUATION » pour
-          // « FRUSTRATION ») là où Sonnet lit juste et signale ses doutes. Arbitrage
-          // assumé : repasser à claude-sonnet-4-6 si des cours mal transcrits remontent.
-          model: "claude-haiku-4-5",
+          // Testé sur un vrai document manuscrit difficile (comparaison valide,
+          // les deux modèles réellement appelés via la liste blanche du proxy) :
+          // Haiku invente des phrases absentes du texte, inverse un fait
+          // (« below average » pour « well above average ») et duplique un
+          // paragraphe en charabia croissant. Sonnet ne présente aucun de ces
+          // défauts sur le même document. Le socle du cours doit être fiable
+          // avant tout le reste (flashcards, QCM, exercices en dérivent) :
+          // le surcoût (~x3) est le prix de ne pas propager une erreur
+          // silencieuse dans toute la révision de l'élève.
+          model: "claude-sonnet-4-6",
           max_tokens: 2000,
           messages: [{
             role: "user",
