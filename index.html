@@ -370,7 +370,12 @@
 
   // Extraction tolérante : le modèle renvoie parfois un JSON entouré de
   // fences, avec des échappements invalides ou des virgules terminales
+  // Vrai quand la dernière lecture n'a abouti qu'en refermant une réponse
+  // coupée : l'entraînement est alors amputé de ses derniers éléments.
+  let jsonAmpute = false;
+
   function extraireJSON(texte) {
+    jsonAmpute = false;
     if (!texte) return null;
     let t = String(texte).replace(/```json/gi, '').replace(/```/g, '');
     const debut = t.indexOf('{'), fin = t.lastIndexOf('}');
@@ -381,7 +386,9 @@
     try { return JSON.parse(r); } catch (e) {}
     r = r.replace(/,\s*([}\]])/g, '$1');
     try { return JSON.parse(r); } catch (e) {}
-    return reparerJSONTronque(r);
+    const repare = reparerJSONTronque(r);
+    if (repare) jsonAmpute = true;
+    return repare;
   }
 
   // Dernier recours : la réponse a été coupée en cours de route (plafond
@@ -758,6 +765,14 @@
         // réponse malformée, un nouvel essai suffit presque toujours
         signalerErreur('json_1er_essai', '');
         donnees = extraireJSON(await callDeepSeek(prompt));
+      } else if (jsonAmpute) {
+        // La réponse a été coupée au plafond de 8000 jetons du serveur. Sur un
+        // cours dense le raisonnement en consomme 4000 à 7000, et il ne reste
+        // pas de quoi finir : mesuré amputé 4 fois sur 4, donc relancer ne
+        // servirait qu'à payer deux fois. La carte mentale et l'interro sont
+        // perdues, le reste est intact. On le signale pour savoir à quelle
+        // fréquence cela arrive en vrai ; le correctif est côté serveur.
+        signalerErreur('json_ampute', '');
       }
       if (!donnees) throw new Error('la préparation a raté, réessaie dans un instant');
 
