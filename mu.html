@@ -989,7 +989,7 @@
     return r.trim();
   }
 
-  async function callClaudeVision(imageBase64) {
+  async function callGeminiVision(imageBase64) {
     if (quotaRestant() <= 0) {
       throw new Error(avecNombre('quota.atteint', LIMITE_PAGES_JOUR));
     }
@@ -1002,42 +1002,40 @@
     try {
       // L'identifiant accompagne l'appel : sans lui le serveur ne peut ni
       // appliquer le quota de l'appareil, ni imputer le coût à cet élève.
-      const res = await fetch(`${SCRIPT_URL}?action=claude&id=${getDeviceId()}`, {
+      const res = await fetch(`${SCRIPT_URL}?action=gemini&id=${getDeviceId()}`, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           token: APP_TOKEN,
-          // Testé face à Sonnet 4.6 sur le même document manuscrit difficile
-          // (haute résolution : 2576px contre 1568px sur 4.6, réflexion
-          // désactivée côté serveur pour un budget de jetons comparable) :
-          // Sonnet 5 lit juste sur le fait le plus important du document
-          // (« eleven » vs « fifteen » sur 4.6) et signale la zone coupée par
-          // un doigt au lieu de l'ignorer. Le nouveau tokenizer produit ~30%
-          // de jetons en plus, ce qui rendra ce modèle un peu plus cher que
-          // 4.6 (~+12% sur ce poste) une fois le tarif de lancement terminé
-          // le 1er septembre 2026 — accepté pour la fiabilité de la lecture.
-          model: "claude-sonnet-5",
           max_tokens: 2000,
-          messages: [{
-            role: "user",
-            content: [
-              { type: "image", source: { type: "base64", media_type: "image/jpeg", data: imageBase64 } },
-              { type: "text", text: `Retranscris TOUT le texte de cette image mot pour mot. Si l'image contient une figure géométrique, un schéma, un graphique ou un tableau, décris-le précisément en texte entre crochets, avec toutes les mesures, noms de points, angles et unités visibles sur le dessin — par exemple [Figure : triangle ABC rectangle en A, AB = 4 cm, AC = 3 cm, hypoténuse BC = 5 cm]. Ne dis JAMAIS que l'écriture est illisible. Réponds uniquement avec le texte transcrit : aucune phrase d'introduction, aucun commentaire, aucune ligne de séparation.${langueFigures}` }
+          // Testé face à Sonnet 5 sur un document manuscrit difficile : lit
+          // le même fait correctement (« eleven » heures de soutien), sans
+          // invention ni doublon, environ moitié moins cher — à condition de
+          // couper la réflexion (thinkingBudget: 0, forcé côté serveur), sans
+          // quoi elle consomme le budget sans rien apporter à une tâche de
+          // pure lecture. Ne signale pas les zones cachées par un doigt
+          // comme le faisait Sonnet 5 ; test réalisé sur un seul document.
+          contents: [{
+            parts: [
+              { inline_data: { mime_type: "image/jpeg", data: imageBase64 } },
+              { text: `Retranscris TOUT le texte de cette image mot pour mot. Si l'image contient une figure géométrique, un schéma, un graphique ou un tableau, décris-le précisément en texte entre crochets, avec toutes les mesures, noms de points, angles et unités visibles sur le dessin — par exemple [Figure : triangle ABC rectangle en A, AB = 4 cm, AC = 3 cm, hypoténuse BC = 5 cm]. Ne dis JAMAIS que l'écriture est illisible. Réponds uniquement avec le texte transcrit : aucune phrase d'introduction, aucun commentaire, aucune ligne de séparation.${langueFigures}` }
             ]
           }]
         })
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const data = await res.json();
-      console.log('Réponse Claude:', data);
-      if (data.error) throw new Error(`API Claude: ${data.error.message || JSON.stringify(data.error)}`);
+      console.log('Réponse Gemini:', data);
+      if (data.error) throw new Error(`API Gemini: ${data.error.message || JSON.stringify(data.error)}`);
+      const cand = data.candidates && data.candidates[0];
+      const parts = cand && cand.content && cand.content.parts;
+      const texte = parts ? parts.map(p => p.text || '').join('') : '';
       // Le quota ne se décompte que sur une lecture réellement aboutie : une
       // panne réseau ou une erreur d'API ne doit pas coûter une page à l'élève.
-      if (data.content && data.content[0] && data.content[0].text) { incrementerQuota(); return nettoyerTranscription(data.content[0].text); }
-      if (data.completion) { incrementerQuota(); return nettoyerTranscription(data.completion); }
+      if (texte) { incrementerQuota(); return nettoyerTranscription(texte); }
       throw new Error(`Format de réponse inattendu: ${JSON.stringify(data)}`);
     } catch (error) {
-      console.error('Erreur callClaudeVision:', error);
+      console.error('Erreur callGeminiVision:', error);
       throw error;
     }
   }
@@ -1186,7 +1184,7 @@
       } else {
         if (pages.length === 0) throw new Error(t('err.noPhoto'));
         for (let i = 0; i < pages.length; i++) {
-          const text = await callClaudeVision(pages[i].base64);
+          const text = await callGeminiVision(pages[i].base64);
           coursTexte += `--- PAGE ${i+1} ---\n${text}\n\n`;
         }
       }
