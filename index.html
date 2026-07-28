@@ -648,48 +648,86 @@
     return r.trim();
   }
 
+  const PROMPT_OCR = "Retranscris TOUT le texte de cette image mot pour mot. Si l'image contient une figure géométrique, un schéma, un graphique ou un tableau, décris-le précisément en texte entre crochets, avec toutes les mesures, noms de points, angles et unités visibles sur le dessin — par exemple [Figure : triangle ABC rectangle en A, AB = 4 cm, AC = 3 cm, hypoténuse BC = 5 cm]. Ne dis JAMAIS que l'écriture est illisible. Réponds uniquement avec le texte transcrit : aucune phrase d'introduction, aucun commentaire, aucune ligne de séparation.";
+
+  async function tenterGemini_(imageBase64) {
+    const res = await fetch(`${SCRIPT_URL}?action=gemini&id=${getDeviceId()}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        token: APP_TOKEN,
+        max_tokens: 2000,
+        contents: [{
+          parts: [
+            { inline_data: { mime_type: "image/jpeg", data: imageBase64 } },
+            { text: PROMPT_OCR }
+          ]
+        }]
+      })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    const data = await res.json();
+    console.log('Réponse Gemini:', data);
+    if (data.error) throw new Error(`API Gemini: ${data.error.message || JSON.stringify(data.error)}`);
+    const cand = data.candidates && data.candidates[0];
+    const parts = cand && cand.content && cand.content.parts;
+    const texte = parts ? parts.map(p => p.text || '').join('') : '';
+    if (!texte) throw new Error(`Format de réponse inattendu: ${JSON.stringify(data)}`);
+    return texte;
+  }
+
+  // Filet de secours : Gemini reste gratuit tant qu'il répond, mais une panne
+  // ou un dépassement de son quota ne doit jamais bloquer un élève. skipQuota
+  // évite de décompter deux fois la même page sur le quota anti-abus (déjà
+  // décomptée par la tentative Gemini, réussie ou non).
+  async function tenterSonnetSecours_(imageBase64) {
+    const res = await fetch(`${SCRIPT_URL}?action=claude&id=${getDeviceId()}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        token: APP_TOKEN,
+        skipQuota: true,
+        model: "claude-sonnet-4-6",
+        max_tokens: 2000,
+        messages: [{
+          role: "user",
+          content: [
+            { type: "image", source: { type: "base64", media_type: "image/jpeg", data: imageBase64 } },
+            { type: "text", text: PROMPT_OCR }
+          ]
+        }]
+      })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    const data = await res.json();
+    console.log('Réponse Sonnet (secours):', data);
+    if (data.error) throw new Error(`API Claude: ${data.error.message || JSON.stringify(data.error)}`);
+    const texte = data.content && data.content[0] && data.content[0].text;
+    if (!texte) throw new Error(`Format de réponse inattendu: ${JSON.stringify(data)}`);
+    return texte;
+  }
+
   async function callGeminiVision(imageBase64) {
     if (quotaRestant() <= 0) {
       throw new Error(`Tu as scanné ${LIMITE_PAGES_JOUR} pages aujourd'hui, c'est le maximum. Le compteur repart à zéro demain.`);
     }
     try {
-      // L'identifiant accompagne l'appel : sans lui le serveur ne peut ni
-      // appliquer le quota de l'appareil, ni imputer le coût à cet élève.
-      const res = await fetch(`${SCRIPT_URL}?action=gemini&id=${getDeviceId()}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          token: APP_TOKEN,
-          max_tokens: 2000,
-          // Testé face à Sonnet 5 sur un document manuscrit difficile : lit
-          // le même fait correctement (« eleven » heures de soutien), sans
-          // invention ni doublon, environ moitié moins cher — à condition de
-          // couper la réflexion (thinkingBudget: 0, forcé côté serveur), sans
-          // quoi elle consomme le budget sans rien apporter à une tâche de
-          // pure lecture. Ne signale pas les zones cachées par un doigt
-          // comme le faisait Sonnet 5 ; test réalisé sur un seul document.
-          contents: [{
-            parts: [
-              { inline_data: { mime_type: "image/jpeg", data: imageBase64 } },
-              { text: "Retranscris TOUT le texte de cette image mot pour mot. Si l'image contient une figure géométrique, un schéma, un graphique ou un tableau, décris-le précisément en texte entre crochets, avec toutes les mesures, noms de points, angles et unités visibles sur le dessin — par exemple [Figure : triangle ABC rectangle en A, AB = 4 cm, AC = 3 cm, hypoténuse BC = 5 cm]. Ne dis JAMAIS que l'écriture est illisible. Réponds uniquement avec le texte transcrit : aucune phrase d'introduction, aucun commentaire, aucune ligne de séparation." }
-            ]
-          }]
-        })
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-      const data = await res.json();
-      console.log('Réponse Gemini:', data);
-      if (data.error) throw new Error(`API Gemini: ${data.error.message || JSON.stringify(data.error)}`);
-      const cand = data.candidates && data.candidates[0];
-      const parts = cand && cand.content && cand.content.parts;
-      const texte = parts ? parts.map(p => p.text || '').join('') : '';
-      // Le quota ne se décompte que sur une lecture réellement aboutie : une
-      // panne réseau ou une erreur d'API ne doit pas coûter une page à l'élève.
-      if (texte) { incrementerQuota(); return nettoyerTranscription(texte); }
-      throw new Error(`Format de réponse inattendu: ${JSON.stringify(data)}`);
-    } catch (error) {
-      console.error('Erreur callGeminiVision:', error);
-      throw error;
+      const texte = await tenterGemini_(imageBase64);
+      incrementerQuota();
+      return nettoyerTranscription(texte);
+    } catch (erreurGemini) {
+      // Bascule silencieuse : l'élève ne voit rien tant que le secours répond.
+      // Signalé en coulisse pour suivre la fréquence réelle des pannes Gemini.
+      console.error('Gemini indisponible, bascule Sonnet:', erreurGemini);
+      signalerErreur('gemini_indisponible', String(erreurGemini.message || erreurGemini).slice(0, 200));
+      try {
+        const texte = await tenterSonnetSecours_(imageBase64);
+        incrementerQuota();
+        return nettoyerTranscription(texte);
+      } catch (erreurSonnet) {
+        console.error('Erreur callGeminiVision (secours aussi en échec):', erreurSonnet);
+        throw erreurSonnet;
+      }
     }
   }
 
