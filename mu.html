@@ -1302,8 +1302,8 @@
     } else if (mode === 'resume') {
       let html = `<div class="ccard"><h2>📌 ${escapeHtml(appData.topic)}</h2>`;
       if (appData.key_points.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
-      appData.key_points.forEach((p, i) => html += `<div class="kpc"><div class="kpn">${i+1}</div><div>${escapeHtml(p)}</div></div>`);
-      if (appData.definition) html += `<div class="kpc"><strong>${t('resume.definition')}</strong> ${escapeHtml(appData.definition)}</div>`;
+      appData.key_points.forEach((p, i) => html += `<div class="kpc"><div class="kpn">${i+1}</div><div class="kptxt">${escapeHtml(p)}</div></div>`);
+      if (appData.definition) html += `<div class="kpc"><strong>${t('resume.definition')}</strong> <span class="kptxt">${escapeHtml(appData.definition)}</span></div>`;
       html += `</div>`;
       area.innerHTML = html;
 
@@ -1345,7 +1345,7 @@
       if (appData.exercises.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
       let html = `<div class="ccard"><h2>${t('section.exercise')}</h2>`;
       appData.exercises.forEach((ex, idx) => {
-        html += `<div class="qblock"><p><strong>${escapeHtml(ex.tag)}</strong><br>${escapeHtml(ex.statement)}</p><textarea rows="4" style="width:100%; padding:10px;"></textarea>${renderIndiceZone('exercise', idx, ex.hints)}</div>`;
+        html += `<div class="qblock"><p class="ex-tag"><strong>${escapeHtml(ex.tag)}</strong></p><p>${escapeHtml(ex.statement)}</p><textarea rows="4" style="width:100%; padding:10px;"></textarea>${renderIndiceZone('exercise', idx, ex.hints)}</div>`;
       });
       html += `</div>`;
       area.innerHTML = html;
@@ -1499,7 +1499,13 @@
   // formules mathématiques (3x, -14y, =) et la ponctuation restent intacts.
   function estMotColorisable(tok){ const lettres = tok.match(/[a-zàâäéèêëîïôöùûüçñA-ZÀÂÄÉÈÊËÎÏÔÖÙÛÜÇÑ]/g); return !!lettres && lettres.length >= 2; }
   function colorerTexteDYS(texte,startCompteur){ if(!document.body.classList.contains('dys')) return {html:texte,compteur:startCompteur}; if(!texte) return {html:texte,compteur:startCompteur}; let tokens=texte.split(/(\s+)/g), html='', compteur=startCompteur; for(let tok of tokens){ if(/^\s+$/.test(tok)){ html+=tok; continue; } if(!estMotColorisable(tok)){ html+=escapeHtml(tok); continue; } let res=traiterMotDYS(tok,compteur); html+=res.html; compteur=res.compteur; } return {html,compteur}; }
-  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,li,.kpt,.deft,.exst,.fcq,.qtxt,.opt,.branch-title,.branch-leaves li .leaf-text,.question-text,.correction-box,.hint-box,.fchint,.celebrate-score,.celebrate-phrase,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
+  // Cible chaque bloc de texte affiché. La liste ciblait autrefois des classes
+  // (kpt, deft, exst, fcq, qtxt, question-text) qui n'existent plus dans le
+  // rendu actuel : ces contenus n'étaient jamais coloriés. Remplacées par les
+  // vraies classes (kptxt, fcf). L'extraction n'exigeait aussi qu'un unique
+  // nœud texte : une question de QCM ou d'exercice, entourée d'un <strong>,
+  // était ignorée. innerText couvre ce cas (au prix du gras, accepté).
+  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,li,.kptxt,.fcf,.opt,.branch-title,.branch-leaves li .leaf-text,.correction-box,.hint-box,.fchint,.celebrate-score,.celebrate-phrase,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.textContent.trim()?el.innerText:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
   function appliquerCouleursDYSInterface(){ if(!document.body.classList.contains('dys')) return; let compteur=0; let els=document.querySelectorAll('.hero-step,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,.mode-group-label,#generateHint,.footer,.bento-sub,.progress-title,.progress-streak,.progress-count,.progress-day-label'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,compteur); el.innerHTML=res.html; compteur=res.compteur; } }); }
   function toggleDyslexia(){ document.body.classList.toggle('dys'); let a=document.body.classList.contains('dys'); let btn=document.getElementById('dysBtn'), txt=document.getElementById('dysBtnText'); if(a){ btn.classList.add('active'); txt.innerHTML='DYS ● ON'; localStorage.setItem('ms_dys_mode','1'); appliquerCouleursDYSInterface(); } else{ btn.classList.remove('active'); txt.innerHTML='Mode DYS'; localStorage.setItem('ms_dys_mode','0'); document.querySelectorAll('[data-dys-original]').forEach(el=>el.textContent=el.dataset.dysOriginal); } if(appData&&currentMode) setMode(currentMode); }
   if(localStorage.getItem('ms_dys_mode')==='1') toggleDyslexia();
