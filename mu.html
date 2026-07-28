@@ -58,6 +58,11 @@
     }
 
     body { font-family: system-ui, sans-serif; background: var(--paper); color: var(--ink); }
+    /* Sur mobile, un tap affiche par défaut un flash bleu semi-transparent
+       sur l'élément touché. Combiné au texte DYS déjà bleu (syllabe-bleue),
+       le texte devenait illisible pendant le flash — d'où l'impression
+       qu'un exercice "devient bleu" au clic. */
+    * { -webkit-tap-highlight-color: transparent; }
 
     .header {
       background: white; border-bottom: 1px solid var(--g2);
@@ -234,8 +239,12 @@
     .fcwrap { perspective: 800px; height: 220px; cursor: pointer; margin-bottom: 12px; }
     .fcin { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.4s; }
     .fcin.fl { transform: rotateY(180deg); }
+    /* flex-wrap: le mode DYS colorie directement l'intérieur de .fcf en une
+       suite de <span> par syllabe. Un conteneur flex sans flex-wrap force
+       tous ces enfants sur une seule ligne : une question un peu longue
+       débordait du cadre de la carte au lieu de passer à la ligne. */
     .fcf { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 20px;
-      display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; }
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; padding: 24px; text-align: center; }
     .fcfront { background: var(--ink); color: white; }
     .fcback { background: var(--accent); color: white; transform: rotateY(180deg); }
     .fcnav { display: flex; align-items: center; gap: 10px; }
@@ -1545,7 +1554,13 @@
   // vraies classes (kptxt, fcf). L'extraction n'exigeait aussi qu'un unique
   // nœud texte : une question de QCM ou d'exercice, entourée d'un <strong>,
   // était ignorée. innerText couvre ce cas (au prix du gras, accepté).
-  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,li,.kptxt,.fcf,.opt,.branch-title,.branch-leaves li .leaf-text,.correction-box,.hint-box,.fchint,.celebrate-score,.celebrate-phrase,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.textContent.trim()?el.innerText:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
+  // "li" ciblait aussi le <li> de la carte mentale, un conteneur flex qui
+  // n'a jamais d'autre rôle que d'envelopper .leaf-text. Le colorier
+  // directement écrasait ce <span> interne : les syllabes devenaient des
+  // enfants flex directs, qui refusent de passer à la ligne sans
+  // flex-wrap — d'où le débordement horizontal. .branch-leaves li .leaf-text
+  // suffit à cibler le vrai texte sans démolir la structure.
+  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,.kptxt,.fcf,.opt,.branch-title,.branch-leaves li .leaf-text,.correction-box,.hint-box,.fchint,.celebrate-score,.celebrate-phrase,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.textContent.trim()?el.innerText:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
   function appliquerCouleursDYSInterface(){ if(!document.body.classList.contains('dys')) return; let compteur=0; let els=document.querySelectorAll('.hero-step,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,.mode-group-label,#generateHint,.footer,.bento-sub,.progress-title,.progress-streak,.progress-count,.progress-day-label'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,compteur); el.innerHTML=res.html; compteur=res.compteur; } }); }
   function toggleDyslexia(){ document.body.classList.toggle('dys'); let a=document.body.classList.contains('dys'); let btn=document.getElementById('dysBtn'), txt=document.getElementById('dysBtnText'); if(a){ btn.classList.add('active'); txt.innerHTML='DYS ● ON'; localStorage.setItem('ms_dys_mode','1'); appliquerCouleursDYSInterface(); } else{ btn.classList.remove('active'); txt.innerHTML='Mode DYS'; localStorage.setItem('ms_dys_mode','0'); document.querySelectorAll('[data-dys-original]').forEach(el=>el.textContent=el.dataset.dysOriginal); } if(appData&&currentMode) setMode(currentMode); }
   if(localStorage.getItem('ms_dys_mode')==='1') toggleDyslexia();
