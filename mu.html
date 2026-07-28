@@ -1007,16 +1007,16 @@
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           token: APP_TOKEN,
-          // Testé sur un vrai document manuscrit difficile (comparaison valide,
-          // les deux modèles réellement appelés via la liste blanche du proxy) :
-          // Haiku invente des phrases absentes du texte, inverse un fait
-          // (« below average » pour « well above average ») et duplique un
-          // paragraphe en charabia croissant. Sonnet ne présente aucun de ces
-          // défauts sur le même document. Le socle du cours doit être fiable
-          // avant tout le reste (flashcards, QCM, exercices en dérivent) :
-          // le surcoût (~x3) est le prix de ne pas propager une erreur
-          // silencieuse dans toute la révision de l'élève.
-          model: "claude-sonnet-4-6",
+          // Testé face à Sonnet 4.6 sur le même document manuscrit difficile
+          // (haute résolution : 2576px contre 1568px sur 4.6, réflexion
+          // désactivée côté serveur pour un budget de jetons comparable) :
+          // Sonnet 5 lit juste sur le fait le plus important du document
+          // (« eleven » vs « fifteen » sur 4.6) et signale la zone coupée par
+          // un doigt au lieu de l'ignorer. Le nouveau tokenizer produit ~30%
+          // de jetons en plus, ce qui rendra ce modèle un peu plus cher que
+          // 4.6 (~+12% sur ce poste) une fois le tarif de lancement terminé
+          // le 1er septembre 2026 — accepté pour la fiabilité de la lecture.
+          model: "claude-sonnet-5",
           max_tokens: 2000,
           messages: [{
             role: "user",
