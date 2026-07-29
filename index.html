@@ -716,14 +716,79 @@
     return texte;
   }
 
+  // Cache local par hash exact de l'image : protège du double-clic sur
+  // "Générer" ou d'un aller-retour qui renvoie la même photo, sans nouvel
+  // appel payant. Ne rattrape pas deux photos différentes de la même page
+  // (compression, cadrage) — seulement le fichier strictement identique.
+  const CACHE_OCR_DB = 'memoscan-cache-ocr';
+  const CACHE_OCR_LIMITE = 150; // entrées max ; les plus anciennes sont purgées au-delà
+
+  async function hasherImage_(imageBase64) {
+    const enc = new TextEncoder().encode(imageBase64);
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return [...new Uint8Array(buf)].map(o => o.toString(16).padStart(2, '0')).join('');
+  }
+
+  function ouvrirCacheOCR_() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(CACHE_OCR_DB, 1);
+      req.onupgradeneeded = () => {
+        const store = req.result.createObjectStore('pages', { keyPath: 'hash' });
+        store.createIndex('date', 'date');
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function lireCacheOCR_(hash) {
+    try {
+      const db = await ouvrirCacheOCR_();
+      return await new Promise((resolve) => {
+        const req = db.transaction('pages', 'readonly').objectStore('pages').get(hash);
+        req.onsuccess = () => resolve(req.result ? req.result.texte : null);
+        req.onerror = () => resolve(null);
+      });
+    } catch (e) { return null; }
+  }
+
+  async function ecrireCacheOCR_(hash, texte) {
+    try {
+      const db = await ouvrirCacheOCR_();
+      const store = db.transaction('pages', 'readwrite').objectStore('pages');
+      store.put({ hash, texte, date: Date.now() });
+      // Purge : garde seulement les CACHE_OCR_LIMITE entrées les plus récentes.
+      const cles = await new Promise((resolve) => {
+        const acc = [];
+        const curReq = store.index('date').openCursor(); // ordre croissant : plus ancien d'abord
+        curReq.onsuccess = (e) => {
+          const cur = e.target.result;
+          if (cur) { acc.push(cur.primaryKey); cur.continue(); } else resolve(acc);
+        };
+        curReq.onerror = () => resolve(acc);
+      });
+      if (cles.length > CACHE_OCR_LIMITE) {
+        cles.slice(0, cles.length - CACHE_OCR_LIMITE).forEach(h => store.delete(h));
+      }
+    } catch (e) { /* le cache ne doit jamais faire échouer un scan */ }
+  }
+
   async function callGeminiVision(imageBase64) {
+    const hash = await hasherImage_(imageBase64).catch(() => null);
+    if (hash) {
+      const enCache = await lireCacheOCR_(hash);
+      if (enCache) return enCache; // même fichier déjà lu : ni quota ni appel payant
+    }
+
     if (quotaRestant() <= 0) {
       throw new Error(`Tu as scanné ${LIMITE_PAGES_JOUR} pages aujourd'hui, c'est le maximum. Le compteur repart à zéro demain.`);
     }
     try {
       const texte = await tenterGemini_(imageBase64);
       incrementerQuota();
-      return nettoyerTranscription(texte);
+      const propre = nettoyerTranscription(texte);
+      if (hash) ecrireCacheOCR_(hash, propre);
+      return propre;
     } catch (erreurGemini) {
       // Bascule silencieuse : l'élève ne voit rien tant que le secours répond.
       // Signalé en coulisse pour suivre la fréquence réelle des pannes Gemini.
@@ -732,7 +797,9 @@
       try {
         const texte = await tenterSonnetSecours_(imageBase64);
         incrementerQuota();
-        return nettoyerTranscription(texte);
+        const propre = nettoyerTranscription(texte);
+        if (hash) ecrireCacheOCR_(hash, propre);
+        return propre;
       } catch (erreurSonnet) {
         console.error('Erreur callGeminiVision (secours aussi en échec):', erreurSonnet);
         throw erreurSonnet;
