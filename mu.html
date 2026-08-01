@@ -1008,8 +1008,25 @@
     return `Retranscris TOUT le texte de cette image mot pour mot. Si l'image contient une figure géométrique, un schéma, un graphique ou un tableau, décris-le précisément en texte entre crochets, avec toutes les mesures, noms de points, angles et unités visibles sur le dessin — par exemple [Figure : triangle ABC rectangle en A, AB = 4 cm, AC = 3 cm, hypoténuse BC = 5 cm]. Ne dis JAMAIS que l'écriture est illisible. Réponds uniquement avec le texte transcrit : aucune phrase d'introduction, aucun commentaire, aucune ligne de séparation.${langueFigures}`;
   }
 
+  // Sans délai limite, un appel réseau qui ne répond ni en succès ni en
+  // erreur bloque le spinner indéfiniment et empêche la bascule Gemini→Sonnet
+  // de se déclencher (elle ne se déclenche que sur une erreur, jamais sur une
+  // promesse qui ne se résout jamais).
+  async function fetchAvecDelai_(url, options, delaiMs = 30000) {
+    const controleur = new AbortController();
+    const minuteur = setTimeout(() => controleur.abort(), delaiMs);
+    try {
+      return await fetch(url, { ...options, signal: controleur.signal });
+    } catch (e) {
+      if (e.name === 'AbortError') throw new Error('Le serveur ne répond pas, nouvelle tentative...');
+      throw e;
+    } finally {
+      clearTimeout(minuteur);
+    }
+  }
+
   async function tenterGemini_(imageBase64) {
-    const res = await fetch(`${SCRIPT_URL}?action=gemini&id=${getDeviceId()}`, {
+    const res = await fetchAvecDelai_(`${SCRIPT_URL}?action=gemini&id=${getDeviceId()}`, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({
@@ -1039,7 +1056,7 @@
   // évite de décompter deux fois la même page sur le quota anti-abus (déjà
   // décomptée par la tentative Gemini, réussie ou non).
   async function tenterSonnetSecours_(imageBase64) {
-    const res = await fetch(`${SCRIPT_URL}?action=claude&id=${getDeviceId()}`, {
+    const res = await fetchAvecDelai_(`${SCRIPT_URL}?action=claude&id=${getDeviceId()}`, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({
@@ -1158,7 +1175,7 @@
 
   async function callDeepSeek(prompt) {
     try {
-      const res = await fetch(`${SCRIPT_URL}?action=deepseek&id=${getDeviceId()}`, {
+      const res = await fetchAvecDelai_(`${SCRIPT_URL}?action=deepseek&id=${getDeviceId()}`, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
@@ -1166,7 +1183,7 @@
           messages: [{ role: "user", content: prompt }],
           max_tokens: 8000
         })
-      });
+      }, 90000);
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const data = await res.json();
       console.log('Réponse DeepSeek:', data);
