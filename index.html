@@ -628,7 +628,10 @@
   // bloque un abonnement partagé entre plusieurs élèves. Ce compteur est local
   // et donc contournable : il sert à éviter des appels payants inutiles et à
   // expliquer la situation à l'élève. Le vrai plafond est celui du serveur.
-  const LIMITE_PAGES_JOUR = 30;
+  // Doit rester aligne sur LIMITE_JOUR_APPAREIL cote serveur, qui fait foi.
+  // 10 : au-dela de ~11 lecons par jour, un abonnement a Rs 990/an ne couvre
+  // plus le cout des appels (0,0054 $ la lecon, mesure le 04/08).
+  const LIMITE_PAGES_JOUR = 10;
 
   function quotaJour() {
     const jour = new Date().toISOString().slice(0, 10);
