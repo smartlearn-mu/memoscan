@@ -1289,6 +1289,41 @@
     reader.readAsDataURL(fichier);
   }
 
+  const SEPARATEUR_PAGES = String.fromCharCode(10, 10);
+
+  // ---- OCR hybride : Mistral d'abord, Gemini seulement si figure ----
+  // Mesure du 04/08 sur la meme photo de cahier manuscrit :
+  //   mistral-ocr  8 s, gratuit, transcription fidele, les 2 pages
+  //   gemini      16 s, 0,0080 $, fidele AUSSI, et il DECRIT la frise
+  // Mistral remplace les figures par un marqueur ![img-0.jpeg] au lieu de les
+  // mettre en mots. Sur une page de texte c'est donc tout benefice ; des qu'un
+  // schema apparait on repasse a Gemini, car tout l'apprentissage des maths
+  // repose sur ces descriptions entre crochets.
+  const MARQUEUR_IMAGE = /!\[[^\]]*\]\([^)]*\)/;
+
+  async function tenterMistralOcr_(imageBase64) {
+    const res = await fetchAvecDelai_(`${SCRIPT_URL}?action=mistralOcr&id=${getDeviceId()}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        token: APP_TOKEN,
+        // Le quota serveur protege le budget ; une page lue gratuitement par
+        // Mistral ne coute rien, elle ne doit donc pas l'entamer. Le compteur
+        // affiche a l'eleve, lui, decompte bien toutes les pages.
+        skipQuota: true,
+        document: { type: 'image_url', image_url: 'data:image/jpeg;base64,' + imageBase64 }
+      })
+    }, 60000);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const pages = data.pages || [];
+    if (!pages.length) return null;
+    const brut = pages.map(p => p.markdown || '').join(SEPARATEUR_PAGES);
+    if (MARQUEUR_IMAGE.test(brut)) return null;   // figure a decrire : c'est pour Gemini
+    const propre = nettoyerTranscription(brut);
+    return transcriptionUtilisable_(propre) ? propre : null;
+  }
+
   async function callGeminiVision(imageBase64) {
     const hash = await hasherImage_(imageBase64).catch(() => null);
     if (hash) {
@@ -1299,6 +1334,15 @@
     if (quotaRestant() <= 0) {
       throw new Error(avecNombre('quota.atteint', LIMITE_PAGES_JOUR));
     }
+    // Gratuit et rapide : on tente Mistral en premier. Il rend null s'il
+    // rencontre une figure, et Gemini prend alors le relais pour la decrire.
+    const viaMistral = await tenterMistralOcr_(imageBase64).catch(() => null);
+    if (viaMistral) {
+      incrementerQuota();
+      if (hash) ecrireCacheOCR_(hash, viaMistral);
+      return viaMistral;
+    }
+
     try {
       const texte = await tenterGemini_(imageBase64);
       const propre = nettoyerTranscription(texte);
