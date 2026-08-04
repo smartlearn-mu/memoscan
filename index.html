@@ -862,14 +862,15 @@
       try {
         const texte = await tenterSonnetSecours_(imageBase64);
         const propre = nettoyerTranscription(texte);
-        // Gemini a deja renonce. Si Sonnet ne lit pas davantage, ce n'est plus
-        // un hoquet de fournisseur : c'est la photo. Mesure du 04/08 20:01 :
-        // Gemini 21 jetons, Sonnet 27 sur la meme image. Mieux vaut une erreur
-        // franche qu'une lecon fabriquee a partir de rien, que ni l'eleve ni
-        // le parent ne peut distinguer d'une vraie.
+        // Deux modeles chez deux fournisseurs qui rendent 21 et 27 jetons sur
+        // la meme image (mesure du 04/08 20:01) : soit la photo est illisible,
+        // soit la page est reellement presque vide. Dans les deux cas il n'y a
+        // pas de quoi batir une lecon, et DeepSeek en fabriquerait une de 3500
+        // jetons entierement inventee, que ni l'eleve ni le parent ne peut
+        // distinguer d'une vraie. Le message couvre donc les deux causes.
         if (!transcriptionUtilisable_(propre)) {
-          signalerErreur('photo_illisible', `gemini+sonnet : ${propre.length} car. : ${propre.slice(0, 80)}`);
-          throw new Error("Cette photo n'a pas pu etre lue. Reprends-la : rapproche-toi de la page, evite l'ombre et les reflets, et photographie une seule page a la fois.");
+          signalerErreur('texte_insuffisant', `gemini+sonnet : ${propre.length} car. : ${propre.slice(0, 80)}`);
+          throw new Error("Cette page contient trop peu de texte pour en faire une lecon. Si la photo est floue ou sombre, reprends-la. Si la page est courte, ajoute les pages suivantes avant de generer.");
         }
         incrementerQuota();
         if (hash) ecrireCacheOCR_(hash, propre);
