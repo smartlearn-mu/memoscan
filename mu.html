@@ -377,7 +377,7 @@
       <div class="upload-title" data-i18n="upload.gallery.title">Choisir une photo</div>
       <div class="upload-desc" data-i18n="upload.gallery.desc">Clique pour sélectionner dans ta galerie</div>
     </div>
-    <input type="file" id="galleryInput" accept="image/*" multiple style="display:none">
+    <input type="file" id="galleryInput" accept="image/*,application/pdf" multiple style="display:none">
   </div>
 
   <div class="upload-zone" id="textZone">
@@ -899,6 +899,9 @@
   // ==================== UPLOAD IMAGES (ordre garanti) ====================
   function handleImageUpload(files) {
     if (!files || files.length === 0) return;
+    // Un PDF remplace la selection : on ne melange pas photos et document.
+    const pdf = Array.from(files).find(f => f.type === 'application/pdf');
+    if (pdf) return chargerPdf_(pdf);
     const fileList = Array.from(files).filter(f => f.type.startsWith('image/'));
     if (fileList.length === 0) return;
     pages = new Array(fileList.length).fill(null);
@@ -1229,6 +1232,60 @@
     return !/(je ne (peux|pourrai)[^.]{0,30}(lire|transcrire|retranscrire|dechiffrer|déchiffrer)|illisible|impossible de[^.]{0,20}(lire|transcrire|dechiffrer|déchiffrer)|i (cannot|can't|am unable|'m unable)[^.]{0,30}(read|transcribe)|unable to (read|transcribe))/i.test(t);
   }
 
+
+  // ---- PDF : Mistral OCR ----
+  // Mesure du 04/08 : 4 pages en 6 s, gratuit, et le texte revient en markdown
+  // (titres et gras conserves) -- meilleure entree pour la generation qu'un
+  // bloc plat. Gemini couterait 0,0138 $ pour les memes 4 pages et 8x plus lent.
+  const PDF_PAGES_MAX = 4;
+
+  async function lirePdf_(base64) {
+    const res = await fetchAvecDelai_(`${SCRIPT_URL}?action=mistralOcr&id=${getDeviceId()}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        token: APP_TOKEN,
+        document: { type: 'document_url', document_url: 'data:application/pdf;base64,' + base64 },
+        // Au-dela de 4 pages la lecon est diluee : le generateur produit un
+        // nombre FIXE de flashcards et d'exercices quelle que soit la taille
+        // du document, donc chaque page finirait a peine effleuree.
+        pages: [0, 1, 2, 3]
+      })
+    }, 120000);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.error || data.message) throw new Error(String(data.message || data.error).slice(0, 150));
+    const pages = data.pages || [];
+    if (!pages.length) throw new Error('Ce PDF ne contient pas de texte lisible.');
+    const texte = pages.map(p => p.markdown || '').join('\n\n').trim();
+    if (!transcriptionUtilisable_(texte)) {
+      throw new Error("Ce document contient trop peu de texte pour en faire une lecon.");
+    }
+    // On previent quand le plafond a mordu : jamais de troncature silencieuse.
+    pdfTronque = pages.length >= PDF_PAGES_MAX;
+    return texte;
+  }
+
+  let pdfTronque = false;
+
+  function chargerPdf_(fichier) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const b64 = String(e.target.result).split(',')[1];
+      pages = [{ pdf: true, base64: b64, nom: fichier.name }];
+      previewContainer.innerHTML =
+        `<div class="ccard" style="text-align:center;padding:18px">📄 <strong>${escapeHtml(fichier.name)}</strong>`
+        + `<div style="font-size:13px;opacity:.75;margin-top:6px">`
+        + (currentLang === 'en'
+            ? `Only the first ${PDF_PAGES_MAX} pages will be used.`
+            : `Seules les ${PDF_PAGES_MAX} premieres pages seront utilisees.`)
+        + `</div></div>`;
+      previewContainer.style.display = 'block';
+      updateGenerateButton();
+    };
+    reader.readAsDataURL(fichier);
+  }
+
   async function callGeminiVision(imageBase64) {
     const hash = await hasherImage_(imageBase64).catch(() => null);
     if (hash) {
@@ -1438,7 +1495,9 @@
       } else {
         if (pages.length === 0) throw new Error(t('err.noPhoto'));
         for (let i = 0; i < pages.length; i++) {
-          const text = await callGeminiVision(pages[i].base64);
+          const text = pages[i].pdf
+            ? await lirePdf_(pages[i].base64)
+            : await callGeminiVision(pages[i].base64);
           coursTexte += `--- PAGE ${i+1} ---\n${text}\n\n`;
         }
       }
