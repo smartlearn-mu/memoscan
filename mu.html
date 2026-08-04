@@ -232,7 +232,10 @@
 
     /* Compte des activités fabriquées, affiché sur la tuile "S'entraîner" */
 .bento-compte { display: block; margin-top: 4px; font-size: 13px; opacity: .85; font-weight: 600; }
-.carea { margin-top: 16px; }
+.deja-bandeau { margin: 12px 0 0; padding: 10px 14px; border-radius: 12px;
+      background: #e8f5e9; color: #1b5e20; font-size: 14px; font-weight: 600;
+      border: 1px solid #a5d6a7; }
+    .carea { margin-top: 16px; }
     .ccard { background: white; border: 2px solid var(--g2); border-radius: 20px; padding: 24px; margin-bottom: 16px; }
     .kpc { background: var(--g1); border-radius: 14px; padding: 14px; margin-bottom: 10px; display: flex; gap: 12px; }
     .kpn { width: 28px; height: 28px; background: var(--accent-deep); color: white; border-radius: 10px;
@@ -418,7 +421,8 @@
         <div class="mode-btn" data-mode="interro" role="button" tabindex="0">⏱️ <span class="mode-title" data-i18n="modegrid.interro">Interro</span></div>
       </div>
     </div>
-    <div id="carea" class="carea"></div>
+    <div id="dejaBandeau" class="deja-bandeau" style="display:none;"></div>
+      <div id="carea" class="carea"></div>
   </div>
 
   <div class="footer" data-i18n="footer.text">Memo Scan · Smart Learn — ton prof particulier de poche · leçons particulières, révisions, aide aux devoirs</div>
@@ -1118,16 +1122,63 @@
     return [...new Uint8Array(buf)].map(o => o.toString(16).padStart(2, '0')).join('');
   }
 
+  // Version 2 : ajout du magasin "lecons". onblocked est indispensable — sans
+  // lui, un onglet reste ouvert sur l'ancienne version et la promesse ne se
+  // resout jamais : spinner infini.
   function ouvrirCacheOCR_() {
     return new Promise((resolve, reject) => {
-      const req = indexedDB.open(CACHE_OCR_DB, 1);
+      const req = indexedDB.open(CACHE_OCR_DB, 2);
       req.onupgradeneeded = () => {
-        const store = req.result.createObjectStore('pages', { keyPath: 'hash' });
-        store.createIndex('date', 'date');
+        const db = req.result;
+        if (!db.objectStoreNames.contains('pages')) {
+          db.createObjectStore('pages', { keyPath: 'hash' }).createIndex('date', 'date');
+        }
+        if (!db.objectStoreNames.contains('lecons')) {
+          db.createObjectStore('lecons', { keyPath: 'hash' }).createIndex('date', 'date');
+        }
       };
       req.onsuccess = () => resolve(req.result);
       req.onerror = () => reject(req.error);
+      req.onblocked = () => reject(new Error('cache bloque par un autre onglet'));
     });
+  }
+
+  // Le cache OCR evitait de repayer la LECTURE d'une photo, mais la generation
+  // etait refaite a chaque fois : un eleve qui rescannait la meme page repayait
+  // la partie la plus chere, attendait 30 s, et recevait des exercices
+  // DIFFERENTS — donc perdait le travail deja commence. La lecon est desormais
+  // conservee, indexee sur le texte du cours (donc valable aussi en mode colle).
+  const CACHE_LECONS_LIMITE = 60;
+
+  async function lireLeconCache_(hash) {
+    try {
+      const db = await ouvrirCacheOCR_();
+      return await new Promise((resolve) => {
+        const req = db.transaction('lecons', 'readonly').objectStore('lecons').get(hash);
+        req.onsuccess = () => resolve(req.result ? req.result.donnees : null);
+        req.onerror = () => resolve(null);
+      });
+    } catch (e) { return null; }
+  }
+
+  async function ecrireLeconCache_(hash, donnees) {
+    try {
+      const db = await ouvrirCacheOCR_();
+      const store = db.transaction('lecons', 'readwrite').objectStore('lecons');
+      store.put({ hash, donnees, date: Date.now() });
+      const cles = await new Promise((resolve) => {
+        const acc = [];
+        const cur = store.index('date').openCursor();
+        cur.onsuccess = (e) => {
+          const c = e.target.result;
+          if (c) { acc.push(c.primaryKey); c.continue(); } else resolve(acc);
+        };
+        cur.onerror = () => resolve(acc);
+      });
+      if (cles.length > CACHE_LECONS_LIMITE) {
+        cles.slice(0, cles.length - CACHE_LECONS_LIMITE).forEach(h => store.delete(h));
+      }
+    } catch (e) { /* le cache ne doit jamais faire echouer une generation */ }
   }
 
   async function lireCacheOCR_(hash) {
@@ -1389,6 +1440,13 @@
         }
       }
 
+      // Meme cours deja prepare : on rend la lecon telle quelle. Ni attente,
+      // ni appel paye, et surtout l'eleve retrouve EXACTEMENT les exercices
+      // qu'il avait commences au lieu d'une nouvelle serie.
+      const hashCours = await hasherImage_(coursTexte).catch(() => null);
+      let donnees = hashCours ? await lireLeconCache_(hashCours) : null;
+      const dejaPreparee = !!donnees;
+
       // Le bouton 🌐 ne traduisait que l'interface : les consignes passaient en
       // anglais mais le cours corrigé, les flashcards et les exercices restaient
       // en français, puisque le prompt l'est. Un élève anglophone doit réviser
@@ -1399,7 +1457,7 @@
 
       const prompt = `Cours:\n${coursTexte}\n\nTu es un professeur particulier exigeant. Prépare un entraînement complet à partir du cours ci-dessus. Quantités attendues : 8 à 12 flashcards couvrant toutes les notions, 6 à 8 questions de QCM avec des pièges plausibles, 4 à 6 questions ouvertes dont les 2 dernières plus difficiles (expliquer, comparer, appliquer), 3 à 5 exercices, 5 à 8 questions d'interro. Adapte-toi au type de cours : s'il s'agit d'une MÉTHODE ou d'une PROCÉDURE à appliquer (mathématiques, calcul, conjugaison, grammaire, orthographe), crée de NOUVEAUX exercices en variant les nombres, les verbes ou les cas, tant que la méthode reste exactement celle enseignée dans le cours — vise le haut des fourchettes même si le cours est court, car c'est la répétition qui fait progresser. S'il s'agit au contraire d'un cours de CONNAISSANCES (histoire, géographie, sciences, vocabulaire, littérature), n'invente jamais un fait, une date ou une notion absente du cours : réduis alors les quantités plutôt que d'ajouter du contenu qui n'a pas été enseigné. Écris les mathématiques en texte simple lisible par un enfant (x², 3/4, √9, ×, ÷, ≤) : n'utilise JAMAIS de LaTeX, ni \\( \\), ni $, ni \\frac, ni \\begin. Reste concis dans les corrections : va à l'essentiel plutôt que de tout détailler. Pratique l'apprentissage guidé : pour chaque question ouverte et chaque exercice, écris deux indices gradués (champ hints) pour un élève de 10-12 ans qui bloque. Le premier relance sa réflexion par une question qui recentre, sans rien dévoiler. Le second oriente vers l'endroit du cours où chercher, mais ne contient JAMAIS un élément de la réponse attendue : il dit où chercher, jamais quoi répondre. ${consigneLangue} Génère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","hints":["indice1","indice2"],"model_answer":"r"}],"exercises":[{"tag":"étiquette courte","statement":"exo","hints":["indice1","indice2"],"solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
 
-      let donnees = extraireJSON(await callDeepSeek(prompt));
+      if (!donnees) donnees = extraireJSON(await callDeepSeek(prompt));
       if (!donnees) {
         // Seconde chance automatique : le generateur produit parfois une
         // reponse malformee, un nouvel essai suffit presque toujours
@@ -1415,6 +1473,7 @@
         signalerErreur('json_ampute', '');
       }
       if (!donnees) throw new Error(t('err.generation'));
+      if (hashCours && !dejaPreparee) ecrireLeconCache_(hashCours, donnees);
 
       appData = normaliserAppData(donnees);
       fcIndex = 0;
@@ -1424,6 +1483,7 @@
 
       document.getElementById('loadingDiv').style.display = 'none';
       document.getElementById('modeSection').style.display = 'block';
+      afficherDejaPreparee_(dejaPreparee);
       generateBtn.disabled = false;
       setMode('cours');
       // La tuile "S'entraîner" se repliait après chaque génération : l'élève ne
@@ -1701,6 +1761,20 @@
       tuile.appendChild(badge);
     }
     badge.textContent = bouts.join(' · ');
+  }
+
+  // Sans ce bandeau, une lecon rendue instantanement depuis le cache passerait
+  // pour un bug ("il n'a rien fait"). On dit explicitement que c'est le meme
+  // travail, ce qui repond aussi a la vraie question de l'eleve : est-ce deja fait ?
+  function afficherDejaPreparee_(oui) {
+    const b = document.getElementById('dejaBandeau');
+    if (!b) return;
+    b.style.display = oui ? 'block' : 'none';
+    if (oui) {
+      b.textContent = currentLang === 'en'
+        ? "You already prepared this lesson - here is exactly your earlier work, nothing was regenerated."
+        : "Tu as deja prepare cette lecon - tu retrouves exactement ton travail, rien n'a ete regenere.";
+    }
   }
 
   function setPratiqueOuverte(val) {
