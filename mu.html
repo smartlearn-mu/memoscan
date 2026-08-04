@@ -1015,17 +1015,32 @@
   // 90 s et non 30 : un OCR Gemini mesuré via Apps Script a pris 47 s, et un
   // autre exactement 30 s — la réponse arrivant 2 s après la coupure, la page
   // était alors payée deux fois (Gemini abandonné + Sonnet de secours) pour rien.
-  async function fetchAvecDelai_(url, options, delaiMs = 90000) {
-    const controleur = new AbortController();
-    const minuteur = setTimeout(() => controleur.abort(), delaiMs);
-    try {
-      return await fetch(url, { ...options, signal: controleur.signal });
-    } catch (e) {
-      if (e.name === 'AbortError') throw new Error('Le serveur ne répond pas, nouvelle tentative...');
-      throw e;
-    } finally {
-      clearTimeout(minuteur);
+  // Google renvoie par intermittence des 404 sur le proxy Apps Script : mesuré
+  // en vrai, le même appel échoue puis passe 16 s plus tard. Sans reprise, un
+  // seul hoquet jetait tout le travail de l'élève, generation comprise.
+  const STATUTS_PASSAGERS = [404, 408, 429, 500, 502, 503, 504];
+
+  async function fetchAvecDelai_(url, options, delaiMs = 90000, essais = 3) {
+    let derniere;
+    for (let n = 0; n < essais; n++) {
+      const controleur = new AbortController();
+      const minuteur = setTimeout(() => controleur.abort(), delaiMs);
+      try {
+        const res = await fetch(url, { ...options, signal: controleur.signal });
+        // Une vraie erreur (400, 403...) est rendue telle quelle à l'appelant :
+        // la réessayer ne servirait à rien. Seul le passager est repris.
+        if (res.ok || STATUTS_PASSAGERS.indexOf(res.status) === -1) return res;
+        derniere = new Error(`HTTP ${res.status}`);
+      } catch (e) {
+        derniere = e.name === 'AbortError'
+          ? new Error('Le serveur ne répond pas, nouvelle tentative...')
+          : e;
+      } finally {
+        clearTimeout(minuteur);
+      }
+      if (n < essais - 1) await new Promise(r => setTimeout(r, 1500 * (n + 1)));
     }
+    throw derniere;
   }
 
   async function tenterGemini_(imageBase64) {
