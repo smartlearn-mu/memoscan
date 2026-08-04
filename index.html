@@ -210,12 +210,13 @@
     .fcwrap { perspective: 800px; height: 220px; cursor: pointer; margin-bottom: 12px; }
     .fcin { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.4s; }
     .fcin.fl { transform: rotateY(180deg); }
-    /* flex-wrap: le mode DYS colorie directement l'intérieur de .fcf en une
-       suite de <span> par syllabe. Un conteneur flex sans flex-wrap force
-       tous ces enfants sur une seule ligne : une question un peu longue
-       débordait du cadre de la carte au lieu de passer à la ligne. */
+    /* .fcf centre en flex, mais ne doit JAMAIS être la cible du coloriage DYS :
+       un conteneur flex supprime les espaces entre ses enfants, et les syllabes
+       colorées devenaient des enfants flex directs — les mots se collaient.
+       Le texte vit donc dans .fctxt, qui n'est pas flex. */
     .fcf { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 20px;
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; padding: 24px; text-align: center; }
+      display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; }
+    .fctxt { display: block; max-width: 100%; overflow-wrap: break-word; }
     .fcfront { background: var(--ink); color: white; }
     .fcback { background: var(--accent); color: white; transform: rotateY(180deg); }
 
@@ -1000,7 +1001,7 @@
     } else if (mode === 'flashcard') {
       if (appData.flashcards.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
       const card = appData.flashcards[fcIndex];
-      area.innerHTML = `<div class="ccard"><div class="fcwrap" onclick="flipFlashcard()"><div class="fcin ${fcFlipped ? 'fl' : ''}"><div class="fcf fcfront">${escapeHtml(card.question)}</div><div class="fcf fcback">${escapeHtml(card.answer)}</div></div></div><div style="display:flex; justify-content:space-between;"><button onclick="prevFlashcard()">◀</button><span style="font-size:0.8rem;align-self:center;">${fcIndex+1}/${appData.flashcards.length}</span><button onclick="nextFlashcard()">▶</button></div></div>`;
+      area.innerHTML = `<div class="ccard"><div class="fcwrap" onclick="flipFlashcard()"><div class="fcin ${fcFlipped ? 'fl' : ''}"><div class="fcf fcfront"><span class="fctxt">${escapeHtml(card.question)}</span></div><div class="fcf fcback"><span class="fctxt">${escapeHtml(card.answer)}</span></div></div></div><div style="display:flex; justify-content:space-between;"><button onclick="prevFlashcard()">◀</button><span style="font-size:0.8rem;align-self:center;">${fcIndex+1}/${appData.flashcards.length}</span><button onclick="nextFlashcard()">▶</button></div></div>`;
 
     } else if (mode === 'qcm') {
       if (appData.qcm.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
@@ -1138,7 +1139,7 @@
   // enfants flex directs, qui refusent de passer à la ligne sans
   // flex-wrap — d'où le débordement horizontal. .branch-leaves li .leaf-text
   // suffit à cibler le vrai texte sans démolir la structure.
-  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,.kptxt,.fcf,.opt,.branch-title,.branch-leaves li .leaf-text,.correction-box,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.textContent.trim()?el.innerText:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
+  function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,.kptxt,.fcf .fctxt,.opt,.branch-title,.branch-leaves li .leaf-text,.correction-box,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.textContent.trim()?el.innerText:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
   function appliquerCouleursDYSInterface(){ if(!document.body.classList.contains('dys')) return; let compteur=0; let els=document.querySelectorAll('.hero h2,.hero p,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,#generateHint,.footer'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,compteur); el.innerHTML=res.html; compteur=res.compteur; } }); }
   function toggleDyslexia(){ document.body.classList.toggle('dys'); let a=document.body.classList.contains('dys'); let btn=document.getElementById('dysBtn'), txt=document.getElementById('dysBtnText'); if(a){ btn.classList.add('active'); txt.innerHTML='DYS ● ON'; localStorage.setItem('ms_dys_mode','1'); appliquerCouleursDYSInterface(); } else{ btn.classList.remove('active'); txt.innerHTML='Mode DYS'; localStorage.setItem('ms_dys_mode','0'); document.querySelectorAll('[data-dys-original]').forEach(el=>el.textContent=el.dataset.dysOriginal); } if(appData&&currentMode) setMode(currentMode); }
   if(localStorage.getItem('ms_dys_mode')==='1') toggleDyslexia();
