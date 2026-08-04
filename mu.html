@@ -1197,6 +1197,13 @@
         // ce que Gemini a répondu quand il ne transcrit pas.
         throw new Error(`Transcription inexploitable (${propre.length} car.) : ${propre.slice(0, 90)}`);
       }
+      // Une page courte peut etre legitime (une trace ecrite tient parfois en
+      // trois lignes), mais c'est aussi la signature d'une transcription
+      // partielle. On ne bloque pas l'eleve, on signale pour pouvoir verifier
+      // apres coup au lieu de deviner a partir des seuls compteurs de jetons.
+      if (propre.length < 600) {
+        signalerErreur('ocr_court', `${propre.length} car. : ${propre.slice(0, 90)}`);
+      }
       incrementerQuota();
       if (hash) ecrireCacheOCR_(hash, propre);
       return propre;
