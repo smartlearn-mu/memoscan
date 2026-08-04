@@ -1334,14 +1334,16 @@
     if (quotaRestant() <= 0) {
       throw new Error(avecNombre('quota.atteint', LIMITE_PAGES_JOUR));
     }
-    // Gratuit et rapide : on tente Mistral en premier. Il rend null s'il
-    // rencontre une figure, et Gemini prend alors le relais pour la decrire.
-    const viaMistral = await tenterMistralOcr_(imageBase64).catch(() => null);
-    if (viaMistral) {
-      incrementerQuota();
-      if (hash) ecrireCacheOCR_(hash, viaMistral);
-      return viaMistral;
-    }
+    // ATTENTION -- ne PAS remettre Mistral OCR en tete sur les photos.
+    // Mesure du 04/08 sur une vraie page d'eleve (cursive rapide, abregee) :
+    //   Mistral : "Parite et chat"  au lieu de  "Rarete et choix"
+    //             "France (S.E., minibank)"     "terre (sol, minerais)"
+    //             "urines"                      "usines"
+    //   Gemini  : tout juste.
+    // Les deux notions centrales du cours etaient detruites, et la sortie ne
+    // contenait AUCUN marqueur d'image : un aiguillage base sur la detection
+    // de figure aurait accepte ce texte et bati la lecon dessus. Mistral reste
+    // excellent sur le texte imprime (PDF, voir lirePdf_), pas sur le manuscrit.
 
     try {
       const texte = await tenterGemini_(imageBase64);
