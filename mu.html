@@ -1157,6 +1157,15 @@
     } catch (e) { /* le cache ne doit jamais faire échouer un scan */ }
   }
 
+  // Une page de cours photographiée fait toujours plusieurs centaines de
+  // caractères. Une réponse minuscule, ou qui commence par un refus, n'est
+  // pas une transcription : mieux vaut la rejeter que bâtir une leçon dessus.
+  function transcriptionUtilisable_(texte) {
+    const t = (texte || '').trim();
+    if (t.length < 40) return false;
+    return !/^(je ne peux pas|je suis desole|désolé|sorry|i (cannot|can't|am unable|'m unable))/i.test(t);
+  }
+
   async function callGeminiVision(imageBase64) {
     const hash = await hasherImage_(imageBase64).catch(() => null);
     if (hash) {
@@ -1169,8 +1178,13 @@
     }
     try {
       const texte = await tenterGemini_(imageBase64);
-      incrementerQuota();
       const propre = nettoyerTranscription(texte);
+      // Mesuré en vrai : Gemini a renvoyé 21 jetons au lieu d'une page, et
+      // l'app a fabriqué une leçon entière à partir de ce vide. Une page de
+      // cours fait des centaines de caractères : en dessous, c'est un refus
+      // de lecture ou une réponse vide, et Sonnet doit reprendre la main.
+      if (!transcriptionUtilisable_(propre)) throw new Error('Transcription vide ou refus de lecture');
+      incrementerQuota();
       if (hash) ecrireCacheOCR_(hash, propre);
       return propre;
     } catch (erreurGemini) {
