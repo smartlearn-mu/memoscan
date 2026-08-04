@@ -810,39 +810,52 @@
       document.getElementById('trialBanner').style.display = 'none';
       return;
     }
-    if (!localStorage.getItem('ms_mu_trial_start')) {
-      localStorage.setItem('ms_mu_trial_start', String(Date.now()));
+    if (localStorage.getItem(CLE_LECONS) === null) {
+      localStorage.setItem(CLE_LECONS, String(TRIAL_LECONS));
     }
     updateTrialBanner();
-    setInterval(updateTrialBanner, 60000);
+  }
+
+  // Essai compte en lecons, plus en heures : on ne peut pas oublier un essai
+  // qui ne se perime pas, et il attend le soir ou l'enfant en a vraiment besoin.
+  const TRIAL_LECONS = 3;
+  const CLE_LECONS = 'ms_mu_lecons_essai';
+
+  function leconsEssaiRestantes_() {
+    const v = parseInt(localStorage.getItem(CLE_LECONS), 10);
+    return isNaN(v) ? TRIAL_LECONS : Math.max(0, v);
+  }
+
+  // Decremente APRES une generation reussie seulement : un essai ne doit jamais
+  // etre entame par une panne reseau ou une photo illisible.
+  function consommerLeconEssai_() {
+    if (localStorage.getItem('ms_paid') === '1') return;
+    localStorage.setItem(CLE_LECONS, String(Math.max(0, leconsEssaiRestantes_() - 1)));
+    updateTrialBanner();
   }
 
   function updateTrialBanner() {
     if (localStorage.getItem('ms_paid') === '1') return;
-    const start = parseInt(localStorage.getItem('ms_mu_trial_start') || '0', 10);
-    const elapsed = Date.now() - start;
-    const ONE_DAY = 24 * 60 * 60 * 1000;
-    const remaining = ONE_DAY - elapsed;
+    const reste = leconsEssaiRestantes_();
     const banner = document.getElementById('trialBanner');
     const span = banner.querySelector('span');
-    if (remaining <= 0) {
-      span.textContent = t('trial.expired');
+    const en = currentLang === 'en';
+    if (reste <= 0) {
+      span.textContent = en
+        ? 'Your 3 free lessons are used. Unlock the full year for Rs 990.'
+        : "Tes 3 lecons gratuites sont utilisees. Debloque l'annee entiere pour Rs 990.";
       banner.classList.add('expired');
     } else {
       banner.classList.remove('expired');
-      const hoursLeft = Math.ceil(remaining / (60 * 60 * 1000));
-      if (hoursLeft <= 1) {
-        span.textContent = t('trial.lastHour');
-      } else {
-        span.textContent = t('trial.left').replace('{h}', hoursLeft);
-      }
+      span.textContent = reste === 1
+        ? (en ? '1 free lesson left' : 'Il te reste 1 lecon gratuite')
+        : (en ? reste + ' free lessons left' : 'Il te reste ' + reste + ' lecons gratuites');
     }
   }
 
   function isTrialExpired() {
     if (localStorage.getItem('ms_paid') === '1') return false;
-    const start = parseInt(localStorage.getItem('ms_mu_trial_start') || '0', 10);
-    return (Date.now() - start) >= 24 * 60 * 60 * 1000;
+    return leconsEssaiRestantes_() <= 0;
   }
 
   initTrial();
@@ -855,12 +868,12 @@
         if (r.paid) {
           localStorage.setItem('ms_paid', '1');
           document.getElementById('trialBanner').style.display = 'none';
-        } else if (r.daysLeft <= 0) {
-          localStorage.setItem('ms_mu_trial_start', String(Date.now() - 25 * 3600 * 1000));
-          updateTrialBanner();
         } else {
-          if (r.start && !isNaN(new Date(r.start).getTime())) {
-            localStorage.setItem('ms_mu_trial_start', String(new Date(r.start).getTime()));
+          // Le serveur fait foi : il compte les lecons reellement generees,
+          // ce qu'un vidage du navigateur ne peut pas remettre a zero.
+          const reste = (r.leconsRestantes !== undefined) ? r.leconsRestantes : r.daysLeft;
+          if (typeof reste === 'number' && !isNaN(reste)) {
+            localStorage.setItem(CLE_LECONS, String(Math.max(0, reste)));
             updateTrialBanner();
           }
         }
@@ -1628,6 +1641,7 @@
       annoncerActivites_();
       setPratiqueOuverte(true);
       document.getElementById('modeSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      consommerLeconEssai_();
       enregistrerJourActif();
       renderProgressCard();
       fetch(SCRIPT_URL + '?action=activity&id=' + getDeviceId() + '&type=scan&token=' + encodeURIComponent(APP_TOKEN)).catch(() => {});
