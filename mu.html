@@ -1566,7 +1566,22 @@
 
       const prompt = `Cours:\n${coursTexte}\n\nTu es un professeur particulier exigeant. Prépare un entraînement complet à partir du cours ci-dessus. Quantités attendues : 8 à 12 flashcards couvrant toutes les notions, 6 à 8 questions de QCM avec des pièges plausibles, 4 à 6 questions ouvertes dont les 2 dernières plus difficiles (expliquer, comparer, appliquer), 3 à 5 exercices, 5 à 8 questions d'interro. Adapte-toi au type de cours : s'il s'agit d'une MÉTHODE ou d'une PROCÉDURE à appliquer (mathématiques, calcul, conjugaison, grammaire, orthographe), crée de NOUVEAUX exercices en variant les nombres, les verbes ou les cas, tant que la méthode reste exactement celle enseignée dans le cours — vise le haut des fourchettes même si le cours est court, car c'est la répétition qui fait progresser. S'il s'agit au contraire d'un cours de CONNAISSANCES (histoire, géographie, sciences, vocabulaire, littérature), n'invente jamais un fait, une date ou une notion absente du cours : réduis alors les quantités plutôt que d'ajouter du contenu qui n'a pas été enseigné. Écris les mathématiques en texte simple lisible par un enfant (x², 3/4, √9, ×, ÷, ≤) : n'utilise JAMAIS de LaTeX, ni \\( \\), ni $, ni \\frac, ni \\begin. Reste concis dans les corrections : va à l'essentiel plutôt que de tout détailler. Pratique l'apprentissage guidé : pour chaque question ouverte et chaque exercice, écris deux indices gradués (champ hints) pour un élève de 10-12 ans qui bloque. Le premier relance sa réflexion par une question qui recentre, sans rien dévoiler. Le second oriente vers l'endroit du cours où chercher, mais ne contient JAMAIS un élément de la réponse attendue : il dit où chercher, jamais quoi répondre. ${consigneLangue} Génère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","hints":["indice1","indice2"],"model_answer":"r"}],"exercises":[{"tag":"étiquette courte","statement":"exo","hints":["indice1","indice2"],"solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
 
-      if (!donnees) donnees = extraireJSON(await callDeepSeek(prompt));
+      // Le cours seul est court : il revient vers 12 s, les activites vers 38 s.
+      // On lance les deux ensemble et on affiche le cours des qu'il est la.
+      const promptCours = `Cours:\n${coursTexte}\n\n${consigneLangue} Remets ce cours au propre pour un eleve de 10-12 ans, dans sa langue d'origine sauf consigne contraire ci-dessus. N'invente jamais une notion, une date ou un fait absent du cours. Ecris les mathematiques en texte simple (x2, 3/4, racine de 9) : jamais de LaTeX. Genere UNIQUEMENT JSON (sans texte avant ou apres): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"]}`;
+
+      let dCours = null;
+      if (!donnees) {
+        const pCours = callDeepSeek(promptCours).catch(() => null);
+        const pActivites = callDeepSeek(prompt);
+        const brutCours = await pCours;
+        dCours = brutCours ? extraireJSON(brutCours) : null;
+        if (dCours && dCours.corrected_course) {
+          appData = normaliserAppData(dCours);
+          afficherLeconPartielle_();
+        }
+        donnees = extraireJSON(await pActivites);
+      }
       if (!donnees) {
         // Seconde chance automatique : le generateur produit parfois une
         // reponse malformee, un nouvel essai suffit presque toujours
@@ -1582,6 +1597,15 @@
         signalerErreur('json_ampute', '');
       }
       if (!donnees) throw new Error(t('err.generation'));
+      // L'eleve a peut-etre deja commence a lire le cours du premier appel :
+      // on garde CELUI-LA, pour que le texte ne change pas sous ses yeux.
+      if (dCours && dCours.corrected_course) {
+        donnees.topic = dCours.topic || donnees.topic;
+        donnees.corrected_course = dCours.corrected_course;
+        if ((dCours.key_points || []).length) donnees.key_points = dCours.key_points;
+        if (dCours.definition) donnees.definition = dCours.definition;
+        if ((dCours.to_remember || []).length) donnees.to_remember = dCours.to_remember;
+      }
       if (hashCours && !dejaPreparee) ecrireLeconCache_(hashCours, donnees);
 
       appData = normaliserAppData(donnees);
@@ -1853,6 +1877,28 @@
   // Écrit le compte réel sur la tuile ("12 🃏 · 8 ✅ · 5 🧮 …") : sans ça, rien
   // à l'écran ne dit à l'élève que des exercices ont été fabriqués. Badge à
   // part et non remplacement du titre, pour survivre au changement de langue.
+  // Affiche le cours des qu'il arrive, sans attendre les activites. Apps Script
+  // ne sait pas relayer un flux : le vrai streaming est impossible, et couper la
+  // generation en deux appels paralleles est la seule facon de reduire l'attente
+  // RESSENTIE -- l'eleve lit a ~12 s au lieu de patienter ~38 s devant un spinner.
+  function afficherLeconPartielle_() {
+    document.getElementById('loadingDiv').style.display = 'none';
+    document.getElementById('modeSection').style.display = 'block';
+    setMode('cours');
+    const tuile = document.getElementById('bentoPratiqueToggle');
+    if (tuile) {
+      let badge = tuile.querySelector('.bento-compte');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'bento-compte';
+        tuile.appendChild(badge);
+      }
+      badge.textContent = currentLang === 'en'
+        ? 'activities being prepared...' : 'activites en preparation...';
+    }
+    document.getElementById('modeSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   function annoncerActivites_() {
     const tuile = document.getElementById('bentoPratiqueToggle');
     if (!tuile || !appData) return;
