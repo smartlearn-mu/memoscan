@@ -864,11 +864,14 @@
         body: JSON.stringify({
           token: APP_TOKEN,
           messages: [{ role: "user", content: prompt }],
-          // 8000 amputait le JSON : le raisonnement de DeepSeek consomme la
-          // majeure partie du budget et la carte mentale arrivait tronquée.
+          // Mesuré sur le même cours : le raisonnement consommait 9738 jetons
+          // facturés en sortie pour un résultat équivalent (10 flashcards au
+          // lieu de 12, mais 5 exercices au lieu de 4). Le couper divise
+          // l'attente par 2,8 (84 s -> 30 s) et le coût par 2,9.
+          thinking: { type: "disabled" },
           max_tokens: 32000
         })
-      }, 300000);  // mesuré : 112 s pour une page, 17182 jetons de sortie
+      }, 300000);  // large : sans raisonnement 30 s, mais une longue leçon reste possible
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const data = await res.json();
       console.log('Réponse DeepSeek:', data);
