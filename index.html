@@ -663,7 +663,10 @@
   // erreur bloque le spinner indéfiniment et empêche la bascule Gemini→Sonnet
   // de se déclencher (elle ne se déclenche que sur une erreur, jamais sur une
   // promesse qui ne se résout jamais).
-  async function fetchAvecDelai_(url, options, delaiMs = 30000) {
+  // 60 s et non 30 : un aller-retour Gemini via Apps Script a déjà pris 30 s
+  // tout rond, la réponse arrivant 2 s après la coupure — la page était alors
+  // payée deux fois (Gemini abandonné + Sonnet de secours) pour rien.
+  async function fetchAvecDelai_(url, options, delaiMs = 60000) {
     const controleur = new AbortController();
     const minuteur = setTimeout(() => controleur.abort(), delaiMs);
     try {
@@ -832,9 +835,11 @@
         body: JSON.stringify({
           token: APP_TOKEN,
           messages: [{ role: "user", content: prompt }],
-          max_tokens: 8000
+          // 8000 amputait le JSON : le raisonnement de DeepSeek consomme la
+          // majeure partie du budget et la carte mentale arrivait tronquée.
+          max_tokens: 32000
         })
-      }, 90000);
+      }, 120000);
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const data = await res.json();
       console.log('Réponse DeepSeek:', data);
