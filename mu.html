@@ -230,7 +230,9 @@
     .bento-pratique-pills { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; }
     .bento-pratique-pills .mode-btn:not(.active) { background: #fdf6e3; }
 
-    .carea { margin-top: 16px; }
+    /* Compte des activités fabriquées, affiché sur la tuile "S'entraîner" */
+.bento-compte { display: block; margin-top: 4px; font-size: 13px; opacity: .85; font-weight: 600; }
+.carea { margin-top: 16px; }
     .ccard { background: white; border: 2px solid var(--g2); border-radius: 20px; padding: 24px; margin-bottom: 16px; }
     .kpc { background: var(--g1); border-radius: 14px; padding: 14px; margin-bottom: 10px; display: flex; gap: 12px; }
     .kpn { width: 28px; height: 28px; background: var(--accent-deep); color: white; border-radius: 10px;
@@ -1160,10 +1162,14 @@
   // Une page de cours photographiée fait toujours plusieurs centaines de
   // caractères. Une réponse minuscule, ou qui commence par un refus, n'est
   // pas une transcription : mieux vaut la rejeter que bâtir une leçon dessus.
+  // Seuil à 150 et non 40 : une réponse de 21 jetons fait ~90 caractères et
+  // passait au travers, alors qu'une page de cours réelle en fait 2489.
   function transcriptionUtilisable_(texte) {
     const t = (texte || '').trim();
-    if (t.length < 40) return false;
-    return !/^(je ne peux pas|je suis desole|désolé|sorry|i (cannot|can't|am unable|'m unable))/i.test(t);
+    if (t.length < 150) return false;
+    // Un refus peut aussi arriver après une formule de politesse : on le
+    // cherche partout, pas seulement en tête.
+    return !/(je ne peux pas (lire|dechiffrer|déchiffrer|transcrire)|illisible|impossible de (lire|dechiffrer|déchiffrer)|i (cannot|can't|am unable|'m unable) to (read|transcribe)|unable to read)/i.test(t);
   }
 
   async function callGeminiVision(imageBase64) {
@@ -1183,7 +1189,11 @@
       // l'app a fabriqué une leçon entière à partir de ce vide. Une page de
       // cours fait des centaines de caractères : en dessous, c'est un refus
       // de lecture ou une réponse vide, et Sonnet doit reprendre la main.
-      if (!transcriptionUtilisable_(propre)) throw new Error('Transcription vide ou refus de lecture');
+      if (!transcriptionUtilisable_(propre)) {
+        // On remonte le début du texte refusé : sans ça on ne peut que supposer
+        // ce que Gemini a répondu quand il ne transcrit pas.
+        throw new Error(`Transcription inexploitable (${propre.length} car.) : ${propre.slice(0, 90)}`);
+      }
       incrementerQuota();
       if (hash) ecrireCacheOCR_(hash, propre);
       return propre;
@@ -1391,12 +1401,18 @@
       fcFlipped = false;
       hintProgress = {};
       qcmRepondu = {};
-      pratiqueOuverte = false;
 
       document.getElementById('loadingDiv').style.display = 'none';
       document.getElementById('modeSection').style.display = 'block';
       generateBtn.disabled = false;
       setMode('cours');
+      // La tuile "S'entraîner" se repliait après chaque génération : l'élève ne
+      // voyait ni les exercices ni l'interro, croyait que rien n'avait été
+      // produit et relançait une génération payante. Mesuré sur un appareil :
+      // 5 relances en 2,5 minutes. On l'ouvre et on annonce ce qui existe.
+      annoncerActivites_();
+      setPratiqueOuverte(true);
+      document.getElementById('modeSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
       enregistrerJourActif();
       renderProgressCard();
       fetch(SCRIPT_URL + '?action=activity&id=' + getDeviceId() + '&type=scan&token=' + encodeURIComponent(APP_TOKEN)).catch(() => {});
@@ -1645,6 +1661,28 @@
   });
 
   // ==================== GRILLE BENTO : tuile "S'entraîner" dépliable ====================
+  // Écrit le compte réel sur la tuile ("12 🃏 · 8 ✅ · 5 🧮 …") : sans ça, rien
+  // à l'écran ne dit à l'élève que des exercices ont été fabriqués. Badge à
+  // part et non remplacement du titre, pour survivre au changement de langue.
+  function annoncerActivites_() {
+    const tuile = document.getElementById('bentoPratiqueToggle');
+    if (!tuile || !appData) return;
+    const bouts = [];
+    const compte = [['flashcards', '🃏'], ['qcm', '✅'], ['open_questions', '✍️'],
+                    ['exercises', '🧮'], ['interro', '⏱️']];
+    compte.forEach(([cle, emoji]) => {
+      const n = (appData[cle] || []).length;
+      if (n) bouts.push(`${n} ${emoji}`);
+    });
+    let badge = tuile.querySelector('.bento-compte');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'bento-compte';
+      tuile.appendChild(badge);
+    }
+    badge.textContent = bouts.join(' · ');
+  }
+
   function setPratiqueOuverte(val) {
     pratiqueOuverte = val;
     const pills = document.getElementById('bentoPratiquePills');

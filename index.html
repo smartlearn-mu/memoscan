@@ -811,10 +811,14 @@
   // Une page de cours photographiée fait toujours plusieurs centaines de
   // caractères. Une réponse minuscule, ou qui commence par un refus, n'est
   // pas une transcription : mieux vaut la rejeter que bâtir une leçon dessus.
+  // Seuil à 150 et non 40 : une réponse de 21 jetons fait ~90 caractères et
+  // passait au travers, alors qu'une page de cours réelle en fait 2489.
   function transcriptionUtilisable_(texte) {
     const t = (texte || '').trim();
-    if (t.length < 40) return false;
-    return !/^(je ne peux pas|je suis desole|désolé|sorry|i (cannot|can't|am unable|'m unable))/i.test(t);
+    if (t.length < 150) return false;
+    // Un refus peut aussi arriver après une formule de politesse : on le
+    // cherche partout, pas seulement en tête.
+    return !/(je ne peux pas (lire|dechiffrer|déchiffrer|transcrire)|illisible|impossible de (lire|dechiffrer|déchiffrer)|i (cannot|can't|am unable|'m unable) to (read|transcribe)|unable to read)/i.test(t);
   }
 
   async function callGeminiVision(imageBase64) {
@@ -834,7 +838,11 @@
       // l'app a fabriqué une leçon entière à partir de ce vide. Une page de
       // cours fait des centaines de caractères : en dessous, c'est un refus
       // de lecture ou une réponse vide, et Sonnet doit reprendre la main.
-      if (!transcriptionUtilisable_(propre)) throw new Error('Transcription vide ou refus de lecture');
+      if (!transcriptionUtilisable_(propre)) {
+        // On remonte le début du texte refusé : sans ça on ne peut que supposer
+        // ce que Gemini a répondu quand il ne transcrit pas.
+        throw new Error(`Transcription inexploitable (${propre.length} car.) : ${propre.slice(0, 90)}`);
+      }
       incrementerQuota();
       if (hash) ecrireCacheOCR_(hash, propre);
       return propre;
