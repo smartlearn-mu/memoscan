@@ -1223,7 +1223,10 @@
     if (t.length < 150) return false;
     // Un refus peut aussi arriver après une formule de politesse : on le
     // cherche partout, pas seulement en tête.
-    return !/(je ne peux pas (lire|dechiffrer|déchiffrer|transcrire)|illisible|impossible de (lire|dechiffrer|déchiffrer)|i (cannot|can't|am unable|'m unable) to (read|transcribe)|unable to read)/i.test(t);
+    // Le verbe n'est pas toujours colle a la negation : mesure du 04/08, Sonnet
+    // a repondu "je ne peux pas LE retranscrire integralement" (309 car., donc
+    // au-dessus du seuil de longueur) et le refus serait passe pour un cours.
+    return !/(je ne (peux|pourrai)[^.]{0,30}(lire|transcrire|retranscrire|dechiffrer|déchiffrer)|illisible|impossible de[^.]{0,20}(lire|transcrire|dechiffrer|déchiffrer)|i (cannot|can't|am unable|'m unable)[^.]{0,30}(read|transcribe)|unable to (read|transcribe))/i.test(t);
   }
 
   async function callGeminiVision(imageBase64) {
