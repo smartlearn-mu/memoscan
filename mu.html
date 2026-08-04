@@ -1012,10 +1012,10 @@
   // erreur bloque le spinner indéfiniment et empêche la bascule Gemini→Sonnet
   // de se déclencher (elle ne se déclenche que sur une erreur, jamais sur une
   // promesse qui ne se résout jamais).
-  // 60 s et non 30 : un aller-retour Gemini via Apps Script a déjà pris 30 s
-  // tout rond, la réponse arrivant 2 s après la coupure — la page était alors
-  // payée deux fois (Gemini abandonné + Sonnet de secours) pour rien.
-  async function fetchAvecDelai_(url, options, delaiMs = 60000) {
+  // 90 s et non 30 : un OCR Gemini mesuré via Apps Script a pris 47 s, et un
+  // autre exactement 30 s — la réponse arrivant 2 s après la coupure, la page
+  // était alors payée deux fois (Gemini abandonné + Sonnet de secours) pour rien.
+  async function fetchAvecDelai_(url, options, delaiMs = 90000) {
     const controleur = new AbortController();
     const minuteur = setTimeout(() => controleur.abort(), delaiMs);
     try {
@@ -1188,7 +1188,7 @@
           // majeure partie du budget et la carte mentale arrivait tronquée.
           max_tokens: 32000
         })
-      }, 120000);
+      }, 300000);  // mesuré : 112 s pour une page, 17182 jetons de sortie
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const data = await res.json();
       console.log('Réponse DeepSeek:', data);
