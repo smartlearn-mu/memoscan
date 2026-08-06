@@ -1232,14 +1232,17 @@
     } catch (e) { /* le cache ne doit jamais faire échouer un scan */ }
   }
 
-  // Une page de cours photographiée fait toujours plusieurs centaines de
-  // caractères. Une réponse minuscule, ou qui commence par un refus, n'est
-  // pas une transcription : mieux vaut la rejeter que bâtir une leçon dessus.
-  // Seuil à 150 et non 40 : une réponse de 21 jetons fait ~90 caractères et
-  // passait au travers, alors qu'une page de cours réelle en fait 2489.
+  // Un refus ou une reponse vide n'est pas une transcription : on le rejette.
+  // Mais une page COURTE et REELLE (une regle de grammaire, une definition
+  // en deux lignes) est un cas legitime -- le 06/08 Gemini a lu correctement
+  // "Le passé composé : auxiliaire avoir + participe passé..." (124 car.) et
+  // l'app l'a rejete a tort car le seuil etait a 150. La longueur ne dit rien
+  // sur la fidelite de l'OCR ; seul un texte quasi vide (echec de lecture) ou
+  // un refus explicite doit bloquer. La honnetete sur un cours mince est
+  // maintenant du ressort du prompt de generation, pas de ce garde-fou.
   function transcriptionUtilisable_(texte) {
     const t = (texte || '').trim();
-    if (t.length < 150) return false;
+    if (t.length < 15) return false;
     // Un refus peut aussi arriver après une formule de politesse : on le
     // cherche partout, pas seulement en tête.
     // Le verbe n'est pas toujours colle a la negation : mesure du 04/08, Sonnet
@@ -1388,12 +1391,10 @@
       try {
         const texte = await tenterSonnetSecours_(imageBase64);
         const propre = nettoyerTranscription(texte);
-        // Deux modeles chez deux fournisseurs qui rendent 21 et 27 jetons sur
-        // la meme image (mesure du 04/08 20:01) : soit la photo est illisible,
-        // soit la page est reellement presque vide. Dans les deux cas il n'y a
-        // pas de quoi batir une lecon, et DeepSeek en fabriquerait une de 3500
-        // jetons entierement inventee, que ni l'eleve ni le parent ne peut
-        // distinguer d'une vraie. Le message couvre donc les deux causes.
+        // Avec le seuil abaisse a 15 car., ce blocage ne se declenche plus que
+        // si Gemini ET Sonnet ont tous les deux echoue a lire quoi que ce soit
+        // de reel (image floue, vide, ou refus des deux cotes). Une page courte
+        // mais lue correctement (grammaire, definition breve) ne passe plus ici.
         if (!transcriptionUtilisable_(propre)) {
           signalerErreur('texte_insuffisant', `gemini+sonnet : ${propre.length} car. : ${propre.slice(0, 80)}`);
           throw new Error("Cette page contient trop peu de texte pour en faire une lecon. Si la photo est floue ou sombre, reprends-la. Si la page est courte, ajoute les pages suivantes avant de generer.");
@@ -1579,7 +1580,7 @@
         ? "OUTPUT LANGUAGE — THIS OVERRIDES EVERYTHING: the pupil is an English speaker. Write every single thing you generate in English: topic, corrected_course, key_points, definition, to_remember, flashcards, qcm (questions, options and explanations), open_questions, hints, exercises (including the tag field), mindmap and interro. Do this even when the photographed course is written in another language — teach its content in English. One exception: for a language lesson, keep the words, sentences and examples being studied in their original language, and write everything around them in English."
         : "LANGUE DE SORTIE : rédige en français tout ce que tu génères, y compris le champ tag des exercices.";
 
-      const prompt = `Cours:\n${coursTexte}\n\nTu es un professeur particulier exigeant. Prépare un entraînement complet à partir du cours ci-dessus. Quantités attendues : 8 à 12 flashcards couvrant toutes les notions, 6 à 8 questions de QCM avec des pièges plausibles, 4 à 6 questions ouvertes dont les 2 dernières plus difficiles (expliquer, comparer, appliquer), 3 à 5 exercices, 5 à 8 questions d'interro. Adapte-toi au type de cours : s'il s'agit d'une MÉTHODE ou d'une PROCÉDURE à appliquer (mathématiques, calcul, conjugaison, grammaire, orthographe), crée de NOUVEAUX exercices en variant les nombres, les verbes ou les cas, tant que la méthode reste exactement celle enseignée dans le cours — vise le haut des fourchettes même si le cours est court, car c'est la répétition qui fait progresser. S'il s'agit au contraire d'un cours de CONNAISSANCES (histoire, géographie, sciences, vocabulaire, littérature), n'invente jamais un fait, une date ou une notion absente du cours : réduis alors les quantités plutôt que d'ajouter du contenu qui n'a pas été enseigné. Écris les mathématiques en texte simple lisible par un enfant (x², 3/4, √9, ×, ÷, ≤) : n'utilise JAMAIS de LaTeX, ni \\( \\), ni $, ni \\frac, ni \\begin. Reste concis dans les corrections : va à l'essentiel plutôt que de tout détailler. Pratique l'apprentissage guidé : pour chaque question ouverte et chaque exercice, écris deux indices gradués (champ hints) pour un élève de 10-12 ans qui bloque. Le premier relance sa réflexion par une question qui recentre, sans rien dévoiler. Le second oriente vers l'endroit du cours où chercher, mais ne contient JAMAIS un élément de la réponse attendue : il dit où chercher, jamais quoi répondre. ${consigneLangue} Génère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","hints":["indice1","indice2"],"model_answer":"r"}],"exercises":[{"tag":"étiquette courte","statement":"exo","hints":["indice1","indice2"],"solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
+      const prompt = `Cours:\n${coursTexte}\n\nTu es un professeur particulier exigeant. Prépare un entraînement complet à partir du cours ci-dessus. Quantités attendues : 8 à 12 flashcards couvrant toutes les notions, 6 à 8 questions de QCM avec des pièges plausibles, 4 à 6 questions ouvertes dont les 2 dernières plus difficiles (expliquer, comparer, appliquer), 3 à 5 exercices, 5 à 8 questions d'interro. Adapte-toi au type de cours : s'il s'agit d'une MÉTHODE ou d'une PROCÉDURE à appliquer (mathématiques, calcul, conjugaison, grammaire, orthographe), crée de NOUVEAUX exercices en variant les nombres, les verbes ou les cas, tant que la méthode reste exactement celle enseignée dans le cours — vise le haut des fourchettes même si le cours est court, car c'est la répétition qui fait progresser. S'il s'agit au contraire d'un cours de CONNAISSANCES (histoire, géographie, sciences, vocabulaire, littérature), n'invente jamais un fait, une date ou une notion absente du cours : réduis alors les quantités plutôt que d'ajouter du contenu qui n'a pas été enseigné. Si le texte transcrit est très mince (un titre ou quelques mots isolés, sans phrase explicative), ne fabrique JAMAIS un cours complet à partir de presque rien : topic et corrected_course doivent refléter fidèlement ce qui a été lu, et les tableaux (flashcards, qcm, open_questions, exercises, interro) peuvent rester VIDES — un tableau vide vaut toujours mieux qu'un tableau inventé. Écris les mathématiques en texte simple lisible par un enfant (x², 3/4, √9, ×, ÷, ≤) : n'utilise JAMAIS de LaTeX, ni \\( \\), ni $, ni \\frac, ni \\begin. Reste concis dans les corrections : va à l'essentiel plutôt que de tout détailler. Pratique l'apprentissage guidé : pour chaque question ouverte et chaque exercice, écris deux indices gradués (champ hints) pour un élève de 10-12 ans qui bloque. Le premier relance sa réflexion par une question qui recentre, sans rien dévoiler. Le second oriente vers l'endroit du cours où chercher, mais ne contient JAMAIS un élément de la réponse attendue : il dit où chercher, jamais quoi répondre. ${consigneLangue} Génère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","hints":["indice1","indice2"],"model_answer":"r"}],"exercises":[{"tag":"étiquette courte","statement":"exo","hints":["indice1","indice2"],"solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
 
       // Le cours seul est court : il revient vers 12 s, les activites vers 38 s.
       // On lance les deux ensemble et on affiche le cours des qu'il est la.
