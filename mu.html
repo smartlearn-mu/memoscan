@@ -434,6 +434,12 @@
   const APP_TOKEN = "ms_7f3a1e9c4b6d2058";
 
   let currentMode = null, currentInputMode = 'photo', pages = [], pastedText = '', appData = null;
+  // Vrai entre l'affichage du cours seul (afficherLeconPartielle_) et l'arrivee
+  // des activites : sans lui, un clic sur un mode encore vide affichait
+  // 'reessaie de generer' comme si la generation avait echoue, alors qu'elle
+  // est simplement en cours (bug signale le 06/08 : le message apparaissait
+  // PENDANT que le reste des exercices se generait).
+  let activitesEnCours = false;
   let fcIndex = 0, fcFlipped = false, _compteurDYSGlobal = 0;
   let hintProgress = {}; // clef "mode-idx" -> niveau d'indice affiché (0 à 3)
   let qcmRepondu = {}; // clef qi -> true/false (bonne/mauvaise réponse), pour le bilan de fin de QCM
@@ -509,6 +515,7 @@
       'err.oopsPrefix': "😕 Oups, ça n'a pas marché : ",
 
       'msgvide.text': '😅 Pas de contenu pour ce mode. Réessaie de générer !',
+      'msgvide.enCours': '⏳ Tes exercices arrivent, encore quelques secondes...',
 
       'corr.open.btn': '📖 Voir correction',
       'corr.exercise.btn': '🔍 Voir correction',
@@ -612,6 +619,7 @@
       'err.oopsPrefix': '😕 Oops, something went wrong: ',
 
       'msgvide.text': '😅 No content for this mode. Try generating again!',
+      'msgvide.enCours': '⏳ Your exercises are on their way, just a few more seconds...',
 
       'corr.open.btn': '📖 See answer',
       'corr.exercise.btn': '🔍 See answer',
@@ -1594,6 +1602,7 @@
         dCours = brutCours ? extraireJSON(brutCours) : null;
         if (dCours && dCours.corrected_course) {
           appData = normaliserAppData(dCours);
+          activitesEnCours = true;
           afficherLeconPartielle_();
         }
         donnees = extraireJSON(await pActivites);
@@ -1625,6 +1634,7 @@
       if (hashCours && !dejaPreparee) ecrireLeconCache_(hashCours, donnees);
 
       appData = normaliserAppData(donnees);
+      activitesEnCours = false;
       fcIndex = 0;
       fcFlipped = false;
       hintProgress = {};
@@ -1653,13 +1663,17 @@
       afficherErreur(t('err.oopsPrefix') + e.message);
       document.getElementById('loadingDiv').style.display = 'none';
       generateBtn.disabled = false;
+      activitesEnCours = false;
     }
   }
 
   generateBtn.addEventListener('click', generateExercises);
 
   // ==================== AFFICHAGE DES MODES ====================
-  function getMsgVide() { return `<div class="ccard"><p>${t('msgvide.text')}</p></div>`; }
+  function getMsgVide() {
+    const texte = activitesEnCours ? t('msgvide.enCours') : t('msgvide.text');
+    return `<div class="ccard"><p>${texte}</p></div>`;
+  }
 
   // Apprentissage guidé : indices progressifs avant la correction (modes 'open' et 'exercise')
   function renderIndiceZone(mode, idx, hints) {
