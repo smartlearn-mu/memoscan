@@ -286,8 +286,8 @@
     </div>
     <div class="mode-card" data-mode="gallery" id="modeGalleryCard" role="button" tabindex="0">
       <div class="mode-card-emoji">🖼️</div>
-      <div class="mode-card-title">Choisir une photo</div>
-      <div class="mode-card-desc">Galerie</div>
+      <div class="mode-card-title">Photo ou PDF</div>
+      <div class="mode-card-desc">Galerie ou fichier</div>
     </div>
     <div class="mode-card" data-mode="text" id="modeTextCard" role="button" tabindex="0">
       <div class="mode-card-emoji">📝</div>
@@ -308,10 +308,10 @@
   <div class="upload-zone" id="galleryZone">
     <div class="upload-area" id="galleryArea">
       <div class="upload-emoji">🖼️</div>
-      <div class="upload-title">Choisir une photo</div>
-      <div class="upload-desc">Clique pour sélectionner dans ta galerie</div>
+      <div class="upload-title">Choisir une photo ou un PDF</div>
+      <div class="upload-desc">Photo de ton cours, ou fichier PDF (4 pages max)</div>
     </div>
-    <input type="file" id="galleryInput" accept="image/*" multiple style="display:none">
+    <input type="file" id="galleryInput" accept="image/*,application/pdf" multiple style="display:none">
   </div>
 
   <div class="upload-zone" id="textZone">
@@ -460,44 +460,57 @@
   }
 
   // ==================== ESSAI 2 JOURS ====================
+  // Essai compte en lecons, plus en jours : impossible a oublier, et il
+  // attend le moment ou l'eleve en a reellement besoin plutot que de courir
+  // pendant que la famille attend simplement le bon soir. Porte depuis
+  // mu.html le 06/08, meme logique cote serveur (TRIAL_LECONS, partage entre
+  // les deux apps).
+  const TRIAL_LECONS = 3;
+  const CLE_LECONS = 'ms_lecons_essai';
+
+  function leconsEssaiRestantes_() {
+    const v = parseInt(localStorage.getItem(CLE_LECONS), 10);
+    return isNaN(v) ? TRIAL_LECONS : Math.max(0, v);
+  }
+
+  // Decremente APRES une generation reussie seulement : un essai ne doit jamais
+  // etre entame par une panne reseau ou une photo illisible.
+  function consommerLeconEssai_() {
+    if (localStorage.getItem('ms_paid') === '1') return;
+    localStorage.setItem(CLE_LECONS, String(Math.max(0, leconsEssaiRestantes_() - 1)));
+    updateTrialBanner();
+  }
+
   function initTrial() {
     if (localStorage.getItem('ms_paid') === '1') {
       document.getElementById('trialBanner').style.display = 'none';
       return;
     }
-    if (!localStorage.getItem('ms_trial_start')) {
-      localStorage.setItem('ms_trial_start', String(Date.now()));
+    if (localStorage.getItem(CLE_LECONS) === null) {
+      localStorage.setItem(CLE_LECONS, String(TRIAL_LECONS));
     }
     updateTrialBanner();
-    setInterval(updateTrialBanner, 60000);
   }
 
   function updateTrialBanner() {
     if (localStorage.getItem('ms_paid') === '1') return;
-    const start = parseInt(localStorage.getItem('ms_trial_start') || '0', 10);
-    const elapsed = Date.now() - start;
-    const TWO_DAYS = 48 * 60 * 60 * 1000;
-    const remaining = TWO_DAYS - elapsed;
+    const reste = leconsEssaiRestantes_();
     const banner = document.getElementById('trialBanner');
     const span = banner.querySelector('span');
-    if (remaining <= 0) {
-      span.textContent = '🔒 Essai terminé — passe à la version complète';
+    if (reste <= 0) {
+      span.textContent = "Tes 3 leçons gratuites sont utilisées. Débloque l'année complète.";
+      banner.classList.add('expired');
     } else {
-      const hoursLeft = Math.ceil(remaining / (60 * 60 * 1000));
-      const daysLeft = Math.floor(hoursLeft / 24);
-      const hRest = hoursLeft % 24;
-      if (daysLeft >= 1) {
-        span.textContent = `🎓 Essai gratuit : il te reste ${daysLeft} jour(s)`;
-      } else {
-        span.textContent = `⏳ dernières heures ! (${hRest}h restantes)`;
-      }
+      banner.classList.remove('expired');
+      span.textContent = reste === 1
+        ? '🎓 Il te reste 1 leçon gratuite'
+        : `🎓 Il te reste ${reste} leçons gratuites`;
     }
   }
 
   function isTrialExpired() {
     if (localStorage.getItem('ms_paid') === '1') return false;
-    const start = parseInt(localStorage.getItem('ms_trial_start') || '0', 10);
-    return (Date.now() - start) >= 48 * 60 * 60 * 1000;
+    return leconsEssaiRestantes_() <= 0;
   }
 
   initTrial();
@@ -510,12 +523,12 @@
         if (r.paid) {
           localStorage.setItem('ms_paid', '1');
           document.getElementById('trialBanner').style.display = 'none';
-        } else if (r.daysLeft <= 0) {
-          localStorage.setItem('ms_trial_start', String(Date.now() - 49 * 3600 * 1000));
-          updateTrialBanner();
         } else {
-          if (r.start && !isNaN(new Date(r.start).getTime())) {
-            localStorage.setItem('ms_trial_start', String(new Date(r.start).getTime()));
+          // Le serveur fait foi : il compte les lecons reellement generees,
+          // ce qu'un vidage du navigateur ne peut pas remettre a zero.
+          const reste = (r.leconsRestantes !== undefined) ? r.leconsRestantes : r.daysLeft;
+          if (typeof reste === 'number' && !isNaN(reste)) {
+            localStorage.setItem(CLE_LECONS, String(Math.max(0, reste)));
             updateTrialBanner();
           }
         }
@@ -554,6 +567,9 @@
   // ==================== UPLOAD IMAGES (ordre garanti) ====================
   function handleImageUpload(files) {
     if (!files || files.length === 0) return;
+    // Un PDF remplace la selection : on ne melange pas photos et document.
+    const pdf = Array.from(files).find(f => f.type === 'application/pdf');
+    if (pdf) return chargerPdf_(pdf);
     const fileList = Array.from(files).filter(f => f.type.startsWith('image/'));
     if (fileList.length === 0) return;
     pages = new Array(fileList.length).fill(null);
@@ -863,14 +879,17 @@
     } catch (e) { /* le cache ne doit jamais faire échouer un scan */ }
   }
 
-  // Une page de cours photographiée fait toujours plusieurs centaines de
-  // caractères. Une réponse minuscule, ou qui commence par un refus, n'est
-  // pas une transcription : mieux vaut la rejeter que bâtir une leçon dessus.
-  // Seuil à 150 et non 40 : une réponse de 21 jetons fait ~90 caractères et
-  // passait au travers, alors qu'une page de cours réelle en fait 2489.
+  // Un refus ou une reponse vide n'est pas une transcription : on le rejette.
+  // Mais une page COURTE et REELLE (une regle de grammaire, une definition
+  // en deux lignes) est un cas legitime -- le 06/08 sur mu.html, Gemini a lu
+  // correctement "Le passé composé : auxiliaire avoir + participe passé..."
+  // (124 car.) et l'app l'a rejete a tort car le seuil etait a 150. La
+  // longueur ne dit rien sur la fidelite de l'OCR ; seul un texte quasi vide
+  // (echec de lecture) ou un refus explicite doit bloquer. La honnetete sur
+  // un cours mince est du ressort du prompt de generation, pas de ce garde-fou.
   function transcriptionUtilisable_(texte) {
     const t = (texte || '').trim();
-    if (t.length < 150) return false;
+    if (t.length < 15) return false;
     // Un refus peut aussi arriver après une formule de politesse : on le
     // cherche partout, pas seulement en tête.
     // Le verbe n'est pas toujours colle a la negation : mesure du 04/08, Sonnet
@@ -887,6 +906,69 @@
     if (!b) return;
     b.style.display = oui ? 'block' : 'none';
     if (oui) b.textContent = "Tu as deja prepare cette lecon - tu retrouves exactement ton travail, rien n'a ete regenere.";
+  }
+
+
+  // ---- PDF : Mistral OCR ----
+  // Mesure du 04/08 sur mu.html : 4 pages en 6 s, gratuit, texte rendu en
+  // markdown (titres et gras conserves) -- meilleure entree pour la
+  // generation qu'un bloc plat. Gemini couterait 0,0138 $ pour les memes
+  // 4 pages et 8x plus lent. Porte depuis mu.html le 06/08.
+  const PDF_PAGES_MAX = 4;
+
+  async function lirePdf_(base64) {
+    const res = await fetchAvecDelai_(`${SCRIPT_URL}?action=mistralOcr&id=${getDeviceId()}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        token: APP_TOKEN,
+        document: { type: 'document_url', document_url: 'data:application/pdf;base64,' + base64 },
+        // Au-dela de 4 pages la lecon est diluee : le generateur produit un
+        // nombre FIXE de flashcards et d'exercices quelle que soit la taille
+        // du document, donc chaque page finirait a peine effleuree.
+        pages: [0, 1, 2, 3]
+      })
+    }, 120000);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.error || data.message) throw new Error(String(data.message || data.error).slice(0, 150));
+    const pages = data.pages || [];
+    if (!pages.length) throw new Error('Ce PDF ne contient pas de texte lisible.');
+    const texte = pages.map(p => p.markdown || '').join(String.fromCharCode(10,10)).trim();
+    if (!transcriptionUtilisable_(texte)) {
+      throw new Error("Ce document contient trop peu de texte pour en faire une lecon.");
+    }
+    // On previent quand le plafond a mordu : jamais de troncature silencieuse.
+    pdfTronque = pages.length >= PDF_PAGES_MAX;
+    return texte;
+  }
+
+  let pdfTronque = false;
+
+  function chargerPdf_(fichier) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const b64 = String(e.target.result).split(',')[1];
+      pages = [{ pdf: true, base64: b64, nom: fichier.name }];
+      previewContainer.innerHTML =
+        `<div class="ccard" style="text-align:center;padding:18px">📄 <strong>${escapeHtml(fichier.name)}</strong>`
+        + `<div style="font-size:13px;opacity:.75;margin-top:6px">Seules les ${PDF_PAGES_MAX} premieres pages seront utilisees.</div></div>`;
+      previewContainer.style.display = 'block';
+      updateGenerateButton();
+    };
+    reader.readAsDataURL(fichier);
+  }
+
+  // Affiche le cours des qu'il arrive, sans attendre les activites. Apps
+  // Script ne sait pas relayer un flux : le vrai streaming est impossible, et
+  // couper la generation en deux appels paralleles est la seule facon de
+  // reduire l'attente RESSENTIE -- l'eleve lit a ~12 s au lieu de patienter
+  // ~38 s devant un spinner. Porte depuis mu.html le 06/08.
+  function afficherLeconPartielle_() {
+    document.getElementById('loadingDiv').style.display = 'none';
+    document.getElementById('modeSection').style.display = 'block';
+    setMode('cours');
+    document.getElementById('modeSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   async function callGeminiVision(imageBase64) {
@@ -1017,7 +1099,9 @@
       } else {
         if (pages.length === 0) throw new Error('Ajoute au moins une photo');
         for (let i = 0; i < pages.length; i++) {
-          const text = await callGeminiVision(pages[i].base64);
+          const text = pages[i].pdf
+            ? await lirePdf_(pages[i].base64)
+            : await callGeminiVision(pages[i].base64);
           coursTexte += `--- PAGE ${i+1} ---\n${text}\n\n`;
         }
       }
@@ -1029,9 +1113,28 @@
       let donnees = hashCours ? await lireLeconCache_(hashCours) : null;
       const dejaPreparee = !!donnees;
 
-      const prompt = `Cours:\n${coursTexte}\n\nTu es un professeur particulier exigeant. Prépare un entraînement complet à partir du cours ci-dessus. Quantités attendues : 8 à 12 flashcards couvrant toutes les notions, 6 à 8 questions de QCM avec des pièges plausibles, 4 à 6 questions ouvertes dont les 2 dernières plus difficiles (expliquer, comparer, appliquer), 3 à 5 exercices, 5 à 8 questions d'interro. Adapte-toi au type de cours : s'il s'agit d'une MÉTHODE ou d'une PROCÉDURE à appliquer (mathématiques, calcul, conjugaison, grammaire, orthographe), crée de NOUVEAUX exercices en variant les nombres, les verbes ou les cas, tant que la méthode reste exactement celle enseignée dans le cours — vise le haut des fourchettes même si le cours est court, car c'est la répétition qui fait progresser. S'il s'agit au contraire d'un cours de CONNAISSANCES (histoire, géographie, sciences, vocabulaire, littérature), n'invente jamais un fait, une date ou une notion absente du cours : réduis alors les quantités plutôt que d'ajouter du contenu qui n'a pas été enseigné. Écris les mathématiques en texte simple lisible par un enfant (x², 3/4, √9, ×, ÷, ≤) : n'utilise JAMAIS de LaTeX, ni \\( \\), ni $, ni \\frac, ni \\begin. Reste concis dans les corrections : va à l'essentiel plutôt que de tout détailler. Génère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
+      const prompt = `Cours:\n${coursTexte}\n\nTu es un professeur particulier exigeant. Prépare un entraînement complet à partir du cours ci-dessus. Quantités attendues : 8 à 12 flashcards couvrant toutes les notions, 6 à 8 questions de QCM avec des pièges plausibles, 4 à 6 questions ouvertes dont les 2 dernières plus difficiles (expliquer, comparer, appliquer), 3 à 5 exercices, 5 à 8 questions d'interro. Adapte-toi au type de cours : s'il s'agit d'une MÉTHODE ou d'une PROCÉDURE à appliquer (mathématiques, calcul, conjugaison, grammaire, orthographe), crée de NOUVEAUX exercices en variant les nombres, les verbes ou les cas, tant que la méthode reste exactement celle enseignée dans le cours — vise le haut des fourchettes même si le cours est court, car c'est la répétition qui fait progresser. S'il s'agit au contraire d'un cours de CONNAISSANCES (histoire, géographie, sciences, vocabulaire, littérature), n'invente jamais un fait, une date ou une notion absente du cours : réduis alors les quantités plutôt que d'ajouter du contenu qui n'a pas été enseigné. Si le texte transcrit est très mince (un titre ou quelques mots isolés, sans phrase explicative), ne fabrique JAMAIS un cours complet à partir de presque rien : topic et corrected_course doivent refléter fidèlement ce qui a été lu, et les tableaux (flashcards, qcm, open_questions, exercises, interro) peuvent rester VIDES — un tableau vide vaut toujours mieux qu'un tableau inventé. Écris les mathématiques en texte simple lisible par un enfant (x², 3/4, √9, ×, ÷, ≤) : n'utilise JAMAIS de LaTeX, ni \\( \\), ni $, ni \\frac, ni \\begin. Reste concis dans les corrections : va à l'essentiel plutôt que de tout détailler. Génère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
 
-      if (!donnees) donnees = extraireJSON(await callDeepSeek(prompt));
+      // Le cours seul est court : il revient vers 12 s, les activites vers 38 s.
+      // On lance les deux ensemble et on affiche le cours des qu'il est la.
+      const promptCours = `Cours:
+${coursTexte}
+
+Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notion, une date ou un fait absent du cours. Ecris les mathematiques en texte simple (x2, 3/4, racine de 9) : jamais de LaTeX. Genere UNIQUEMENT JSON (sans texte avant ou apres): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"]}`;
+
+      let dCours = null;
+      if (!donnees) {
+        const pCours = callDeepSeek(promptCours).catch(() => null);
+        const pActivites = callDeepSeek(prompt);
+        const brutCours = await pCours;
+        dCours = brutCours ? extraireJSON(brutCours) : null;
+        if (dCours && dCours.corrected_course) {
+          appData = normaliserAppData(dCours);
+          activitesEnCours = true;
+          afficherLeconPartielle_();
+        }
+        donnees = extraireJSON(await pActivites);
+      }
       if (!donnees) {
         // Seconde chance automatique : le générateur produit parfois une
         // réponse malformée, un nouvel essai suffit presque toujours
@@ -1047,9 +1150,20 @@
         signalerErreur('json_ampute', '');
       }
       if (!donnees) throw new Error('la préparation a raté, réessaie dans un instant');
+      // L'eleve a peut-etre deja commence a lire le cours du premier appel :
+      // on garde CELUI-LA, pour que le texte ne change pas sous ses yeux.
+      if (dCours && dCours.corrected_course) {
+        donnees.topic = dCours.topic || donnees.topic;
+        donnees.corrected_course = dCours.corrected_course;
+        if ((dCours.key_points || []).length) donnees.key_points = dCours.key_points;
+        if (dCours.definition) donnees.definition = dCours.definition;
+        if ((dCours.to_remember || []).length) donnees.to_remember = dCours.to_remember;
+      }
       if (hashCours && !dejaPreparee) ecrireLeconCache_(hashCours, donnees);
 
       appData = normaliserAppData(donnees);
+      activitesEnCours = false;
+      consommerLeconEssai_();
       fcIndex = 0;
       fcFlipped = false;
 
@@ -1066,13 +1180,25 @@
       afficherErreur('😕 Oups, ça n\'a pas marché : ' + e.message);
       document.getElementById('loadingDiv').style.display = 'none';
       generateBtn.disabled = false;
+      activitesEnCours = false;
     }
   }
 
   generateBtn.addEventListener('click', generateExercises);
 
   // ==================== AFFICHAGE DES MODES ====================
-  const MSG_VIDE = '<div class="ccard"><p>😅 Pas de contenu pour ce mode. Réessaie de générer !</p></div>';
+  // Vrai entre l'affichage du cours seul (afficherLeconPartielle_) et l'arrivee
+  // des activites : sans lui, un clic sur un mode encore vide affichait
+  // 'reessaie de generer' comme si la generation avait echoue, alors qu'elle
+  // est simplement en cours. Porte depuis mu.html le 06/08.
+  let activitesEnCours = false;
+
+  function getMsgVide() {
+    const texte = activitesEnCours
+      ? '⏳ Tes exercices arrivent, encore quelques secondes...'
+      : '😅 Pas de contenu pour ce mode. Réessaie de générer !';
+    return `<div class="ccard"><p>${texte}</p></div>`;
+  }
 
   function setMode(mode) {
     currentMode = mode;
@@ -1085,19 +1211,19 @@
 
     } else if (mode === 'resume') {
       let html = `<div class="ccard"><h2>📌 ${escapeHtml(appData.topic)}</h2>`;
-      if (appData.key_points.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
+      if (appData.key_points.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
       appData.key_points.forEach((p, i) => html += `<div class="kpc"><div class="kpn">${i+1}</div><div class="kptxt">${escapeHtml(p)}</div></div>`);
       if (appData.definition) html += `<div class="kpc"><strong>📖 Définition :</strong> <span class="kptxt">${escapeHtml(appData.definition)}</span></div>`;
       html += `</div>`;
       area.innerHTML = html;
 
     } else if (mode === 'flashcard') {
-      if (appData.flashcards.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
+      if (appData.flashcards.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
       const card = appData.flashcards[fcIndex];
       area.innerHTML = `<div class="ccard"><div class="fcwrap" onclick="flipFlashcard()"><div class="fcin ${fcFlipped ? 'fl' : ''}"><div class="fcf fcfront"><span class="fctxt">${escapeHtml(card.question)}</span></div><div class="fcf fcback"><span class="fctxt">${escapeHtml(card.answer)}</span></div></div></div><div style="display:flex; justify-content:space-between;"><button onclick="prevFlashcard()">◀</button><span style="font-size:0.8rem;align-self:center;">${fcIndex+1}/${appData.flashcards.length}</span><button onclick="nextFlashcard()">▶</button></div></div>`;
 
     } else if (mode === 'qcm') {
-      if (appData.qcm.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
+      if (appData.qcm.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
       let html = `<div class="ccard"><h2>✅ QCM</h2>`;
       appData.qcm.forEach((q, qi) => {
         html += `<div class="qblock" id="qblock-${qi}"><p><strong>${escapeHtml(q.question)}</strong></p>`;
@@ -1116,7 +1242,7 @@
       });
 
     } else if (mode === 'open') {
-      if (appData.open_questions.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
+      if (appData.open_questions.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
       let html = `<div class="ccard"><h2>✍️ Questions</h2>`;
       appData.open_questions.forEach((q, idx) => {
         html += `<div class="qblock"><p><strong>${escapeHtml(q.question)}</strong></p><textarea rows="4" style="width:100%; border-radius:12px; padding:10px;"></textarea><button onclick="voirCorrection('open',${idx})">📖 Voir correction</button><div class="correction-box" id="corr-open-${idx}" style="display:none;"></div></div>`;
@@ -1125,7 +1251,7 @@
       area.innerHTML = html;
 
     } else if (mode === 'exercise') {
-      if (appData.exercises.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
+      if (appData.exercises.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
       let html = `<div class="ccard"><h2>🧮 Exercices</h2>`;
       appData.exercises.forEach((ex, idx) => {
         html += `<div class="qblock"><p class="ex-tag"><strong>${escapeHtml(ex.tag)}</strong></p><p>${escapeHtml(ex.statement)}</p><textarea rows="4" style="width:100%; padding:10px;"></textarea><button onclick="voirCorrection('exercise',${idx})">🔍 Voir correction</button><div class="correction-box" id="corr-exercise-${idx}" style="display:none;"></div></div>`;
@@ -1135,7 +1261,7 @@
 
     } else if (mode === 'mindmap') {
       let html = `<div class="ccard"><div class="mindmap-container"><div class="mindmap-center">${escapeHtml(appData.mindmap.center)}</div><div class="mindmap-branches">`;
-      if (appData.mindmap.branches.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
+      if (appData.mindmap.branches.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
       appData.mindmap.branches.forEach(b => {
         html += `<div class="mindmap-branch"><div class="branch-title">${escapeHtml(b.label)}</div><ul class="branch-leaves">${(b.leaves||[]).map(l => `<li><span class="leaf-text">${escapeHtml(l)}</span></li>`).join('')}</ul></div>`;
       });
@@ -1143,7 +1269,7 @@
       area.innerHTML = html;
 
     } else if (mode === 'interro') {
-      if (appData.interro.length === 0) { area.innerHTML = MSG_VIDE; appliquerCouleursDYS(); return; }
+      if (appData.interro.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
       let html = `<div class="ccard"><h2>⏱️ Interro</h2>`;
       appData.interro.forEach((q, idx) => {
         html += `<div class="qblock"><p><strong>${escapeHtml(q.question)}</strong></p><textarea rows="3" style="width:100%; padding:10px;"></textarea><button onclick="voirCorrection('interro',${idx})">✅ Voir correction</button><div class="correction-box" id="corr-interro-${idx}" style="display:none;"></div></div>`;
