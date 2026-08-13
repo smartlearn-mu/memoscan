@@ -477,6 +477,8 @@
       'textarea.placeholder': "Colle ton cours ici... (tu peux le copier d'un PDF, d'un site web ou de tes notes)",
 
       'generate.btn': '🔍 Générer mes exercices',
+      'generate.btn.needPhoto': '📸 Ajoute une photo pour commencer',
+      'generate.btn.needText': '📝 Colle ton cours pour commencer',
       'loading.text': '📖 Ton prof lit ton cours et prépare tes exercices...',
 
       'modegrid.cours': 'Cours corrigé',
@@ -581,6 +583,8 @@
       'textarea.placeholder': 'Paste your lesson here... (from a PDF, a website or your notes)',
 
       'generate.btn': '🔍 Generate my exercises',
+      'generate.btn.needPhoto': '📸 Add a photo to get started',
+      'generate.btn.needText': '📝 Paste your lesson to get started',
       'loading.text': '📖 Your tutor is reading your lesson and preparing your exercises...',
 
       'modegrid.cours': 'Corrected lesson',
@@ -904,16 +908,20 @@
     updateGenerateButton();
   }
 
+  // Le bouton porte lui-meme l'instruction manquante au lieu d'un texte d'aide
+  // separe apres coup : un visiteur qui appuie sur un bouton gris sans rien
+  // comprendre abandonne avant de chercher une explication plus bas. Mesure
+  // reelle du 13/08 : 14 visiteurs uniques sur 7 jours, 0 scan -- personne
+  // n'a franchi ce premier geste.
   function updateGenerateButton() {
     if (currentInputMode === 'text') generateBtn.disabled = !pastedText.trim();
     else generateBtn.disabled = pages.length === 0;
 
-    const hint = document.getElementById('generateHint');
-    delete hint.dataset.dysOriginal;
-    if (!generateBtn.disabled) { hint.textContent = ''; appliquerCouleursDYSInterface(); return; }
-    if (currentInputMode === 'text') hint.textContent = t('hint.text');
-    else if (currentInputMode === 'photo') hint.textContent = t('hint.photo');
-    else hint.textContent = t('hint.gallery');
+    if (generateBtn.disabled) {
+      generateBtn.textContent = currentInputMode === 'text' ? t('generate.btn.needText') : t('generate.btn.needPhoto');
+    } else {
+      generateBtn.textContent = t('generate.btn');
+    }
     appliquerCouleursDYSInterface();
   }
 

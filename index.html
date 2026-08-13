@@ -551,16 +551,22 @@
     updateGenerateButton();
   }
 
+  // Le bouton porte lui-meme l'instruction manquante au lieu d'un texte d'aide
+  // separe apres coup : un visiteur qui appuie sur un bouton gris sans rien
+  // comprendre abandonne avant de chercher une explication plus bas. Mesure
+  // reelle du 13/08 sur mu.html : 14 visiteurs uniques sur 7 jours, 0 scan.
+  const TEXTE_BOUTON_GENERER = '🔍 Générer mes exercices';
   function updateGenerateButton() {
     if (currentInputMode === 'text') generateBtn.disabled = !pastedText.trim();
     else generateBtn.disabled = pages.length === 0;
 
-    const hint = document.getElementById('generateHint');
-    delete hint.dataset.dysOriginal;
-    if (!generateBtn.disabled) { hint.textContent = ''; appliquerCouleursDYSInterface(); return; }
-    if (currentInputMode === 'text') hint.textContent = '👆 Colle ton cours dans la zone de texte ci-dessus pour activer le bouton';
-    else if (currentInputMode === 'photo') hint.textContent = '👆 Prends une photo de ton cours ci-dessus pour activer le bouton';
-    else hint.textContent = '👆 Choisis une photo dans ta galerie ci-dessus pour activer le bouton';
+    if (generateBtn.disabled) {
+      generateBtn.textContent = currentInputMode === 'text'
+        ? '📝 Colle ton cours pour commencer'
+        : '📸 Ajoute une photo pour commencer';
+    } else {
+      generateBtn.textContent = TEXTE_BOUTON_GENERER;
+    }
     appliquerCouleursDYSInterface();
   }
 
