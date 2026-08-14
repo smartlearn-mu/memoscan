@@ -271,6 +271,12 @@
   <span>🎓 2 jours gratuits</span>
   <button id="payBtn">💳 29€/an</button>
 </div>
+<div id="payInfo" style="display:none; background:white; border-bottom:1px solid var(--g2); padding:14px 20px; text-align:center; font-size:0.875rem; line-height:1.7;"></div>
+<div id="codeForm" style="display:none; background:white; border-bottom:1px solid var(--g2); padding:10px 20px; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;">
+  <input type="text" id="codeInput" placeholder="Ton code de deblocage" style="padding:8px 12px; border:1.5px solid var(--g2); border-radius:40px; font-size:16px;">
+  <button id="codeSubmitBtn" style="background:var(--accent); color:white; border:none; border-radius:40px; padding:8px 16px; font-weight:700; font-size:0.85rem; cursor:pointer;">Valider</button>
+  <span id="codeMsg" style="font-size:0.8rem;"></span>
+</div>
 
 <div class="main-content">
   <div class="hero">
@@ -1368,9 +1374,54 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
   function appliquerCouleursDYSInterface(){ if(!document.body.classList.contains('dys')) return; let compteur=0; let els=document.querySelectorAll('.hero h2,.hero p,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,#generateHint,.footer'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,compteur); el.innerHTML=res.html; compteur=res.compteur; } }); }
   function toggleDyslexia(){ document.body.classList.toggle('dys'); let a=document.body.classList.contains('dys'); let btn=document.getElementById('dysBtn'), txt=document.getElementById('dysBtnText'); if(a){ btn.classList.add('active'); txt.innerHTML='DYS ● ON'; localStorage.setItem('ms_dys_mode','1'); appliquerCouleursDYSInterface(); } else{ btn.classList.remove('active'); txt.innerHTML='Mode DYS'; localStorage.setItem('ms_dys_mode','0'); document.querySelectorAll('[data-dys-original]').forEach(el=>el.textContent=el.dataset.dysOriginal); } if(appData&&currentMode) setMode(currentMode); }
   if(localStorage.getItem('ms_dys_mode')==='1') toggleDyslexia();
-  document.getElementById('dysBtn').addEventListener('click',toggleDyslexia);
-  document.getElementById('payBtn').addEventListener('click',()=>alert("💳 Paiement 29€/an via Wise\nContact: smartlearn.mu@gmail.com"));
+  // Formulaire "J'ai un code" : absent jusqu'ici sur index.html, donc un client
+  // Wise qui payait n'avait aucun moyen, DANS l'app, de rentrer le code recu par
+  // email -- il fallait le debloquer a la main a chaque fois. Porte de mu.html.
+  // Toutes les chaines qui contiennent une apostrophe francaise sont a guillemets
+  // doubles, pour n'avoir jamais besoin de l'echapper.
+  function renderPayInfo() {
+    const mailLink = 'mailto:smartlearn.mu@gmail.com?subject=' + encodeURIComponent('Paiement Memo Scan')
+      + '&body=' + encodeURIComponent("Bonjour, je souhaite payer l'abonnement Memo Scan (29 euros par an) via Wise.");
+    document.getElementById('payInfo').innerHTML =
+      "💳 <strong>29€/an</strong> — profite de toutes les fonctionnalités toute l'année.<br>"
+      + "Paie via <strong>Wise</strong>, envoie ta preuve par email et reçois ton code de déblocage en quelques minutes.<br>"
+      + '<a href="' + mailLink + '" style="display:inline-block; margin-top:10px; background:var(--accent); color:white; border-radius:40px; padding:8px 18px; font-weight:700; text-decoration:none;">📧 Contacter pour payer</a>'
+      + "<div style='margin-top:14px;'><button id='codeToggleBtn' style='background:white; color:var(--accent); border:1.5px solid var(--accent); border-radius:40px; padding:10px 18px; font-weight:700; font-size:0.85rem; cursor:pointer; min-height:44px;'>🔓 J'ai un code</button></div>";
+  }
+  renderPayInfo();
 
+  document.getElementById('payBtn').addEventListener('click', () => {
+    const info = document.getElementById('payInfo');
+    info.style.display = (info.style.display === 'none' || !info.style.display) ? 'block' : 'none';
+  });
+
+  // Delegation : #codeToggleBtn est recree a chaque renderPayInfo() (innerHTML),
+  // un listener direct serait perdu au premier re-rendu.
+  document.getElementById('payInfo').addEventListener('click', (e) => {
+    if (e.target.closest('#codeToggleBtn')) {
+      const f = document.getElementById('codeForm');
+      f.style.display = f.style.display === 'none' ? 'flex' : 'none';
+    }
+  });
+  document.getElementById('codeSubmitBtn').addEventListener('click', async () => {
+    const code = document.getElementById('codeInput').value.trim();
+    const msg = document.getElementById('codeMsg');
+    if (!code) return;
+    msg.style.color = 'var(--g5)'; msg.textContent = '⏳ Verification...';
+    try {
+      const res = await fetch(SCRIPT_URL + '?action=redeemCode&id=' + getDeviceId() + '&code=' + encodeURIComponent(code) + '&token=' + encodeURIComponent(APP_TOKEN));
+      const r = await res.json();
+      if (r.ok) {
+        localStorage.setItem('ms_paid', '1');
+        document.getElementById('trialBanner').style.display = 'none';
+        document.getElementById('codeForm').style.display = 'none';
+        document.getElementById('payInfo').style.display = 'none';
+      } else { msg.style.color = 'var(--red)'; msg.textContent = '❌ ' + (r.error || 'Code invalide'); }
+    } catch (e) { msg.style.color = 'var(--red)'; msg.textContent = '❌ Erreur reseau, reessaie'; }
+  });
+
+  document.getElementById('dysBtn').addEventListener('click',toggleDyslexia);
+  
   setInputMode('photo');
 
   // ==================== SERVICE WORKER ====================
