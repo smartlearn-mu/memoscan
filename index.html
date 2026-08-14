@@ -277,6 +277,11 @@
   <button id="codeSubmitBtn" style="background:var(--accent); color:white; border:none; border-radius:40px; padding:8px 16px; font-weight:700; font-size:0.85rem; cursor:pointer;">Valider</button>
   <span id="codeMsg" style="font-size:0.8rem;"></span>
 </div>
+<div id="emailForm" style="display:none; background:white; border-bottom:1px solid var(--g2); padding:10px 20px; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;">
+  <input type="email" id="emailInput" placeholder="Ton email" style="padding:8px 12px; border:1.5px solid var(--g2); border-radius:40px; font-size:16px;">
+  <button id="emailSubmitBtn" style="background:var(--accent); color:white; border:none; border-radius:40px; padding:8px 16px; font-weight:700; font-size:0.85rem; cursor:pointer;">Envoyer</button>
+  <span id="emailMsg" style="font-size:0.8rem;"></span>
+</div>
 
 <div class="main-content">
   <div class="hero">
@@ -1379,14 +1384,25 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
   // email -- il fallait le debloquer a la main a chaque fois. Porte de mu.html.
   // Toutes les chaines qui contiennent une apostrophe francaise sont a guillemets
   // doubles, pour n'avoir jamais besoin de l'echapper.
+  // Lien de paiement Wise reutilisable (montant fixe 29e), cree une fois dans
+  // le compte Wise Business. Auparavant le seul chemin etait un mailto: vers
+  // Smart Learn, sans capture structuree de l'email du client -- il fallait
+  // esperer qu'il pense a ecrire lui-meme. Desormais : paiement direct sur
+  // Wise, puis le client entre son email dans l'app (action=demandeCode),
+  // qui notifie automatiquement par mail au lieu d'attendre un message
+  // spontane. La generation du code reste manuelle : Wise ne notifie pas
+  // le serveur automatiquement sans compte API approuve.
+  const LIEN_WISE = 'https://wise.com/pay/r/UeBUFQoUY_B5FYE';
+
   function renderPayInfo() {
-    const mailLink = 'mailto:smartlearn.mu@gmail.com?subject=' + encodeURIComponent('Paiement Memo Scan')
-      + '&body=' + encodeURIComponent("Bonjour, je souhaite payer l'abonnement Memo Scan (29 euros par an) via Wise.");
     document.getElementById('payInfo').innerHTML =
       "💳 <strong>29€/an</strong> — profite de toutes les fonctionnalités toute l'année.<br>"
-      + "Paie via <strong>Wise</strong>, envoie ta preuve par email et reçois ton code de déblocage en quelques minutes.<br>"
-      + '<a href="' + mailLink + '" style="display:inline-block; margin-top:10px; background:var(--accent); color:white; border-radius:40px; padding:8px 18px; font-weight:700; text-decoration:none;">📧 Contacter pour payer</a>'
-      + "<div style='margin-top:14px;'><button id='codeToggleBtn' style='background:white; color:var(--accent); border:1.5px solid var(--accent); border-radius:40px; padding:10px 18px; font-weight:700; font-size:0.85rem; cursor:pointer; min-height:44px;'>🔓 J'ai un code</button></div>";
+      + '<a href="' + LIEN_WISE + '" target="_blank" rel="noopener" style="display:inline-block; margin-top:10px; background:#163300; color:white; border-radius:40px; padding:8px 18px; font-weight:700; text-decoration:none;">💳 Payer 29€ via Wise</a>'
+      + "<div style='margin-top:10px; font-size:0.8rem; opacity:0.8;'>Une fois paye, entre ton email ci-dessous pour recevoir ton code.</div>"
+      + "<div style='margin-top:14px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;'>"
+      + "<button id='emailToggleBtn' style='background:white; color:var(--accent); border:1.5px solid var(--accent); border-radius:40px; padding:10px 18px; font-weight:700; font-size:0.85rem; cursor:pointer; min-height:44px;'>✅ J'ai paye</button>"
+      + "<button id='codeToggleBtn' style='background:white; color:var(--accent); border:1.5px solid var(--accent); border-radius:40px; padding:10px 18px; font-weight:700; font-size:0.85rem; cursor:pointer; min-height:44px;'>🔓 J'ai un code</button>"
+      + "</div>";
   }
   renderPayInfo();
 
@@ -1402,6 +1418,26 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
       const f = document.getElementById('codeForm');
       f.style.display = f.style.display === 'none' ? 'flex' : 'none';
     }
+    if (e.target.closest('#emailToggleBtn')) {
+      const f = document.getElementById('emailForm');
+      f.style.display = f.style.display === 'none' ? 'flex' : 'none';
+    }
+  });
+  document.getElementById('emailSubmitBtn').addEventListener('click', async () => {
+    const email = document.getElementById('emailInput').value.trim();
+    const msg = document.getElementById('emailMsg');
+    if (!email || email.indexOf('@') === -1) {
+      msg.style.color = 'var(--red)'; msg.textContent = 'Email invalide'; return;
+    }
+    msg.style.color = 'var(--g5)'; msg.textContent = '⏳ Envoi...';
+    try {
+      const res = await fetch(SCRIPT_URL + '?action=demandeCode&id=' + getDeviceId() + '&email=' + encodeURIComponent(email) + '&token=' + encodeURIComponent(APP_TOKEN));
+      const r = await res.json();
+      if (r.ok) {
+        msg.style.color = 'var(--green)';
+        msg.textContent = 'Merci, tu recevras ton code par email sous peu.';
+      } else { msg.style.color = 'var(--red)'; msg.textContent = '❌ ' + (r.error || 'Erreur, reessaie'); }
+    } catch (e) { msg.style.color = 'var(--red)'; msg.textContent = '❌ Erreur reseau, reessaie'; }
   });
   document.getElementById('codeSubmitBtn').addEventListener('click', async () => {
     const code = document.getElementById('codeInput').value.trim();
