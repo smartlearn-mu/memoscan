@@ -84,41 +84,48 @@
     .dys-btn.active { background: var(--accent); color: white; }
 
     .trial-banner {
-      background: #e8c87a; color: #1e2130; padding: 10px 20px;
-      text-align: center; font-size: 0.8rem; font-weight: 600;
+      background: var(--ink); color: #ffde59; padding: 10px 20px;
+      text-align: center; font-size: 0.8rem; font-weight: 800;
       display: flex; align-items: center; justify-content: center; gap: 12px;
       flex-wrap: wrap;
     }
-    .trial-banner button { background: #1e2130; color: #e8c87a; border: none;
-      border-radius: 40px; padding: 4px 14px; cursor: pointer; }
+    .trial-banner button { background: #ffde59; color: var(--ink); border: none;
+      border-radius: 40px; padding: 4px 14px; cursor: pointer; font-weight: 700; }
 
-    .input-modes {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
+    /* Les trois modes de saisie etaient trois cartes de poids identique : le
+       visiteur devait choisir avant de comprendre. La photo, seul geste que
+       l'app demande vraiment, devient l'action dominante ; la galerie et le
+       copier-coller passent en second rang sous forme de petites pastilles. */
+    .input-modes { margin-bottom: 24px; }
+
+    /* Bleu accent = couleur d'interface neutre, pas d'incitation a agir.
+       Le geste qu'on veut vraiment declencher (la photo) prend un gradient
+       chaud (orange/corail) : plus vitamine, plus "vas-y", coherent avec le
+       bouton final qui porte la meme energie. */
+    .mode-card.primaire {
+      display: block; width: 100%; text-align: center; cursor: pointer;
+      background: linear-gradient(135deg, #ff9a3d 0%, #ff4757 100%);
+      color: white; border: none; border-radius: 22px;
+      padding: 22px 16px; margin-bottom: 12px;
+      box-shadow: 0 8px 22px rgba(255,71,87,0.36);
+      transition: transform .15s, box-shadow .15s;
     }
+    .mode-card.primaire:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(255,71,87,0.46); }
+    .mode-card.primaire .mode-card-emoji { font-size: 2.6rem; margin-bottom: 6px; }
+    .mode-card.primaire .mode-card-title { font-weight: 800; font-size: 1.35rem; line-height: 1.25; }
+    .mode-card.primaire .mode-card-desc { font-size: 0.95rem; color: rgba(255,255,255,0.9); margin-top: 6px; }
 
-    .mode-card {
-      flex: 1;
-      background: white;
-      border: 2px solid var(--g2);
-      border-radius: 20px;
-      padding: 20px 12px;
-      text-align: center;
-      cursor: pointer;
-      transition: 0.2s;
+    .modes-secondaires { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .modes-secondaires .mode-card {
+      flex: 0 1 auto; background: white; border: 1.5px solid var(--g2);
+      border-radius: 40px; padding: 9px 16px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 7px;
+      min-height: 44px; transition: 0.2s;
     }
-
-    .mode-card.active {
-      border-color: var(--accent);
-      background: var(--al);
-      box-shadow: 0 4px 12px rgba(79,110,247,0.15);
-    }
-
-    .mode-card-emoji { font-size: 2rem; margin-bottom: 8px; }
-    .mode-card-title { font-weight: 700; font-size: 0.9rem; }
-    .mode-card-desc { font-size: 0.7rem; color: var(--g5); margin-top: 4px; }
+    .modes-secondaires .mode-card.active { border-color: var(--accent); background: var(--al); }
+    .modes-secondaires .mode-card-emoji { font-size: 1.1rem; margin-bottom: 0; }
+    .modes-secondaires .mode-card-title { font-weight: 700; font-size: 0.9rem; }
+    .modes-secondaires .mode-card-desc { display: none; }
 
     .upload-zone {
       display: none;
@@ -177,7 +184,7 @@
 
     .generate-btn {
       width: 100%;
-      background: var(--accent);
+      background: linear-gradient(135deg, #ff9a3d 0%, #ff4757 100%);
       color: white;
       border: none;
       padding: 16px;
@@ -268,7 +275,7 @@
 </div>
 
 <div id="trialBanner" class="trial-banner">
-  <span>🎓 2 jours gratuits</span>
+  <span>🎁 3 LEÇONS OFFERTES, ESSAIE !</span>
   <button id="payBtn">💳 29€/an</button>
 </div>
 <div id="payInfo" style="display:none; background:white; border-bottom:1px solid var(--g2); padding:14px 20px; text-align:center; font-size:0.875rem; line-height:1.7;"></div>
@@ -286,24 +293,26 @@
 <div class="main-content">
   <div class="hero">
     <h2>📚 Réviser n'a jamais été aussi simple</h2>
-    <p>Cours à domicile · Prof particulier · Soutien scolaire</p>
+    <p style="font-weight:700; margin-top:6px;">📸 Photographie ton cours. En quelques secondes : fiches, quiz, carte mentale et exercices, prêts à réviser !</p>
   </div>
 
   <div class="input-modes">
-    <div class="mode-card" data-mode="photo" id="modePhotoCard" role="button" tabindex="0">
+    <div class="mode-card primaire" data-mode="photo" id="modePhotoCard" role="button" tabindex="0">
       <div class="mode-card-emoji">📸</div>
       <div class="mode-card-title">Prendre une photo</div>
       <div class="mode-card-desc">Appareil photo</div>
     </div>
-    <div class="mode-card" data-mode="gallery" id="modeGalleryCard" role="button" tabindex="0">
-      <div class="mode-card-emoji">🖼️</div>
-      <div class="mode-card-title">Photo ou PDF</div>
-      <div class="mode-card-desc">Galerie ou fichier</div>
-    </div>
-    <div class="mode-card" data-mode="text" id="modeTextCard" role="button" tabindex="0">
-      <div class="mode-card-emoji">📝</div>
-      <div class="mode-card-title">Copier-coller</div>
-      <div class="mode-card-desc">Texte</div>
+    <div class="modes-secondaires">
+      <div class="mode-card" data-mode="gallery" id="modeGalleryCard" role="button" tabindex="0">
+        <div class="mode-card-emoji">🖼️</div>
+        <div class="mode-card-title">Photo ou PDF</div>
+        <div class="mode-card-desc">Galerie ou fichier</div>
+      </div>
+      <div class="mode-card" data-mode="text" id="modeTextCard" role="button" tabindex="0">
+        <div class="mode-card-emoji">📝</div>
+        <div class="mode-card-title">Copier-coller</div>
+        <div class="mode-card-desc">Texte</div>
+      </div>
     </div>
   </div>
 
@@ -513,9 +522,13 @@
       banner.classList.add('expired');
     } else {
       banner.classList.remove('expired');
-      span.textContent = reste === 1
-        ? '🎓 Il te reste 1 leçon gratuite'
-        : `🎓 Il te reste ${reste} leçons gratuites`;
+      if (reste === TRIAL_LECONS) {
+        span.textContent = '🎁 3 LEÇONS OFFERTES, ESSAIE !';
+      } else if (reste === 1) {
+        span.textContent = '🎁 1 leçon offerte, sans risque';
+      } else {
+        span.textContent = `🎁 ${reste} leçons offertes, sans risque`;
+      }
     }
   }
 

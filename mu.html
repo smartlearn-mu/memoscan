@@ -84,44 +84,51 @@
     .dys-btn.active { background: var(--accent-deep); color: white; }
 
     .trial-banner {
-      background: #e8c87a; color: #1e2130; padding: 5px 10px;
-      text-align: center; font-size: 0.8rem; font-weight: 600;
+      background: var(--ink); color: #ffde59; padding: 6px 10px;
+      text-align: center; font-size: 0.8rem; font-weight: 800;
       display: flex; align-items: center; justify-content: center; gap: 8px;
       flex-wrap: nowrap;
     }
     .trial-banner span { white-space: nowrap; }
-    .trial-banner.expired { padding: 12px 20px; font-weight: 700; flex-wrap: wrap; }
-    .trial-banner.expired span { white-space: normal; }
-    .trial-banner button { background: #1e2130; color: #e8c87a; border: none; font-size: 0.8rem;
-      border-radius: 40px; padding: 4px 12px; min-height: 40px; cursor: pointer; white-space: nowrap; }
+    .trial-banner.expired { padding: 12px 20px; font-weight: 700; flex-wrap: wrap; color: white; }
+    .trial-banner.expired span { white-space: normal; color: white; }
+    .trial-banner button { background: #ffde59; color: var(--ink); border: none; font-size: 0.8rem;
+      border-radius: 40px; padding: 4px 12px; min-height: 40px; cursor: pointer; white-space: nowrap; font-weight: 700; }
 
-    .input-modes {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
+    /* Les trois modes de saisie etaient trois cartes de poids identique : le
+       visiteur devait choisir avant de comprendre. La photo, seul geste que
+       l'app demande vraiment, devient l'action dominante ; la galerie et le
+       copier-coller passent en second rang sous forme de petites pastilles. */
+    .input-modes { margin-bottom: 14px; }
+
+    /* Bleu accent = couleur d'interface neutre, pas d'incitation a agir.
+       Le geste qu'on veut vraiment declencher (la photo) prend un gradient
+       chaud (orange/corail) : plus vitamine, plus "vas-y", coherent avec le
+       bouton final qui porte la meme energie. */
+    .mode-card.primaire {
+      display: block; width: 100%; text-align: center; cursor: pointer;
+      background: linear-gradient(135deg, #ff9a3d 0%, #ff4757 100%);
+      color: white; border: none; border-radius: 22px;
+      padding: 22px 16px; margin-bottom: 12px;
+      box-shadow: 0 8px 22px rgba(255,71,87,0.36);
+      transition: transform .15s, box-shadow .15s;
     }
+    .mode-card.primaire:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(255,71,87,0.46); }
+    .mode-card.primaire .mode-card-emoji { font-size: 2.6rem; margin-bottom: 6px; }
+    .mode-card.primaire .mode-card-title { font-weight: 800; font-size: 1.35rem; line-height: 1.25; }
+    .mode-card.primaire .mode-card-desc { font-size: 0.95rem; color: rgba(255,255,255,0.9); margin-top: 6px; }
 
-    .mode-card {
-      flex: 1;
-      background: white;
-      border: 2px solid var(--g2);
-      border-radius: 16px;
-      padding: 12px 8px;
-      text-align: center;
-      cursor: pointer;
-      transition: 0.2s;
+    .modes-secondaires { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .modes-secondaires .mode-card {
+      flex: 0 1 auto; background: white; border: 1.5px solid var(--g2);
+      border-radius: 40px; padding: 9px 16px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 7px;
+      min-height: 44px; transition: 0.2s;
     }
-
-    .mode-card.active {
-      border-color: var(--accent);
-      background: var(--al);
-      box-shadow: 0 4px 12px rgba(79,110,247,0.15);
-    }
-
-    .mode-card-emoji { font-size: 1.5rem; margin-bottom: 4px; }
-    .mode-card-title { font-weight: 700; font-size: 0.95rem; }
-    .mode-card-desc { font-size: 0.875rem; color: var(--g6); margin-top: 4px; }
+    .modes-secondaires .mode-card.active { border-color: var(--accent); background: var(--al); }
+    .modes-secondaires .mode-card-emoji { font-size: 1.1rem; }
+    .modes-secondaires .mode-card-title { font-weight: 700; font-size: 0.9rem; }
+    .modes-secondaires .mode-card-desc { display: none; }
 
     .upload-zone {
       display: none;
@@ -180,7 +187,7 @@
 
     .generate-btn {
       width: 100%;
-      background: var(--accent-deep);
+      background: linear-gradient(135deg, #ff9a3d 0%, #ff4757 100%);
       color: white;
       border: none;
       padding: 16px;
@@ -325,7 +332,7 @@
 </div>
 
 <div id="trialBanner" class="trial-banner">
-  <span>🎓 3 leçons gratuites</span>
+  <span>🎁 3 LEÇONS OFFERTES, ESSAIE !</span>
   <button id="payBtn" data-i18n="pay.btn">💳 Rs 990/an</button>
 </div>
 <div id="payInfo" style="display:none; background:white; border-bottom:1px solid var(--g2); padding:14px 20px; text-align:center; font-size:0.875rem; line-height:1.7;"></div>
@@ -337,6 +344,7 @@
 
 <div class="main-content">
   <div class="hero">
+    <p class="hero-pitch" style="font-size:1rem; font-weight:700; line-height:1.5; margin-bottom:10px; text-align:center;" data-i18n="hero.pitch">📸 Photographie ton cours. En quelques secondes : fiches, quiz, carte mentale et exercices, prêts à réviser !</p>
     <div class="hero-guide">
       <span class="hero-step" data-i18n="hero.step1">1 📸 Photographie</span>
       <span class="hero-step" data-i18n="hero.step2">2 ⚡ Génère</span>
@@ -345,20 +353,22 @@
   </div>
 
   <div class="input-modes">
-    <div class="mode-card" data-mode="photo" id="modePhotoCard" role="button" tabindex="0">
+    <div class="mode-card primaire" data-mode="photo" id="modePhotoCard" role="button" tabindex="0">
       <div class="mode-card-emoji">📸</div>
       <div class="mode-card-title" data-i18n="inputmode.photo.title">Prendre une photo</div>
       <div class="mode-card-desc" data-i18n="inputmode.photo.desc">Appareil photo</div>
     </div>
-    <div class="mode-card" data-mode="gallery" id="modeGalleryCard" role="button" tabindex="0">
-      <div class="mode-card-emoji">🖼️</div>
-      <div class="mode-card-title" data-i18n="inputmode.gallery.title">Photo ou PDF</div>
-      <div class="mode-card-desc" data-i18n="inputmode.gallery.desc">Galerie ou fichier</div>
-    </div>
-    <div class="mode-card" data-mode="text" id="modeTextCard" role="button" tabindex="0">
-      <div class="mode-card-emoji">📝</div>
-      <div class="mode-card-title" data-i18n="inputmode.text.title">Copier-coller</div>
-      <div class="mode-card-desc" data-i18n="inputmode.text.desc">Texte</div>
+    <div class="modes-secondaires">
+      <div class="mode-card" data-mode="gallery" id="modeGalleryCard" role="button" tabindex="0">
+        <div class="mode-card-emoji">🖼️</div>
+        <div class="mode-card-title" data-i18n="inputmode.gallery.title">Photo ou PDF</div>
+        <div class="mode-card-desc" data-i18n="inputmode.gallery.desc">Galerie ou fichier</div>
+      </div>
+      <div class="mode-card" data-mode="text" id="modeTextCard" role="button" tabindex="0">
+        <div class="mode-card-emoji">📝</div>
+        <div class="mode-card-title" data-i18n="inputmode.text.title">Copier-coller</div>
+        <div class="mode-card-desc" data-i18n="inputmode.text.desc">Texte</div>
+      </div>
     </div>
   </div>
 
@@ -458,6 +468,7 @@
       'code.network': '❌ Erreur réseau, réessaie',
       'quota.atteint': "Tu as scanné {n} pages aujourd'hui, c'est le maximum. Le compteur repart à zéro demain.",
 
+      'hero.pitch': '📸 Photographie ton cours. En quelques secondes : fiches, quiz, carte mentale et exercices, prêts à réviser !',
       'hero.step1': '1 📸 Photographie',
       'hero.step2': '2 ⚡ Génère',
       'hero.step3': '3 🎯 Révise',
@@ -564,6 +575,7 @@
       'quota.atteint': "You've scanned {n} pages today, that's the maximum. The counter resets tomorrow.",
       'code.network': '❌ Network error, try again',
 
+      'hero.pitch': "📸 Snap your course. In seconds: flashcards, quiz, mind map and exercises, ready to revise!",
       'hero.step1': '1 📸 Snap',
       'hero.step2': '2 ⚡ Generate',
       'hero.step3': '3 🎯 Revise',
@@ -700,7 +712,7 @@
     document.getElementById('langBtnText').textContent = currentLang === 'fr' ? 'EN' : 'FR';
 
     // Retirer le cache DYS des éléments d'interface pour éviter que l'ancienne langue ne réapparaisse
-    const dysInterfaceSelector = '.hero-step,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,.mode-group-label,#generateHint,.footer,#payBtn,#codeToggleBtn,#codeSubmitBtn,.generate-btn,.bento-sub,.progress-title,.progress-streak,.progress-count,.progress-day-label';
+    const dysInterfaceSelector = '.hero-pitch,.hero-step,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,.mode-group-label,#generateHint,.footer,#payBtn,#codeToggleBtn,#codeSubmitBtn,.generate-btn,.bento-sub,.progress-title,.progress-streak,.progress-count,.progress-day-label';
     document.querySelectorAll(dysInterfaceSelector).forEach(el => delete el.dataset.dysOriginal);
 
     applyStaticI18n();
@@ -859,9 +871,13 @@
       banner.classList.add('expired');
     } else {
       banner.classList.remove('expired');
-      span.textContent = reste === 1
-        ? (en ? '1 free lesson left' : 'Il te reste 1 lecon gratuite')
-        : (en ? reste + ' free lessons left' : 'Il te reste ' + reste + ' lecons gratuites');
+      if (reste === TRIAL_LECONS) {
+        span.textContent = en ? '🎁 3 FREE LESSONS, TRY IT!' : '🎁 3 LEÇONS OFFERTES, ESSAIE !';
+      } else if (reste === 1) {
+        span.textContent = en ? '🎁 1 free lesson left, no risk' : '🎁 1 leçon offerte, sans risque';
+      } else {
+        span.textContent = en ? '🎁 ' + reste + ' free lessons, no risk' : '🎁 ' + reste + ' leçons offertes, sans risque';
+      }
     }
   }
 
@@ -2058,7 +2074,7 @@
   // flex-wrap — d'où le débordement horizontal. .branch-leaves li .leaf-text
   // suffit à cibler le vrai texte sans démolir la structure.
   function appliquerCouleursDYS(){ if(!document.body.classList.contains('dys')) return; let carea=document.getElementById('carea'); if(!carea) return; _compteurDYSGlobal=0; let els=carea.querySelectorAll('p,.kptxt,.fcf .fctxt,.opt,.branch-title,.branch-leaves li .leaf-text,.correction-box,.hint-box,.fchint,.celebrate-score,.celebrate-phrase,h2,h3'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.textContent.trim()?el.innerText:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,_compteurDYSGlobal); el.innerHTML=res.html; _compteurDYSGlobal=res.compteur; } }); }
-  function appliquerCouleursDYSInterface(){ if(!document.body.classList.contains('dys')) return; let compteur=0; let els=document.querySelectorAll('.hero-step,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,.mode-group-label,#generateHint,.footer,.bento-sub,.progress-title,.progress-streak,.progress-count,.progress-day-label'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,compteur); el.innerHTML=res.html; compteur=res.compteur; } }); }
+  function appliquerCouleursDYSInterface(){ if(!document.body.classList.contains('dys')) return; let compteur=0; let els=document.querySelectorAll('.hero-pitch,.hero-step,.mode-card-title,.mode-card-desc,.upload-title,.upload-desc,.mode-title,.mode-group-label,#generateHint,.footer,.bento-sub,.progress-title,.progress-streak,.progress-count,.progress-day-label'); els.forEach(el=>{ let txt=el.dataset.dysOriginal||(el.childNodes.length===1&&el.childNodes[0]?.nodeType===Node.TEXT_NODE?el.textContent:null); if(txt){ if(!el.dataset.dysOriginal) el.dataset.dysOriginal=txt; let res=colorerTexteDYS(txt,compteur); el.innerHTML=res.html; compteur=res.compteur; } }); }
   function toggleDyslexia(){ document.body.classList.toggle('dys'); let a=document.body.classList.contains('dys'); let btn=document.getElementById('dysBtn'), txt=document.getElementById('dysBtnText'); if(a){ btn.classList.add('active'); txt.innerHTML='DYS ● ON'; localStorage.setItem('ms_dys_mode','1'); appliquerCouleursDYSInterface(); } else{ btn.classList.remove('active'); txt.innerHTML='Mode DYS'; localStorage.setItem('ms_dys_mode','0'); document.querySelectorAll('[data-dys-original]').forEach(el=>el.textContent=el.dataset.dysOriginal); } if(appData&&currentMode) setMode(currentMode); }
   if(localStorage.getItem('ms_dys_mode')==='1') toggleDyslexia();
   document.getElementById('dysBtn').addEventListener('click',toggleDyslexia);
