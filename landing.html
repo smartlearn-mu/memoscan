@@ -497,6 +497,61 @@
 
   const savedLang = localStorage.getItem('ms_landing_lang');
   applyLang(savedLang === 'en' || savedLang === 'fr' ? savedLang : 'fr');
+
+  // ==================== INSTRUMENTATION ENTONNOIR ====================
+  // Même backend que l'app (proxy Apps Script). 'id' partage le device-id de
+  // l'app (même localStorage), 'session' est propre à chaque chargement de page.
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfrICeVrhpkUg2h7X_PUSQB6BX_Y7tX7VhxVn9wSChSkvFsAwtVhnVqiZkrbSffFZ_ig/exec";
+  const APP_TOKEN = "ms_7f3a1e9c4b6d2058";
+
+  function getDeviceId_() {
+    let id = localStorage.getItem('ms_device_id');
+    if (!id) {
+      const arr = new Uint8Array(16);
+      crypto.getRandomValues(arr);
+      id = Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+      localStorage.setItem('ms_device_id', id);
+    }
+    return id;
+  }
+
+  function getSessionId_() {
+    if (!window.__msLandingSession) {
+      window.__msLandingSession = (crypto.randomUUID
+        ? crypto.randomUUID()
+        : 'l-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10));
+    }
+    return window.__msLandingSession;
+  }
+
+  function logActivity(type, detail) {
+    try {
+      fetch(SCRIPT_URL + '?action=activity&id=' + getDeviceId_()
+        + '&session=' + getSessionId_()
+        + '&token=' + encodeURIComponent(APP_TOKEN)
+        + '&app=landing'
+        + '&type=' + encodeURIComponent(type)
+        + '&detail=' + encodeURIComponent(JSON.stringify(detail || {}).slice(0, 200))).catch(() => {});
+    } catch (e) {}
+  }
+
+  // Source de trafic : utm_* + fbclid, mémorisée pour l'app (ms_landing_utm).
+  // Le dernier clic porteur d'utm fait foi (les campagnes se suivent).
+  (function instrumenterLanding() {
+    const p = new URLSearchParams(location.search);
+    const u = {};
+    if (p.get('utm_source')) u.source = p.get('utm_source');
+    if (p.get('utm_medium')) u.medium = p.get('utm_medium');
+    if (p.get('utm_campaign')) u.campaign = p.get('utm_campaign');
+    if (!u.source && p.get('fbclid')) u.source = 'facebook';
+    if (Object.keys(u).length) {
+      localStorage.setItem('ms_landing_utm', JSON.stringify(u));
+    }
+    logActivity('landing_vue', u);
+    document.querySelectorAll('a[href="index.html"]').forEach(a => {
+      a.addEventListener('click', () => logActivity('landing_cta', {}));
+    });
+  })();
 </script>
 </body>
 </html>

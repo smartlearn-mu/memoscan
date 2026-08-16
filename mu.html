@@ -450,6 +450,7 @@
   // est simplement en cours (bug signale le 06/08 : le message apparaissait
   // PENDANT que le reste des exercices se generait).
   let activitesEnCours = false;
+  let chargementEnCours = false, debutChargement = 0;
   let fcIndex = 0, fcFlipped = false, _compteurDYSGlobal = 0;
   let hintProgress = {}; // clef "mode-idx" -> niveau d'indice affiché (0 à 3)
   let qcmRepondu = {}; // clef qi -> true/false (bonne/mauvaise réponse), pour le bilan de fin de QCM
@@ -817,6 +818,36 @@
     } catch (e) {}
   }
 
+  // ==================== ACTIVITÉ (ENTONNOIR) ====================
+  // Instrumente le parcours visiteur : chaque étape du funnel envoie un
+  // événement léger (fire-and-forget, ne doit JAMAIS bloquer ni ralentir
+  // l'expérience). 'session' distingue les visites des visiteurs et permet
+  // de mesurer les durées entre étapes. Aucun contenu (photo, transcription)
+  // n'est jamais envoyé : uniquement des compteurs et des modes.
+  function getSessionId() {
+    if (!window.__msSessionId) {
+      window.__msSessionId = (crypto.randomUUID
+        ? crypto.randomUUID()
+        : 's-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10));
+    }
+    return window.__msSessionId;
+  }
+
+  function getUtm() {
+    try { return JSON.parse(localStorage.getItem('ms_landing_utm') || 'null'); } catch (e) { return null; }
+  }
+
+  function logActivity(type, detail) {
+    try {
+      fetch(SCRIPT_URL + '?action=activity&id=' + getDeviceId()
+        + '&session=' + getSessionId()
+        + '&token=' + encodeURIComponent(APP_TOKEN)
+        + '&app=mu'
+        + '&type=' + encodeURIComponent(type)
+        + '&detail=' + encodeURIComponent(JSON.stringify(detail || {}).slice(0, 200))).catch(() => {});
+    } catch (e) {}
+  }
+
   function getDeviceId() {
     let id = localStorage.getItem('ms_device_id');
     if (!id) {
@@ -890,7 +921,9 @@
 
   async function syncEssaiServeur() {
     try {
-      const res = await fetch(SCRIPT_URL + '?action=register&id=' + getDeviceId() + '&token=' + encodeURIComponent(APP_TOKEN) + '&source=pwa-mu');
+      const utm = getUtm();
+      const qUtm = utm ? '&utm=' + encodeURIComponent(JSON.stringify(utm).slice(0, 160)) : '';
+      const res = await fetch(SCRIPT_URL + '?action=register&id=' + getDeviceId() + '&session=' + getSessionId() + '&token=' + encodeURIComponent(APP_TOKEN) + '&source=pwa-mu' + qUtm);
       const r = await res.json();
       if (r && r.ok === true) {
         if (r.paid) {
@@ -942,7 +975,7 @@
   }
 
   // ==================== UPLOAD IMAGES (ordre garanti) ====================
-  function handleImageUpload(files) {
+  function handleImageUpload(files, mode) {
     if (!files || files.length === 0) return;
     // Un PDF remplace la selection : on ne melange pas photos et document.
     const pdf = Array.from(files).find(f => f.type === 'application/pdf');
@@ -980,6 +1013,7 @@
           if (done === fileList.length) {
             // Filtrer les éventuels trous (ne devrait pas arriver)
             pages = pages.filter(p => p !== null);
+            logActivity('photo_ajoutee', { pages: pages.length, mode: mode || 'photo' });
             updateGenerateButton();
           }
         };
@@ -990,12 +1024,26 @@
   }
 
   // PHOTO
-  cameraArea.addEventListener('click', () => cameraInput.click());
-  cameraInput.addEventListener('change', (e) => { if (e.target.files?.length) handleImageUpload(e.target.files); });
+  function ouvrirCamera_() {
+    logActivity('camere_lancee', {});
+    cameraInput.click();
+  }
+  cameraArea.addEventListener('click', ouvrirCamera_);
+  cameraInput.addEventListener('change', (e) => {
+    if (e.target.files?.length) {
+      logActivity('photo_prise', { mode: 'camera', n: e.target.files.length });
+      handleImageUpload(e.target.files, 'camera');
+    }
+  });
 
   // GALERIE
   galleryArea.addEventListener('click', () => galleryInput.click());
-  galleryInput.addEventListener('change', (e) => { if (e.target.files?.length) handleImageUpload(e.target.files); });
+  galleryInput.addEventListener('change', (e) => {
+    if (e.target.files?.length) {
+      logActivity('photo_prise', { mode: 'gallery', n: e.target.files.length });
+      handleImageUpload(e.target.files, 'gallery');
+    }
+  });
 
   // TEXTE
   pasteTextarea.addEventListener('input', () => {
@@ -1004,9 +1052,9 @@
   });
 
   // Clics sur les cartes de saisie
-  modePhotoCard.addEventListener('click', () => setInputMode('photo'));
-  modeGalleryCard.addEventListener('click', () => setInputMode('gallery'));
-  modeTextCard.addEventListener('click', () => setInputMode('text'));
+  modePhotoCard.addEventListener('click', () => { setInputMode('photo'); logActivity('mode_photo_tap', {}); });
+  modeGalleryCard.addEventListener('click', () => { setInputMode('gallery'); logActivity('mode_autre_tap', { mode: 'gallery' }); });
+  modeTextCard.addEventListener('click', () => { setInputMode('text'); logActivity('mode_autre_tap', { mode: 'text' }); });
 
   // Accessibilité clavier sur les mode-card (Enter/Espace)
   document.querySelectorAll('.mode-card').forEach(card => {
@@ -1324,6 +1372,7 @@
     reader.onload = (e) => {
       const b64 = String(e.target.result).split(',')[1];
       pages = [{ pdf: true, base64: b64, nom: fichier.name }];
+      logActivity('photo_ajoutee', { pages: 1, mode: 'pdf' });
       previewContainer.innerHTML =
         `<div class="ccard" style="text-align:center;padding:18px">📄 <strong>${escapeHtml(fichier.name)}</strong>`
         + `<div style="font-size:13px;opacity:.75;margin-top:6px">`
@@ -1380,6 +1429,7 @@
     }
 
     if (quotaRestant() <= 0) {
+      logActivity('quota_atteint', {});
       throw new Error(avecNombre('quota.atteint', LIMITE_PAGES_JOUR));
     }
     // ATTENTION -- ne PAS remettre Mistral OCR en tete sur les photos.
@@ -1575,10 +1625,14 @@
   async function generateExercises() {
     document.getElementById('errorDiv').style.display = 'none';
     if (isTrialExpired()) {
+      logActivity('essai_epuise_bloque', {});
       afficherErreur(t('trial.expired.error'));
       document.getElementById('payInfo').style.display = 'block';
       return;
     }
+    logActivity('generation_lancee', { mode: currentInputMode, pages: pages.length });
+    chargementEnCours = true;
+    debutChargement = Date.now();
     document.getElementById('loadingDiv').style.display = 'block';
     generateBtn.disabled = true;
 
@@ -1679,6 +1733,8 @@
       consommerLeconEssai_();
       enregistrerJourActif();
       renderProgressCard();
+      chargementEnCours = false;
+      logActivity('generation_terminee', { mode: currentInputMode, pages: pages.length, duree_ms: Date.now() - debutChargement });
       fetch(SCRIPT_URL + '?action=activity&id=' + getDeviceId() + '&type=scan&token=' + encodeURIComponent(APP_TOKEN)).catch(() => {});
 
     } catch(e) {
@@ -1688,10 +1744,23 @@
       document.getElementById('loadingDiv').style.display = 'none';
       generateBtn.disabled = false;
       activitesEnCours = false;
+      chargementEnCours = false;
     }
   }
 
   generateBtn.addEventListener('click', generateExercises);
+
+  // Abandon pendant le chargement : tab fermé / page quittée pendant le spinner.
+  // 'hidden' couvre la fermeture d'onglet et la navigation ; on ne logue qu'une fois.
+  function signalerAbandon_() {
+    if (!chargementEnCours) return;
+    chargementEnCours = false;
+    logActivity('abandon_chargement', { duree_ms: Date.now() - debutChargement });
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') signalerAbandon_();
+  });
+  window.addEventListener('pagehide', signalerAbandon_);
 
   // ==================== AFFICHAGE DES MODES ====================
   function getMsgVide() {
