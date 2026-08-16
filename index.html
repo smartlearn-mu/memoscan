@@ -1353,8 +1353,58 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
   });
 
   // ==================== MODE DYS ====================
-  const SONS = ['oin','ein','ien','eau','ain','ion','ill','an','am','in','im','yn','on','om','ou','oi','au','ai','eu','ui','un','em','en','er','ez','ei','ph','ch','gn','gu','qu','th','é','è','ê','à','â','ô','î','ï','û','ù','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
-  function decouperSyllabes(mot) { let r=[], i=0, m=mot.toLowerCase(); while(i<m.length) { let t=false; for(let s of SONS) if(m.substr(i,s.length)===s) { r.push(mot.substr(i,s.length)); i+=s.length; t=true; break; } if(!t) { r.push(mot[i]); i++; } } return r; }
+  const VOYELLE_SONS = ['oin','ein','ien','eau','ain','ion','ill','an','am','in','im','yn','on','om','ou','oi','au','ai','eu','ui','un','em','en','er','ez','ei','é','è','ê','ë','à','â','ô','î','ï','û','ù','ü','a','e','i','o','u','y'];
+  const CONSONNE_SONS = ['ph','ch','gn','gu','qu','th'];
+  const GROUPES_INSECABLES = ['bl','br','cl','cr','dr','fl','fr','gl','gr','pl','pr','tr','vr'];
+  // Decoupe en unites phonetiques (voyelle simple/digramme ou consonne simple/digramme),
+  // sans jugement sur la syllabation : juste la brique de base pour decouperSyllabes.
+  function tokeniserSons(mot) {
+    let m = mot.toLowerCase(), i = 0, tokens = [];
+    while (i < m.length) {
+      let trouve = null;
+      for (let s of VOYELLE_SONS) if (m.substr(i, s.length) === s) { trouve = { len: s.length, type: 'V' }; break; }
+      if (!trouve) for (let s of CONSONNE_SONS) if (m.substr(i, s.length) === s) { trouve = { len: s.length, type: 'C' }; break; }
+      if (!trouve) trouve = { len: 1, type: 'C' };
+      tokens.push({ texte: mot.substr(i, trouve.len), type: trouve.type });
+      i += trouve.len;
+    }
+    return tokens;
+  }
+  // Vraie syllabation francaise : chaque consonne isolee entre deux voyelles rejoint
+  // la voyelle SUIVANTE (le decoupage lettre-par-lettre precedent coloriait "ecole"
+  // en 5 blocs e/c/o/l/e au lieu de 2 syllabes e/cole). Deux consonnes se separent
+  // (at-taquer), sauf un groupe insecable comme bl/pr/tr qui reste avec la voyelle
+  // suivante (pro-bleme, pas prob-leme).
+  function decouperSyllabes(mot) {
+    // Le e final muet (ecole, problEme) ou la consonne finale muette (chaT, granD)
+    // ne comptent pas comme une syllabe a part entiere : on les detache AVANT de
+    // chercher les noyaux vocaliques, sinon "ecole" se lit comme 3 syllabes
+    // (e-co-le) au lieu des 2 que l'oreille percoit (e-cole, le e muet en queue).
+    let queue = '', corps = mot;
+    if (estEMuetFinal(mot)) { queue = mot.slice(-1); corps = mot.slice(0, -1); }
+    else { let cm = getConsonneMuetteFin(mot); if (cm) { queue = mot.slice(-1); corps = mot.slice(0, -1); } }
+    if (!corps) return [mot];
+    let tokens = tokeniserSons(corps);
+    let idxVoyelles = tokens.map((t, i) => t.type === 'V' ? i : -1).filter(i => i >= 0);
+    let syllabes;
+    if (idxVoyelles.length === 0) { syllabes = [corps]; }
+    else {
+      syllabes = []; let debutSyl = 0;
+      for (let k = 0; k < idxVoyelles.length; k++) {
+        let iV = idxVoyelles[k], iVsuiv = idxVoyelles[k + 1];
+        if (iVsuiv === undefined) { syllabes.push(tokens.slice(debutSyl).map(t => t.texte).join('')); break; }
+        let cons = tokens.slice(iV + 1, iVsuiv), coupeAvant;
+        if (cons.length === 0) { coupeAvant = 0; }
+        else if (cons.length === 1) { coupeAvant = 0; }
+        else if (GROUPES_INSECABLES.includes(cons.slice(-2).map(t => t.texte).join(''))) { coupeAvant = cons.length - 2; }
+        else { coupeAvant = cons.length - 1; }
+        syllabes.push(tokens.slice(debutSyl, iV + 1).concat(cons.slice(0, coupeAvant)).map(t => t.texte).join(''));
+        debutSyl = iV + 1 + coupeAvant;
+      }
+    }
+    if (queue) syllabes[syllabes.length - 1] += queue;
+    return syllabes;
+  }
   function estEMuetFinal(mot) { let m=mot.toLowerCase(); if(m.length<2||m.slice(-1)!=='e') return false; if(m.slice(-2)==='ée') return true; if(['que','gue','ce','ge'].includes(m.slice(-3))) return true; if('aeiouyàâôîïûù'.includes(m.slice(-2,-1))) return false; if(['le','me','te','se','je','ne','de','ce'].includes(m)) return false; return true; }
   function getConsonneMuetteFin(mot) { let m=mot.toLowerCase(); if(m.length<2) return null; let fin=m.slice(-1); return ['t','s','x','n','d','p','g'].includes(fin)?fin:null; }
   function traiterMotDYS(mot,compteurDepart) { if(!mot||!mot.trim()) return {html:mot,compteur:compteurDepart}; let poncAv='',poncFin='',motPur=mot; let mAv=mot.match(/^([«"'(]+)/); if(mAv){poncAv=mAv[0];motPur=mot.slice(poncAv.length);} let mFin=motPur.match(/([.,!?;:…»"')]+)$/); if(mFin){poncFin=mFin[0];motPur=motPur.slice(0,-poncFin.length);} if(!motPur) return {html:poncAv+poncFin,compteur:compteurDepart}; let syllabes=decouperSyllabes(motPur), html=poncAv, compteur=compteurDepart, eMuet=estEMuetFinal(motPur), consMuette=getConsonneMuetteFin(motPur); syllabes.forEach((syl,idx)=>{ let dern=idx===syllabes.length-1; if(dern&&eMuet&&syl.slice(-1)==='e'){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">e</span>`; } else if(dern&&consMuette&&syl.slice(-1)===consMuette){ let corps=syl.slice(0,-1); if(corps){ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${corps}</span>`; compteur++; } html+=`<span class="lettre-muette">${consMuette}</span>`; } else{ let cl=compteur%2===0?'syllabe-bleue':'syllabe-rouge'; html+=`<span class="${cl}">${syl}</span>`; compteur++; } }); return {html:html+poncFin,compteur:compteur}; }
