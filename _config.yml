@@ -4,4 +4,5 @@ exclude:
   - README.md
   - INSTRUMENTATION.md
   - SECURITE.md
+  - PAIEMENT.md
   - backend
