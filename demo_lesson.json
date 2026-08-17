@@ -1,0 +1,264 @@
+{
+  "topic": "Le marché et le mécanisme de l'offre et de la demande : introduction économique",
+  "corrected_course": "<h2>Le marché et le mécanisme de l'offre et de la demande</h2><p>L'économie, c'est l'étude de comment les individus et les entreprises utilisent des ressources limitées pour satisfaire des besoins illimités.</p><p>Par exemple, si j'ai 100 roupies, je peux acheter une écouteur, du pain, ou économiser. Faire ce choix, c'est ça l'économie.</p><h3>La rareté et le choix</h3><p>La rareté, c'est le fait que les ressources sont limitées, alors que les besoins humains sont illimités.</p><p>Par exemple, j'ai 24 heures dans la journée : je choisis entre étudier, dormir, regarder un film, etc.</p><p>Les ressources économiques principales sont :</p><ul><li>La terre (sol, minerais, eau, forêts)</li><li>Le travail (ouvriers, enseignants, médecins)</li><li>Le capital (machines, usines, ordinateurs)</li><li>L'entrepreneuriat (l'esprit d'innovation, le leadership)</li></ul><p>Le choix, c'est comment utiliser ces ressources.</p><p>L'économie étudie quels choix sont faits, et comment ces choix affectent les individus, les entreprises et l'État.</p>",
+  "key_points": [
+    "L'économie étudie comment utiliser des ressources limitées pour satisfaire des besoins illimités.",
+    "La rareté signifie que les ressources sont limitées alors que les besoins humains sont illimités.",
+    "Les 4 ressources économiques principales sont : la terre, le travail, le capital et l'entrepreneuriat.",
+    "Faire un choix, c'est décider comment utiliser ces ressources limitées.",
+    "L'économie regarde comment ces choix affectent les individus, les entreprises et l'État."
+  ],
+  "definition": "La rareté, c'est le fait que les ressources sont limitées, alors que les besoins humains sont illimités.",
+  "to_remember": [
+    "Les ressources économiques principales sont : la terre, le travail, le capital et l'entrepreneuriat.",
+    "L'économie étudie les choix faits avec des ressources limitées pour des besoins illimités."
+  ],
+  "flashcards": [
+    {
+      "question": "Quelle est la définition de l'économie ?",
+      "answer": "L'économie est l'étude de comment les individus et les entreprises utilisent des ressources limitées pour satisfaire des besoins illimités."
+    },
+    {
+      "question": "Que signifie la rareté en économie ?",
+      "answer": "La rareté signifie que les ressources sont limitées alors que les besoins humains sont illimités."
+    },
+    {
+      "question": "Citez les quatre ressources économiques principales.",
+      "answer": "Terre, travail, capital et entrepreneuriat."
+    },
+    {
+      "question": "Donnez un exemple de ressource 'terre'.",
+      "answer": "Sol, minerais, eau, forêts."
+    },
+    {
+      "question": "Donnez un exemple de ressource 'travail'.",
+      "answer": "Ouvriers, enseignants, médecins."
+    },
+    {
+      "question": "Donnez un exemple de ressource 'capital'.",
+      "answer": "Machines, usines, ordinateurs."
+    },
+    {
+      "question": "Qu'est-ce que l'entrepreneuriat comme ressource ?",
+      "answer": "L'esprit d'innovation et le leadership."
+    },
+    {
+      "question": "Pourquoi le choix est-il important en économie ?",
+      "answer": "Parce que les ressources sont rares, il faut choisir comment les utiliser pour satisfaire au mieux les besoins."
+    },
+    {
+      "question": "Quels sont les acteurs concernés par les choix économiques ?",
+      "answer": "Les individus, les entreprises et l'État."
+    },
+    {
+      "question": "Donnez un exemple de choix économique quotidien.",
+      "answer": "Avec 100 Rs, choisir entre acheter un écouteur, du pain ou économiser."
+    }
+  ],
+  "qcm": [
+    {
+      "question": "Quelle est la cause fondamentale du problème économique ?",
+      "options": [
+        "Les besoins sont limités",
+        "Les ressources sont illimitées",
+        "Les ressources sont rares face à des besoins illimités",
+        "L'argent manque toujours"
+      ],
+      "correct": 2,
+      "explanation": "La rareté (ressources limitées) face à des besoins illimités est le fondement de l'économie."
+    },
+    {
+      "question": "Parmi les éléments suivants, lequel n'est PAS une ressource économique selon le cours ?",
+      "options": [
+        "Le travail",
+        "Le capital",
+        "La monnaie",
+        "L'entrepreneuriat"
+      ],
+      "correct": 2,
+      "explanation": "La monnaie n'est pas citée comme ressource économique ; les ressources sont terre, travail, capital, entrepreneuriat."
+    },
+    {
+      "question": "Que signifie 'faire un choix' en économie ?",
+      "options": [
+        "Acheter tout ce qu'on veut",
+        "Utiliser les ressources rares de manière optimale",
+        "Ne rien dépenser",
+        "Augmenter ses besoins"
+      ],
+      "correct": 1,
+      "explanation": "Le choix consiste à décider comment utiliser des ressources limitées pour satisfaire les besoins."
+    },
+    {
+      "question": "Quel exemple illustre le concept de rareté ?",
+      "options": [
+        "Avoir 24 heures dans une journée",
+        "Avoir des besoins illimités",
+        "Avoir des ressources illimitées",
+        "Avoir tout ce qu'on désire"
+      ],
+      "correct": 0,
+      "explanation": "Le temps est une ressource limitée, donc rare ; il faut choisir comment l'utiliser."
+    },
+    {
+      "question": "Les 'machines, usines, ordinateurs' sont classés dans quelle ressource ?",
+      "options": [
+        "Terre",
+        "Travail",
+        "Capital",
+        "Entrepreneuriat"
+      ],
+      "correct": 2,
+      "explanation": "Le capital regroupe les biens de production comme les machines et les usines."
+    },
+    {
+      "question": "L'économie étudie principalement :",
+      "options": [
+        "Les choix des agents économiques",
+        "La météo",
+        "Les mathématiques",
+        "La biologie"
+      ],
+      "correct": 0,
+      "explanation": "L'économie analyse les choix et leurs conséquences sur les individus, entreprises et l'État."
+    },
+    {
+      "question": "Qui est concerné par les choix économiques ?",
+      "options": [
+        "Seulement les entreprises",
+        "Seulement l'État",
+        "Les individus, les entreprises et l'État",
+        "Seulement les consommateurs"
+      ],
+      "correct": 2,
+      "explanation": "Le cours mentionne explicitement que les choix affectent les individus, les entreprises et l'État."
+    },
+    {
+      "question": "Que signifie 'besoins illimités' ?",
+      "options": [
+        "Les besoins sont infinis",
+        "Les besoins sont limités",
+        "Les besoins sont satisfaits",
+        "Les besoins n'existent pas"
+      ],
+      "correct": 0,
+      "explanation": "Les besoins humains sont illimités, c'est-à-dire infinis, contrairement aux ressources."
+    }
+  ],
+  "open_questions": [
+    {
+      "question": "Définissez l'économie et expliquez pourquoi elle est nécessaire.",
+      "model_answer": "L'économie est l'étude de l'utilisation des ressources limitées pour satisfaire des besoins illimités. Elle est nécessaire car sans elle, il n'y aurait pas de gestion rationnelle des ressources rares."
+    },
+    {
+      "question": "Expliquez la notion de rareté avec un exemple personnel.",
+      "model_answer": "La rareté signifie que les ressources sont limitées. Par exemple, j'ai 24 heures par jour : je dois choisir entre étudier, dormir ou regarder un film. Le temps est rare."
+    },
+    {
+      "question": "Listez les quatre ressources économiques et donnez un exemple pour chacune.",
+      "model_answer": "Terre (sol, eau), travail (ouvriers), capital (machines), entrepreneuriat (innovation)."
+    },
+    {
+      "question": "Pourquoi le choix est-il inévitable en économie ?",
+      "model_answer": "Parce que les ressources sont rares et que les besoins sont illimités, il faut faire des choix pour allouer ces ressources de manière optimale."
+    },
+    {
+      "question": "Comparez les ressources 'travail' et 'capital' en donnant des exemples concrets.",
+      "model_answer": "Le travail est l'effort humain (enseignants, médecins), le capital est l'ensemble des biens de production (machines, usines). Les deux sont complémentaires : le travail utilise le capital pour produire."
+    },
+    {
+      "question": "Expliquez comment les choix économiques affectent les individus, les entreprises et l'État.",
+      "model_answer": "Les choix individuels (consommation) affectent les entreprises (production) et l'État (politiques économiques). Par exemple, si les gens achètent plus de biens, les entreprises produisent plus et l'État peut percevoir plus d'impôts."
+    }
+  ],
+  "exercises": [
+    {
+      "tag": "Appli",
+      "statement": "Vous disposez de 100 roupies. Citez trois choix possibles et expliquez pourquoi c'est un problème économique.",
+      "solution": "Acheter un écouteur, du pain, ou économiser. C'est un problème économique car la ressource (100 Rs) est limitée et les besoins sont multiples."
+    },
+    {
+      "tag": "Appli",
+      "statement": "Classez les éléments suivants dans les quatre ressources économiques : pétrole, médecin, tracteur, créativité d'un chef d'entreprise.",
+      "solution": "Pétrole : terre ; médecin : travail ; tracteur : capital ; créativité : entrepreneuriat."
+    },
+    {
+      "tag": "Appli",
+      "statement": "Donnez un exemple de choix que fait un étudiant dans sa journée et identifiez la ressource rare.",
+      "solution": "Choisir entre étudier et sortir avec des amis. La ressource rare est le temps."
+    },
+    {
+      "tag": "Appli",
+      "statement": "Vrai ou faux : 'Les besoins humains sont limités'. Justifiez.",
+      "solution": "Faux. Les besoins humains sont illimités, c'est la rareté des ressources qui oblige à choisir."
+    },
+    {
+      "tag": "Appli",
+      "statement": "Imaginez une économie sans rareté. Quelles seraient les conséquences sur la nécessité de faire des choix ?",
+      "solution": "S'il n'y avait pas de rareté, les choix seraient inutiles car tout serait disponible en abondance. Mais en réalité, la rareté existe."
+    }
+  ],
+  "mindmap": {
+    "center": "Économie",
+    "branches": [
+      {
+        "label": "Rareté",
+        "leaves": [
+          "Ressources limitées",
+          "Besoins illimités"
+        ]
+      },
+      {
+        "label": "Ressources",
+        "leaves": [
+          "Terre",
+          "Travail",
+          "Capital",
+          "Entrepreneuriat"
+        ]
+      },
+      {
+        "label": "Choix",
+        "leaves": [
+          "Individus",
+          "Entreprises",
+          "État"
+        ]
+      }
+    ]
+  },
+  "interro": [
+    {
+      "question": "Qu'est-ce que la rareté ?",
+      "answer": "C'est la situation où les ressources sont limitées par rapport aux besoins illimités."
+    },
+    {
+      "question": "Nommez les quatre ressources économiques.",
+      "answer": "Terre, travail, capital, entrepreneuriat."
+    },
+    {
+      "question": "Donnez un exemple de ressource 'capital'.",
+      "answer": "Machines, usines, ordinateurs."
+    },
+    {
+      "question": "Pourquoi l'économie est-elle nécessaire ?",
+      "answer": "Pour gérer les ressources rares et faire des choix optimaux."
+    },
+    {
+      "question": "Que signifie 'besoins illimités' ?",
+      "answer": "Les besoins humains sont infinis, jamais totalement satisfaits."
+    },
+    {
+      "question": "Citez un acteur économique mentionné dans le cours.",
+      "answer": "Les individus, les entreprises, l'État."
+    },
+    {
+      "question": "Quel est l'exemple donné dans le cours pour illustrer le choix ?",
+      "answer": "Avec 100 Rs, choisir entre un écouteur, du pain ou économiser."
+    },
+    {
+      "question": "Quelle est la différence entre le travail et l'entrepreneuriat ?",
+      "answer": "Le travail est l'effort humain (ouvriers, médecins), l'entrepreneuriat est l'innovation et le leadership."
+    }
+  ]
+}

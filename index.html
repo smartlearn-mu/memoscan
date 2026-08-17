@@ -151,6 +151,11 @@
       background: var(--al);
     }
 
+    /* La grande carte orange ouvre déjà la caméra : la zone pointillés
+       redondante ("Clique pour ouvrir l'appareil photo") est masquée.
+       Un seul bouton = une seule action. */
+    #photoZone .upload-area { display: none; }
+
     .upload-emoji { font-size: 2.5rem; margin-bottom: 12px; }
     .upload-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
     .upload-desc { font-size: 0.75rem; color: var(--g5); }
@@ -705,7 +710,7 @@
   });
 
   // Clics sur les cartes de saisie
-  modePhotoCard.addEventListener('click', () => { setInputMode('photo'); logActivity('mode_photo_tap', {}); });
+  modePhotoCard.addEventListener('click', () => { setInputMode('photo'); logActivity('mode_photo_tap', {}); ouvrirCamera_(); });
   modeGalleryCard.addEventListener('click', () => { setInputMode('gallery'); logActivity('mode_autre_tap', { mode: 'gallery' }); });
   modeTextCard.addEventListener('click', () => { setInputMode('text'); logActivity('mode_autre_tap', { mode: 'text' }); });
 
@@ -1591,6 +1596,27 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
   document.getElementById('dysBtn').addEventListener('click',toggleDyslexia);
   
   setInputMode('photo');
+
+  // ==================== DÉMO (chantier 2) ====================
+  // ?demo=1 charge la leçon d'exemple (demo_lesson.json) SANS appeler l'API,
+  // SANS consommer d'essai, SANS quota. Preuve de valeur en 0 attente.
+  async function demarrerDemo() {
+    try {
+      const r = await fetch('./demo_lesson.json');
+      if (!r.ok) return;
+      appData = normaliserAppData(await r.json());
+      fcIndex = 0; fcFlipped = false;
+      document.getElementById('loadingDiv').style.display = 'none';
+      document.getElementById('modeSection').style.display = 'block';
+      const b = document.getElementById('dejaBandeau');
+      if (b) { b.style.display = 'block'; b.textContent = "🧪 Ceci est un exemple de leçon — à toi d'essayer avec ton cours !"; }
+      setMode('cours');
+      document.getElementById('modeSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      logActivity('demo_lancee', {});
+    } catch (e) { console.warn('demo indisponible', e); }
+  }
+
+  if (new URLSearchParams(location.search).get('demo') === '1') demarrerDemo();
 
   // ==================== SERVICE WORKER ====================
   if ('serviceWorker' in navigator) {

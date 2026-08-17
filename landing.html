@@ -6,7 +6,7 @@
 <title id="pageTitle">Memo Scan – Révise malin, même avec des DYS</title>
 
 <!-- ==================== META SEO ==================== -->
-<meta id="metaDesc" name="description" content="Memo Scan transforme une photo de cours en flashcards, QCM, exercices et mind maps générés automatiquement. Mode spécial enfants dyslexiques. Essai gratuit 2 jours.">
+<meta id="metaDesc" name="description" content="Memo Scan transforme une photo de cours en flashcards, QCM, exercices et mind maps générés automatiquement. Mode spécial enfants dyslexiques. 3 leçons gratuites.">
 <meta name="keywords" content="cours à domicile, prof particulier, soutien scolaire, réviser, dyslexique, application éducative, flashcards, QCM, mind map">
 <meta name="author" content="Smart Learn">
 <meta name="robots" content="index, follow">
@@ -15,7 +15,7 @@
 <!-- ==================== PARTAGE (WhatsApp, réseaux sociaux) ==================== -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Memo Scan – Révise malin, même avec des DYS">
-<meta property="og:description" content="Prends ton cours en photo, révise avec des flashcards, QCM et mind maps générés automatiquement. Mode spécial enfants dyslexiques. Essai gratuit 2 jours.">
+<meta property="og:description" content="Prends ton cours en photo, révise avec des flashcards, QCM et mind maps générés automatiquement. Mode spécial enfants dyslexiques. 3 leçons gratuites.">
 <meta property="og:image" content="https://smartlearn-mu.github.io/memoscan/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -114,26 +114,35 @@
     border-radius: 40px; padding: 6px 16px;
   }
 
-  /* ---------- Phone mockup ---------- */
-  .phone-frame {
-    background: var(--ink); border-radius: 36px; padding: 14px;
-    max-width: 300px; margin: 0 auto; box-shadow: 0 20px 50px rgba(17,18,24,0.18);
-  }
-  .phone-notch { width: 70px; height: 8px; background: var(--slate); border-radius: 6px; margin: 0 auto 10px; }
-  .phone-screen { background: var(--paper); border-radius: 22px; padding: 16px; }
-  .photo-zone {
-    border: 2px dashed var(--g2); border-radius: 18px; background: white;
-    padding: 22px 10px; text-align: center; margin-bottom: 14px;
-  }
-  .photo-zone-emoji { font-size: 1.8rem; margin-bottom: 6px; }
-  .photo-zone-label { font-size: 0.75rem; font-weight: 700; color: var(--g5); }
-  .phone-mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .phone-mode-card {
-    background: white; border: 2px solid var(--g2); border-radius: 14px;
-    padding: 12px 6px; text-align: center; font-size: 0.72rem; font-weight: 700;
-  }
-  .phone-mode-card:nth-child(1) { border-color: var(--accent); background: var(--al); }
-  .phone-mode-emoji { font-size: 1.3rem; margin-bottom: 4px; }
+  /* ---------- Demo interactive ---------- */
+  .demo-section { margin-bottom: 56px; }
+  .demo-widget { background: white; border: 2px solid var(--g2); border-radius: 20px; padding: 18px; max-width: 640px; margin: 0 auto; }
+  .demo-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+  .demo-tab { flex: 1; min-height: 40px; border-radius: 40px; border: 1.5px solid var(--g2); background: var(--g1); font-weight: 700; font-size: 0.85rem; cursor: pointer; font-family: inherit; }
+  .demo-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .demo-panel { min-height: 220px; display: flex; flex-direction: column; justify-content: center; }
+  .demo-fc { perspective: 800px; height: 170px; cursor: pointer; margin-bottom: 10px; }
+  .demo-fc-in { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .4s; }
+  .demo-fc-in.fl { transform: rotateY(180deg); }
+  .demo-fc-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 16px; display: flex; align-items: center; justify-content: center; padding: 16px; text-align: center; }
+  .demo-fc-front { background: var(--ink); color: white; }
+  .demo-fc-back { background: var(--accent); color: white; transform: rotateY(180deg); }
+  .demo-fc-nav { display: flex; align-items: center; gap: 10px; }
+  .demo-fc-nav button { flex: 1; min-height: 40px; border-radius: 12px; border: 1.5px solid var(--g2); background: white; cursor: pointer; font-weight: 700; }
+  .demo-fc-nav span { font-size: 0.85rem; color: var(--g5); min-width: 44px; text-align: center; }
+  .demo-hint { text-align: center; font-size: 0.8rem; color: var(--g5); margin-top: 8px; }
+  .demo-q { font-weight: 700; margin-bottom: 10px; }
+  .demo-opt { padding: 10px 14px; border: 1.5px solid var(--g2); border-radius: 50px; margin: 6px 0; cursor: pointer; background: var(--g1); }
+  .demo-opt.correct { background: #d4f5e2; border-color: var(--green); color: #006644; font-weight: 700; }
+  .demo-opt.wrong { background: #fde8e8; border-color: var(--red); color: #a00; }
+  .demo-fb { margin-top: 8px; font-size: 0.9rem; }
+  .demo-mm { text-align: center; }
+  .demo-mm-center { background: var(--accent); color: white; font-weight: 700; padding: 12px 24px; border-radius: 60px; display: inline-block; margin-bottom: 20px; }
+  .demo-mm-branches { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .demo-mm-branch { flex: 1; min-width: 130px; background: var(--g1); border-radius: 14px; padding: 12px; border: 2px solid var(--g2); }
+  .demo-mm-label { font-weight: 800; color: var(--accent); margin-bottom: 8px; }
+  .demo-mm-branch li { list-style: none; padding: 3px 0; font-size: 0.85rem; }
+  .demo-cta-wrap { text-align: center; margin-top: 16px; }
 
   /* ---------- Steps ---------- */
   .steps-grid { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
@@ -236,27 +245,23 @@
     <h1 data-i18n="hero.title">Prends ton cours en photo.<br>Révise avec de vrais exercices.</h1>
     <p class="hero-subtitle" data-i18n="hero.subtitle">Memo Scan transforme n'importe quelle leçon en flashcards, QCM, exercices et mind maps générés automatiquement — en quelques secondes, sur le téléphone de toute la famille.</p>
     <div class="hero-ctas">
-      <a class="btn-primary" href="index.html" data-i18n="hero.cta">🚀 Essayer 2 jours gratuits</a>
+      <a class="btn-primary" href="index.html" data-i18n="hero.cta">🚀 Essayer 3 leçons gratuites</a>
       <p class="hero-note" data-i18n="hero.note">✅ Sans carte bancaire</p>
     </div>
   </section>
 
-  <section class="phone-section">
-    <h2 class="section-title" data-i18n="phone.title">Toutes les révisions, dans une seule appli</h2>
-    <p class="section-subtitle" data-i18n="phone.subtitle">Une photo suffit pour débloquer 4 façons de réviser.</p>
-    <div class="phone-frame" aria-hidden="true">
-      <div class="phone-notch"></div>
-      <div class="phone-screen">
-        <div class="photo-zone">
-          <div class="photo-zone-emoji">📸</div>
-          <div class="photo-zone-label" data-i18n="phone.camera.label">Ta photo de cours</div>
-        </div>
-        <div class="phone-mode-grid">
-          <div class="phone-mode-card"><div class="phone-mode-emoji">🃏</div><div data-i18n="phone.mode.flashcards">Flashcards</div></div>
-          <div class="phone-mode-card"><div class="phone-mode-emoji">✅</div><div data-i18n="phone.mode.qcm">QCM</div></div>
-          <div class="phone-mode-card"><div class="phone-mode-emoji">🧮</div><div data-i18n="phone.mode.exercises">Exercices</div></div>
-          <div class="phone-mode-card"><div class="phone-mode-emoji">🗺️</div><div data-i18n="phone.mode.mindmap">Mind map</div></div>
-        </div>
+  <section class="demo-section" id="demo">
+    <h2 class="section-title" data-i18n="demo.title">💡 Essaie tout de suite, sans rien photographier</h2>
+    <p class="section-subtitle" data-i18n="demo.subtitle">Ceci est un vrai cours d'économie, transformé automatiquement en cartes, quiz et carte mentale.</p>
+    <div class="demo-widget">
+      <div class="demo-tabs">
+        <button type="button" class="demo-tab active" data-demo="flashcard" data-i18n="demo.tab.flashcard">🃏 Carte</button>
+        <button type="button" class="demo-tab" data-demo="qcm" data-i18n="demo.tab.qcm">✅ QCM</button>
+        <button type="button" class="demo-tab" data-demo="mindmap" data-i18n="demo.tab.mindmap">🗺️ Carte mentale</button>
+      </div>
+      <div class="demo-panel" id="demoPanel"></div>
+      <div class="demo-cta-wrap">
+        <a class="btn-primary" href="index.html?demo=1" data-i18n="demo.cta">👀 Voir la leçon complète</a>
       </div>
     </div>
   </section>
@@ -338,7 +343,7 @@
       'hero.badge': '🎯 CE2 à la 6e · adapté aux enfants DYS',
       'hero.title': 'Prends ton cours en photo.<br>Révise avec de vrais exercices.',
       'hero.subtitle': "Memo Scan transforme n'importe quelle leçon en flashcards, QCM, exercices et mind maps générés automatiquement — en quelques secondes, sur le téléphone de toute la famille.",
-      'hero.cta': '🚀 Essayer 2 jours gratuits',
+      'hero.cta': '🚀 Essayer 3 leçons gratuites',
       'hero.note': '✅ Sans carte bancaire',
 
       'phone.title': 'Toutes les révisions, dans une seule appli',
@@ -378,8 +383,15 @@
 
       'footer.text': 'Memo Scan · Smart Learn — cours à domicile, prof particulier, soutien scolaire',
 
+      'demo.title': '💡 Essaie tout de suite, sans rien photographier',
+      'demo.subtitle': "Ceci est un vrai cours d'économie, transformé automatiquement en cartes, quiz et carte mentale.",
+      'demo.tab.flashcard': '🃏 Carte',
+      'demo.tab.qcm': '✅ QCM',
+      'demo.tab.mindmap': '🗺️ Carte mentale',
+      'demo.cta': '👀 Voir la leçon complète',
+
       'meta.title': 'Memo Scan – Révise malin, même avec des DYS',
-      'meta.desc': 'Memo Scan transforme une photo de cours en flashcards, QCM, exercices et mind maps générés automatiquement. Mode spécial enfants dyslexiques. Essai gratuit 2 jours.'
+      'meta.desc': 'Memo Scan transforme une photo de cours en flashcards, QCM, exercices et mind maps générés automatiquement. Mode spécial enfants dyslexiques. 3 leçons gratuites.'
     },
     en: {
       'header.tagline': 'BY SMART LEARN',
@@ -388,7 +400,7 @@
       'hero.badge': '🎯 Grades 3 to 7 · dyslexia-friendly',
       'hero.title': 'Snap a photo of your lesson.<br>Revise with real exercises.',
       'hero.subtitle': "Memo Scan turns any lesson into auto-generated flashcards, quizzes, exercises and mind maps — in seconds, on the whole family's phone.",
-      'hero.cta': '🚀 Try 2 days free',
+      'hero.cta': '🚀 Try 3 free lessons',
       'hero.note': '✅ No credit card required',
 
       'phone.title': 'Every way to revise, in one app',
@@ -430,8 +442,15 @@
 
       'footer.text': 'Memo Scan · Smart Learn — home tutoring, private lessons, academic support',
 
+      'demo.title': '💡 Try it now, without taking any photo',
+      'demo.subtitle': 'This is a real economics lesson, automatically turned into cards, a quiz and a mind map.',
+      'demo.tab.flashcard': '🃏 Card',
+      'demo.tab.qcm': '✅ Quiz',
+      'demo.tab.mindmap': '🗺️ Mind map',
+      'demo.cta': '👀 See the full lesson',
+
       'meta.title': 'Memo Scan – Smart revision, even for dyslexic kids',
-      'meta.desc': 'Memo Scan turns a photo of a lesson into auto-generated flashcards, quizzes, exercises and mind maps. Special mode for dyslexic children. 2-day free trial.'
+      'meta.desc': 'Memo Scan turns a photo of a lesson into auto-generated flashcards, quizzes, exercises and mind maps. Special mode for dyslexic children. 3 free lessons.'
     }
   };
 
@@ -552,6 +571,75 @@
       a.addEventListener('click', () => logActivity('landing_cta', {}));
     });
   })();
+
+  // ==================== DÉMO INTERACTIVE (chantier 2) ====================
+  // Leçon réelle générée depuis un cours d'économie (demo_lesson.json). Contenu
+  // statique : zéro appel API, zéro attente, zéro coût. Le cours reste en
+  // français (exemple) ; seuls les libellés de l'interface se traduisent.
+  const DEMO = {
+    flashcards: [
+      { q: "Quelle est la définition de l'économie ?", a: "L'économie est l'étude de comment les individus et les entreprises utilisent des ressources limitées pour satisfaire des besoins illimités." },
+      { q: 'Que signifie la rareté en économie ?', a: 'Les ressources sont limitées alors que les besoins humains sont illimités.' },
+      { q: 'Citez les quatre ressources économiques principales.', a: 'Terre, travail, capital et entrepreneuriat.' }
+    ],
+    qcm: [
+      { q: 'Quelle est la cause fondamentale du problème économique ?', options: ['Les besoins sont limités', 'Les ressources sont illimitées', 'Les ressources sont rares face à des besoins illimités', "L'argent manque toujours"], correct: 2, expl: "La rareté (ressources limitées) face à des besoins illimités est le fondement de l'économie." },
+      { q: "Parmi les suivants, lequel n'est PAS une ressource économique selon le cours ?", options: ['Le travail', 'Le capital', 'La monnaie', "L'entrepreneuriat"], correct: 2, expl: "La monnaie n'est pas une ressource ; les ressources sont terre, travail, capital, entrepreneuriat." }
+    ],
+    mindmap: { center: 'Économie', branches: [
+      { label: 'Rareté', leaves: ['Ressources limitées', 'Besoins illimités'] },
+      { label: 'Ressources', leaves: ['Terre', 'Travail', 'Capital', 'Entrepreneuriat'] },
+      { label: 'Choix', leaves: ['Individus', 'Entreprises', 'État'] }
+    ] }
+  };
+
+  let demoFc = 0, demoFlipped = false, demoQcmIdx = 0;
+
+  function renderDemo(tab) {
+    window.__demoTab = tab;
+    document.querySelectorAll('.demo-tab').forEach(b => b.classList.toggle('active', b.dataset.demo === tab));
+    const panel = document.getElementById('demoPanel');
+    if (!panel) return;
+    if (tab === 'flashcard') {
+      const c = DEMO.flashcards[demoFc];
+      const hint = document.documentElement.lang === 'en' ? '👆 Tap the card to flip it' : '👆 Touche la carte pour la retourner';
+      panel.innerHTML = `<div class="demo-fc" onclick="flipDemoFc()"><div class="demo-fc-in ${demoFlipped ? 'fl' : ''}"><div class="demo-fc-face demo-fc-front"><span>${c.q}</span></div><div class="demo-fc-face demo-fc-back"><span>${c.a}</span></div></div></div>` +
+        `<div class="demo-fc-nav"><button type="button" onclick="prevDemoFc(event)">◀</button><span>${demoFc + 1}/${DEMO.flashcards.length}</span><button type="button" onclick="nextDemoFc(event)">▶</button></div>` +
+        `<p class="demo-hint">${hint}</p>`;
+    } else if (tab === 'qcm') {
+      const q = DEMO.qcm[demoQcmIdx];
+      panel.innerHTML = `<p class="demo-q">${q.q}</p>` + q.options.map((o, i) => `<div class="demo-opt" onclick="answerDemoQcm(${i})">${String.fromCharCode(65 + i)}. ${o}</div>`).join('') +
+        `<div id="demoQcmFb" class="demo-fb"></div>` +
+        `<div class="demo-fc-nav"><button type="button" onclick="prevDemoQcm(event)">◀</button><span>${demoQcmIdx + 1}/${DEMO.qcm.length}</span><button type="button" onclick="nextDemoQcm(event)">▶</button></div>`;
+    } else {
+      panel.innerHTML = `<div class="demo-mm"><div class="demo-mm-center">${DEMO.mindmap.center}</div><div class="demo-mm-branches">` +
+        DEMO.mindmap.branches.map(b => `<div class="demo-mm-branch"><div class="demo-mm-label">${b.label}</div><ul>${b.leaves.map(l => `<li>${l}</li>`).join('')}</ul></div>`).join('') +
+        `</div></div>`;
+    }
+  }
+
+  window.flipDemoFc = () => { demoFlipped = !demoFlipped; renderDemo('flashcard'); };
+  window.prevDemoFc = (e) => { e.stopPropagation(); demoFc = (demoFc - 1 + DEMO.flashcards.length) % DEMO.flashcards.length; demoFlipped = false; renderDemo('flashcard'); };
+  window.nextDemoFc = (e) => { e.stopPropagation(); demoFc = (demoFc + 1) % DEMO.flashcards.length; demoFlipped = false; renderDemo('flashcard'); };
+  window.answerDemoQcm = (i) => {
+    const q = DEMO.qcm[demoQcmIdx];
+    document.querySelectorAll('.demo-opt').forEach((o, j) => { if (j === q.correct) o.classList.add('correct'); else if (j === i) o.classList.add('wrong'); });
+    const fb = document.getElementById('demoQcmFb');
+    if (fb) fb.innerHTML = (i === q.correct ? '✅ ' : '❌ ') + q.expl;
+  };
+  window.prevDemoQcm = (e) => { e.stopPropagation(); demoQcmIdx = (demoQcmIdx - 1 + DEMO.qcm.length) % DEMO.qcm.length; renderDemo('qcm'); };
+  window.nextDemoQcm = (e) => { e.stopPropagation(); demoQcmIdx = (demoQcmIdx + 1) % DEMO.qcm.length; renderDemo('qcm'); };
+
+  document.querySelectorAll('.demo-tab').forEach(btn => btn.addEventListener('click', () => renderDemo(btn.dataset.demo)));
+
+  // Re-rendre la démo quand la langue change (les libellés data-i18n se
+  // traduisent, le contenu du cours reste en français).
+  (function () {
+    const orig = applyLang;
+    applyLang = function (lang) { orig(lang); if (window.__demoTab) renderDemo(window.__demoTab); };
+  })();
+
+  renderDemo('flashcard');
 </script>
 </body>
 </html>
