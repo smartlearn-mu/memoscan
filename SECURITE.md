@@ -23,46 +23,29 @@ appels accidentels.
 - quota par appareil/jour (déjà en place, `LIMITE_JOUR_APPAREIL = 10`),
 - comptage d'essai par appareil (déjà en place).
 
-Le risque restant : un fraudeur forge un nouvel `id` à chaque appel → contourne le
-quota et fait grimper la facture IA. Le jeton étant public, il ne l'arrête pas.
+Le risque restant : un fraudeur forge un nouvel `id` à chaque appel. Le jeton étant
+public, il ne l'arrête pas — c'est le **plafond journalier global** qui le borne.
 
-## Correctif recommandé (côté Apps Script, hors dépôt)
+## Anti-abus : déjà en place (plafond journalier global)
 
-Ajouter un **plafond global** : au-delà de N leçons générées par mois (tous
-appareils confondus), on refuse et on alerte. C'est le filet qui protège le budget
-quoi qu'il arrive. Exemple à intégrer dans la fonction qui traite `action=deepseek` :
+Le backend Apps Script contient déjà les garde-fous (aucun code à ajouter) :
 
-```javascript
-// Plafond mensuel global — protège le budget IA même si un fraudeur
-// multiplie les device-id. À adapter à ta feuille.
-var BUDGET_MENSUEL_LEGONS = 500; // générations max par mois
-var FEUILLE = SpreadsheetApp.getActiveSpreadsheet();
+| Limite | Valeur | Rôle |
+|---|---|---|
+| `LIMITE_MINUTE` | 15 | appels/minute, toutes machines |
+| `LIMITE_JOUR` | 2000 | appels/jour, **global** ← le filet anti-abus |
+| `LIMITE_JOUR_APPAREIL` | 10 | pages/jour/élève (anti-partage) |
+| `LIMITE_NOUVEAUX_JOUR` | 300 | nouveaux appareils/jour (anti-fabrication d'id) |
 
-function compterEtAutoriser() {
-  var mois = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM');
-  var feuilleUsage = FEUILLE.getSheetByName('Usage') || FEUILLE.insertSheet('Usage');
-  // Colonne A = mois, colonne B = compteur
-  var trouve = feuilleUsage.createTextFinder(mois).findNext();
-  var n = trouve
-    ? feuilleUsage.getRange(trouve.getRow(), 2).getValue()
-    : 0;
-  if (n >= BUDGET_MENSUEL_LEGONS) {
-    MailApp.sendEmail(OWNER_EMAIL, '[Memo Scan] Budget mensuel atteint',
-      'Le plafond de ' + BUDGET_MENSUEL_LEGONS + ' leçons/mois est atteint.');
-    return false;
-  }
-  if (trouve) feuilleUsage.getRange(trouve.getRow(), 2).setValue(n + 1);
-  else feuilleUsage.appendRow([mois, 1]);
-  return true;
-}
+C'est `LIMITE_JOUR` (2000 appels/jour, global) qui borne la facture : même en
+multipliant les device-id, un fraudeur est bloqué à 2000 appels/jour.
 
-// Dans le handler deepseek, avant l'appel IA :
-if (!compterEtAutoriser()) {
-  return ContentService.createTextOutput(JSON.stringify({
-    error: { message: 'Limite mensuelle atteinte, réessaie le mois prochain.' }
-  })).setMimeType(ContentService.MimeType.JSON);
-}
-```
+**Coût max par jour ≈ 3 à 10 $** (selon le mix : gemini ~0,0036 $, deepseek ~0,0002
+à 0,001 $ par appel). C'est le filet — la facture ne peut pas exploser.
+
+**À vérifier** : 2000/jour est-il le bon chiffre ? À ton volume (~96 visiteurs en
+tout, ~2/jour), il ne sera jamais atteint en usage légitime. Si tu veux resserrer,
+baisse-le à ~300-500/jour — toujours très large pour toi, abus borné à ~1-2 $/jour.
 
 ## Rotation du jeton (optionnel, à faire ensemble)
 
