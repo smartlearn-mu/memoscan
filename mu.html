@@ -331,6 +331,12 @@
     .spinner { display: inline-block; width: 22px; height: 22px; border: 2px solid #4f6ef7; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; margin-left: 8px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* Lecture OCR affichée pendant le traitement + bandeau d'étape finale */
+    .ocr-box { margin-top: 14px; background: white; border: 1.5px solid var(--g2); border-radius: 12px; padding: 12px; text-align: left; font-size: 0.85rem; max-height: 170px; overflow-y: auto; }
+    .ocr-box-title { font-weight: 700; color: var(--accent); margin-bottom: 6px; font-size: 0.8rem; }
+    #ocrTexte { white-space: pre-wrap; line-height: 1.5; color: var(--ink); }
+    .etape-bandeau { margin: 12px 0 0; padding: 10px 14px; border-radius: 12px; background: var(--al); color: var(--accent); font-size: 14px; font-weight: 600; border: 1px solid var(--accent); }
+
     body.dys { font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif; }
     body.dys .main-content, body.dys .ccard, body.dys #modeSection { background: #fdf8e7 !important; }
     body.dys, body.dys p, body.dys li, body.dys .kpt, body.dys .opt, body.dys button { font-size: 1.2rem !important; line-height: 2.2 !important; }
@@ -431,7 +437,11 @@
 
   <div id="loadingDiv" style="display:none; text-align:center; padding:20px;">
     <div class="spinner"></div>
-    <p data-i18n="loading.text">📖 Ton prof lit ton cours et prépare tes exercices...</p>
+    <p id="etapeTxt" data-i18n="loading.text">📖 Ton prof lit ton cours et prépare tes exercices...</p>
+    <div id="ocrBox" style="display:none;" class="ocr-box">
+      <div class="ocr-box-title" data-i18n="loading.ocr">📖 Voici ce que j'ai lu sur ta page</div>
+      <div id="ocrTexte"></div>
+    </div>
   </div>
 
   <div id="errorDiv" style="display:none; background:#fde8e8; border:1.5px solid var(--red); border-radius:16px; padding:14px 18px; margin-bottom:16px; font-size:0.9rem;"></div>
@@ -462,6 +472,7 @@
       </div>
     </div>
     <div id="dejaBandeau" class="deja-bandeau" style="display:none;"></div>
+    <div id="etapeBandeau" class="etape-bandeau" style="display:none;"></div>
       <div id="carea" class="carea"></div>
   </div>
 
@@ -525,6 +536,7 @@
       'demo.btn': '👀 Voir un exemple · sans photo',
       'ajouter.page': '➕ Ajouter une page',
       'loading.text': '📖 Ton prof lit ton cours et prépare tes exercices...',
+      'loading.ocr': "📖 Voici ce que j'ai lu sur ta page",
 
       'modegrid.cours': 'Cours corrigé',
       'modegrid.resume': 'Résumé',
@@ -634,6 +646,7 @@
       'demo.btn': '👀 See an example · no photo',
       'ajouter.page': '➕ Add a page',
       'loading.text': '📖 Your tutor is reading your lesson and preparing your exercises...',
+      'loading.ocr': "📖 Here's what I read on your page",
 
       'modegrid.cours': 'Corrected lesson',
       'modegrid.resume': 'Summary',
@@ -1704,6 +1717,28 @@
     appliquerCouleursDYSInterface();
   }
 
+  // ---- Progression du traitement (remplace le spinner muet) ----
+  function setEtape(texte) {
+    const el = document.getElementById('etapeTxt');
+    if (el) el.textContent = texte;
+  }
+  function afficherOcr(texte) {
+    const box = document.getElementById('ocrBox');
+    const t = document.getElementById('ocrTexte');
+    if (box && t) {
+      t.textContent = texte;
+      box.style.display = 'block';
+    }
+  }
+  function setEtapeFinale(texte) {
+    const b = document.getElementById('etapeBandeau');
+    if (b) { b.textContent = texte; b.style.display = 'block'; }
+  }
+  function cacherEtapeFinale() {
+    const b = document.getElementById('etapeBandeau');
+    if (b) b.style.display = 'none';
+  }
+
   async function generateExercises() {
     document.getElementById('errorDiv').style.display = 'none';
     if (isTrialExpired()) {
@@ -1716,6 +1751,7 @@
     chargementEnCours = true;
     debutChargement = Date.now();
     document.getElementById('loadingDiv').style.display = 'block';
+    document.getElementById('ocrBox').style.display = 'none';
     generateBtn.disabled = true;
 
     try {
@@ -1725,12 +1761,16 @@
         if (!coursTexte.trim()) throw new Error(t('err.pasteEmpty'));
       } else {
         if (pages.length === 0) throw new Error(t('err.noPhoto'));
+        setEtape(currentLang === 'en' ? '1/3 · Reading your page…' : '1/3 · Je lis ta page…');
         for (let i = 0; i < pages.length; i++) {
           const text = pages[i].pdf
             ? await lirePdf_(pages[i].base64)
             : await callGeminiVision(pages[i].base64);
           coursTexte += `--- PAGE ${i+1} ---\n${text}\n\n`;
+          // Montre la lecture dès qu'elle revient, seulement si utilisable.
+          if (transcriptionUtilisable_(text)) afficherOcr(text);
         }
+        setEtape(currentLang === 'en' ? "2/3 · Writing your course…" : "2/3 · J'écris ton cours…");
       }
 
       // Meme cours deja prepare : on rend la lecon telle quelle. Ni attente,
@@ -1805,6 +1845,7 @@
       afficherDejaPreparee_(dejaPreparee);
       generateBtn.disabled = false;
       setMode('cours');
+      cacherEtapeFinale();
       // La tuile "S'entraîner" se repliait après chaque génération : l'élève ne
       // voyait ni les exercices ni l'interro, croyait que rien n'avait été
       // produit et relançait une génération payante. Mesuré sur un appareil :
@@ -2090,6 +2131,7 @@
   function afficherLeconPartielle_() {
     document.getElementById('loadingDiv').style.display = 'none';
     document.getElementById('modeSection').style.display = 'block';
+    setEtapeFinale(currentLang === 'en' ? '3/3 · Preparing your exercises… (~20 s left)' : '3/3 · Je prépare tes exercices… (encore ~20 s)');
     setMode('cours');
     const tuile = document.getElementById('bentoPratiqueToggle');
     if (tuile) {
