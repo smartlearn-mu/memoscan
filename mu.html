@@ -143,6 +143,15 @@
     }
     .demo-btn:hover { transform: translateY(-1px); box-shadow: 0 9px 24px rgba(0, 200, 83, 0.42); }
 
+    /* Bouton "Ajouter une page" : apparaît une fois la 1re photo prise. */
+    .ajouter-page-btn {
+      display: none; align-items: center; gap: 6px;
+      background: white; border: 1.5px dashed var(--accent); color: var(--accent);
+      border-radius: 40px; padding: 9px 16px; cursor: pointer;
+      font-weight: 700; font-size: 0.85rem; font-family: inherit;
+      margin: 0 auto 16px;
+    }
+
     .upload-zone {
       display: none;
       margin-bottom: 20px;
@@ -415,6 +424,8 @@
 
   <div id="previewContainer" class="preview-images"></div>
 
+  <button type="button" class="ajouter-page-btn" id="ajouterPageBtn" data-i18n="ajouter.page">➕ Ajouter une page</button>
+
   <button class="generate-btn" id="generateBtn" data-i18n="generate.btn" disabled>🔍 Générer mes exercices</button>
   <p id="generateHint" style="text-align:center; font-size:0.8rem; color:var(--g6); margin-top:-10px; margin-bottom:20px;"></p>
 
@@ -470,6 +481,7 @@
   // PENDANT que le reste des exercices se generait).
   let activitesEnCours = false;
   let chargementEnCours = false, debutChargement = 0;
+  let ajoutPages = false;
   let fcIndex = 0, fcFlipped = false, _compteurDYSGlobal = 0;
   let hintProgress = {}; // clef "mode-idx" -> niveau d'indice affiché (0 à 3)
   let qcmRepondu = {}; // clef qi -> true/false (bonne/mauvaise réponse), pour le bilan de fin de QCM
@@ -511,6 +523,7 @@
       'generate.btn.needPhoto': '📸 Ajoute une photo pour commencer',
       'generate.btn.needText': '📝 Colle ton cours pour commencer',
       'demo.btn': '👀 Voir un exemple · sans photo',
+      'ajouter.page': '➕ Ajouter une page',
       'loading.text': '📖 Ton prof lit ton cours et prépare tes exercices...',
 
       'modegrid.cours': 'Cours corrigé',
@@ -619,6 +632,7 @@
       'generate.btn.needPhoto': '📸 Add a photo to get started',
       'generate.btn.needText': '📝 Paste your lesson to get started',
       'demo.btn': '👀 See an example · no photo',
+      'ajouter.page': '➕ Add a page',
       'loading.text': '📖 Your tutor is reading your lesson and preparing your exercises...',
 
       'modegrid.cours': 'Corrected lesson',
@@ -771,6 +785,18 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
+  }
+
+  // Nettoie le HTML produit par le modèle avant innerHTML : un cours photographié
+  // peut, par injection de prompt, faire générer du HTML hostile (<script>, onerror...).
+  function sanitizerHtml(html) {
+    if (!html) return '';
+    return String(html)
+      .replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, '')
+      .replace(/<style\b[^>]*>[\s\S]*?<\/style\s*>/gi, '')
+      .replace(/<(script|iframe|object|embed|style|link|meta|form|base)\b[^>]*\/?>/gi, '')
+      .replace(/\son[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+      .replace(/javascript\s*:/gi, '');
   }
 
   // Extraction tolerante : le modele renvoie parfois un JSON entoure de
@@ -1003,8 +1029,15 @@
     if (pdf) return chargerPdf_(pdf);
     const fileList = Array.from(files).filter(f => f.type.startsWith('image/'));
     if (fileList.length === 0) return;
-    pages = new Array(fileList.length).fill(null);
-    previewContainer.innerHTML = '';
+
+    // Ajout (bouton "Ajouter une page") ou remplacement (première photo) ?
+    const append = ajoutPages;
+    ajoutPages = false;
+    const base = append ? pages.filter(p => p !== null) : [];
+    const start = base.length;
+    pages = base.concat(new Array(fileList.length).fill(null));
+    if (!append) previewContainer.innerHTML = '';
+
     // Pré-créer les éléments preview pour maintenir l'ordre
     const previews = fileList.map(() => {
       const img = document.createElement('img');
@@ -1012,7 +1045,7 @@
       previewContainer.appendChild(img);
       return img;
     });
-    let done = 0;
+    let done = 0, echecs = 0;
     fileList.forEach((file, idx) => {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -1028,20 +1061,38 @@
           canvas.width = w; canvas.height = h;
           canvas.getContext('2d').drawImage(imgEl, 0, 0, w, h);
           const compressed = canvas.toDataURL('image/jpeg', 0.85);
-          pages[idx] = { src: compressed, base64: compressed.split(',')[1], mime: 'image/jpeg' };
+          pages[start + idx] = { src: compressed, base64: compressed.split(',')[1], mime: 'image/jpeg' };
           previews[idx].src = compressed;
           done++;
-          if (done === fileList.length) {
-            // Filtrer les éventuels trous (ne devrait pas arriver)
-            pages = pages.filter(p => p !== null);
-            logActivity('photo_ajoutee', { pages: pages.length, mode: mode || 'photo' });
-            updateGenerateButton();
-          }
+          finirSiToutesLues();
+        };
+        // Photo que le navigateur ne sait pas décoder (HEIC sur Android...) :
+        // sans ce handler, onload ne se déclenchait jamais et le bouton
+        // "Générer" restait grisé sans aucune explication.
+        imgEl.onerror = () => {
+          echecs++;
+          done++;
+          if (previews[idx]) previews[idx].remove();
+          finirSiToutesLues();
         };
         imgEl.src = e.target.result;
       };
       reader.readAsDataURL(file);
     });
+
+    function finirSiToutesLues() {
+      if (done !== fileList.length) return;
+      // Filtrer les éventuels trous (photos illisibles)
+      pages = pages.filter(p => p !== null);
+      if (echecs > 0) {
+        afficherErreur(currentLang === 'en'
+          ? '😕 ' + echecs + ' photo(s) not recognized (HEIC/iPhone format?). Retake them as JPEG or pick them from the gallery.'
+          : '😕 ' + echecs + ' photo(s) non reconnue(s) (format HEIC/iPhone ?). Reprends-la en JPEG ou choisis-la depuis la galerie.');
+      }
+      logActivity('photo_ajoutee', { pages: pages.length, mode: mode || 'photo' });
+      updateGenerateButton();
+      updateBoutonAjouter();
+    }
   }
 
   // PHOTO
@@ -1064,6 +1115,16 @@
       logActivity('photo_prise', { mode: 'gallery', n: e.target.files.length });
       handleImageUpload(e.target.files, 'gallery');
     }
+  });
+
+  // "Ajouter une page" : reprend une photo et l'AJOUTE (au lieu de remplacer).
+  function updateBoutonAjouter() {
+    const btn = document.getElementById('ajouterPageBtn');
+    if (btn) btn.style.display = pages.length > 0 ? 'inline-flex' : 'none';
+  }
+  document.getElementById('ajouterPageBtn').addEventListener('click', () => {
+    ajoutPages = true;
+    ouvrirCamera_();
   });
 
   // TEXTE
@@ -1841,7 +1902,7 @@
     const area = document.getElementById('carea');
 
     if (mode === 'cours') {
-      area.innerHTML = `<div class="ccard">${appData.corrected_course}</div>`;
+      area.innerHTML = `<div class="ccard">${sanitizerHtml(appData.corrected_course)}</div>`;
 
     } else if (mode === 'resume') {
       let html = `<div class="ccard"><h2>📌 ${escapeHtml(appData.topic)}</h2>`;

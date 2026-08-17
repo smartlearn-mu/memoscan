@@ -1,0 +1,7 @@
+# Empêche Jekyll (GitHub Pages) de publier les documents internes comme pages
+# du site. Le site public reste index.html / mu.html / landing.html + assets.
+exclude:
+  - README.md
+  - INSTRUMENTATION.md
+  - SECURITE.md
+  - backend
