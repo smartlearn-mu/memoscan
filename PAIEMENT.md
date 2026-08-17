@@ -16,7 +16,7 @@ Un client paie 29€ sur le lien Wise fixe, remplit son email dans l'app ("✅ J
 6. Si le paiement Wise n'apparaît pas : ne pas générer de code, répondre au client pour clarifier avant.
 
 ## Délai
-Objectif : traiter sous 24h. Un cas réel a traîné 3 jours (mail du 14/08 traité le 17/08) — mauvais pour l'image, à éviter.
+Objectif : traiter sous 3 jours ouvrables.
 
 ## Piste d'automatisation future
 Actuellement tout est manuel (pas d'accès à l'API Wise Business pour webhook). Si Wise Business API devient accessible un jour, ce process pourrait être automatisé (webhook Wise -> createCode -> envoi auto du code).
