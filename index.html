@@ -127,6 +127,19 @@
     .modes-secondaires .mode-card-title { font-weight: 700; font-size: 0.9rem; }
     .modes-secondaires .mode-card-desc { display: none; }
 
+    /* Démo : vert vitaminé, distinct de l'orange de la photo (qui reste
+       l'action dominante). Preuve de valeur sans photo ni attente. */
+    .demo-btn {
+      display: block; width: 100%; text-align: center; cursor: pointer;
+      background: linear-gradient(135deg, #00e676 0%, #00c853 100%);
+      color: white; border: none; border-radius: 40px;
+      padding: 13px 16px; margin-top: 12px;
+      font-weight: 800; font-size: 0.95rem; font-family: inherit;
+      box-shadow: 0 6px 18px rgba(0, 200, 83, 0.32);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .demo-btn:hover { transform: translateY(-1px); box-shadow: 0 9px 24px rgba(0, 200, 83, 0.42); }
+
     .upload-zone {
       display: none;
       margin-bottom: 20px;
@@ -319,6 +332,7 @@
         <div class="mode-card-desc">Texte</div>
       </div>
     </div>
+    <button type="button" class="demo-btn" id="demoBtn">👀 Voir un exemple · sans photo</button>
   </div>
 
   <div class="upload-zone" id="photoZone">
@@ -1617,6 +1631,7 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
   }
 
   if (new URLSearchParams(location.search).get('demo') === '1') demarrerDemo();
+  document.getElementById('demoBtn').addEventListener('click', demarrerDemo);
 
   // ==================== SERVICE WORKER ====================
   if ('serviceWorker' in navigator) {
