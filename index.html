@@ -293,7 +293,7 @@
 </div>
 
 <div id="trialBanner" class="trial-banner">
-  <span>🎁 3 LEÇONS OFFERTES, ESSAIE !</span>
+  <span>🎁 3 ESSAIS GRATUITS, ESSAIE !</span>
   <button id="payBtn">💳 29€/an</button>
 </div>
 <div id="payInfo" style="display:none; background:white; border-bottom:1px solid var(--g2); padding:14px 20px; text-align:center; font-size:0.875rem; line-height:1.7;"></div>
@@ -568,16 +568,16 @@
     const banner = document.getElementById('trialBanner');
     const span = banner.querySelector('span');
     if (reste <= 0) {
-      span.textContent = "Tes 3 leçons gratuites sont utilisées. Débloque l'année complète.";
+      span.textContent = "Tes 3 essais gratuits sont utilisés. Débloque l'année complète.";
       banner.classList.add('expired');
     } else {
       banner.classList.remove('expired');
       if (reste === TRIAL_LECONS) {
-        span.textContent = '🎁 3 LEÇONS OFFERTES, ESSAIE !';
+        span.textContent = '🎁 3 ESSAIS GRATUITS, ESSAIE !';
       } else if (reste === 1) {
-        span.textContent = '🎁 1 leçon offerte, sans risque';
+        span.textContent = '🎁 1 essai gratuit, sans risque';
       } else {
-        span.textContent = `🎁 ${reste} leçons offertes, sans risque`;
+        span.textContent = `🎁 ${reste} essais gratuits, sans risque`;
       }
     }
   }

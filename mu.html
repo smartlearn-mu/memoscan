@@ -6,7 +6,7 @@
   <title>Memo Scan Maurice – Ton prof particulier 24h/24</title>
 
   <!-- ==================== META SEO ==================== -->
-  <meta name="description" content="Ton prof particulier 24h/24 à Maurice : photographie ton cours, il prépare tes exercices et t'interroge. Rs 990 par an. 3 leçons gratuites pour essayer.">
+  <meta name="description" content="Ton prof particulier 24h/24 à Maurice : photographie ton cours, il prépare tes exercices et t'interroge. Rs 990 par an. 3 essais gratuits.">
   <meta name="keywords" content="prof particulier Maurice, leçons particulières, private tuition Mauritius, tuition, soutien scolaire, réviser, dyslexique, aide aux devoirs">
   <meta name="author" content="Smart Learn">
   <meta name="robots" content="index, follow">
@@ -14,14 +14,14 @@
   <!-- ==================== PARTAGE (WhatsApp, réseaux sociaux) ==================== -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Memo Scan Maurice – Ton prof particulier 24h/24">
-  <meta property="og:description" content="Ton prof particulier 24h/24 à Maurice : photographie ton cours, il prépare tes exercices et t'interroge. Rs 990 par an. 3 leçons gratuites pour essayer.">
+  <meta property="og:description" content="Ton prof particulier 24h/24 à Maurice : photographie ton cours, il prépare tes exercices et t'interroge. Rs 990 par an. 3 essais gratuits.">
   <meta property="og:image" content="https://smartlearn-mu.github.io/memoscan/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://smartlearn-mu.github.io/memoscan/mu.html">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Memo Scan Maurice – Ton prof particulier 24h/24">
-  <meta name="twitter:description" content="Ton prof particulier 24h/24 à Maurice : photographie ton cours, il prépare tes exercices et t'interroge. Rs 990 par an. 3 leçons gratuites pour essayer.">
+  <meta name="twitter:description" content="Ton prof particulier 24h/24 à Maurice : photographie ton cours, il prépare tes exercices et t'interroge. Rs 990 par an. 3 essais gratuits.">
   <meta name="twitter:image" content="https://smartlearn-mu.github.io/memoscan/og-image.png">
 
   <!-- ==================== PWA ==================== -->
@@ -350,7 +350,7 @@
 </div>
 
 <div id="trialBanner" class="trial-banner">
-  <span>🎁 3 LEÇONS OFFERTES, ESSAIE !</span>
+  <span>🎁 3 ESSAIS GRATUITS, ESSAIE !</span>
   <button id="payBtn" data-i18n="pay.btn">💳 Rs 990/an</button>
 </div>
 <div id="payInfo" style="display:none; background:white; border-bottom:1px solid var(--g2); padding:14px 20px; text-align:center; font-size:0.875rem; line-height:1.7;"></div>
@@ -918,17 +918,17 @@
     const en = currentLang === 'en';
     if (reste <= 0) {
       span.textContent = en
-        ? 'Your 3 free lessons are used. Unlock the full year for Rs 990.'
-        : "Tes 3 lecons gratuites sont utilisees. Debloque l'annee entiere pour Rs 990.";
+        ? 'Your 3 free tries are used. Unlock the full year for Rs 990.'
+        : "Tes 3 essais gratuits sont utilisés. Débloque l'année entière pour Rs 990.";
       banner.classList.add('expired');
     } else {
       banner.classList.remove('expired');
       if (reste === TRIAL_LECONS) {
-        span.textContent = en ? '🎁 3 FREE LESSONS, TRY IT!' : '🎁 3 LEÇONS OFFERTES, ESSAIE !';
+        span.textContent = en ? '🎁 3 FREE TRIES, TRY IT!' : '🎁 3 ESSAIS GRATUITS, ESSAIE !';
       } else if (reste === 1) {
-        span.textContent = en ? '🎁 1 free lesson left, no risk' : '🎁 1 leçon offerte, sans risque';
+        span.textContent = en ? '🎁 1 free try left, no risk' : '🎁 1 essai gratuit, sans risque';
       } else {
-        span.textContent = en ? '🎁 ' + reste + ' free lessons, no risk' : '🎁 ' + reste + ' leçons offertes, sans risque';
+        span.textContent = en ? '🎁 ' + reste + ' free tries, no risk' : '🎁 ' + reste + ' essais gratuits, sans risque';
       }
     }
   }
