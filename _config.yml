@@ -6,3 +6,4 @@ exclude:
   - SECURITE.md
   - PAIEMENT.md
   - backend
+  - apps-script
