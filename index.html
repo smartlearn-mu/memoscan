@@ -1726,25 +1726,31 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
   setInputMode('photo');
 
   // ==================== DÉMO (chantier 2) ====================
-  // ?demo=1 charge la leçon d'exemple (demo_lesson.json) SANS appeler l'API,
+  // ?demo=N (N=1..10) charge la démo N depuis demos.json SANS appeler l'API,
   // SANS consommer d'essai, SANS quota. Preuve de valeur en 0 attente.
   async function demarrerDemo() {
     try {
-      const r = await fetch('./demo_lesson.json');
-      if (!r.ok) return;
-      appData = normaliserAppData(await r.json());
+      const n = parseInt(new URLSearchParams(location.search).get('demo') || '1', 10) || 1;
+      const r = await fetch('./demos.json');
+      const liste = r.ok ? await r.json() : [];
+      const lecon = (Array.isArray(liste) && liste.length) ? liste[Math.max(0, Math.min(n - 1, liste.length - 1))] : null;
+      if (!lecon) return;
+      appData = normaliserAppData(lecon);
       fcIndex = 0; fcFlipped = false;
       document.getElementById('loadingDiv').style.display = 'none';
       document.getElementById('modeSection').style.display = 'block';
       const b = document.getElementById('dejaBandeau');
-      if (b) { b.style.display = 'block'; b.textContent = "🧪 Ceci est un exemple de leçon — à toi d'essayer avec ton cours !"; }
+      if (b) {
+        b.style.display = 'block';
+        b.textContent = "🧪 Exemple de leçon (" + (lecon.niveau || '') + ' · ' + (lecon.matiere || '') + ") — à toi d'essayer avec ton cours !";
+      }
       setMode('cours');
       document.getElementById('modeSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      logActivity('demo_lancee', {});
+      logActivity('demo_lancee', { demo: n });
     } catch (e) { console.warn('demo indisponible', e); }
   }
 
-  if (new URLSearchParams(location.search).get('demo') === '1') demarrerDemo();
+  if (new URLSearchParams(location.search).get('demo')) demarrerDemo();
   document.getElementById('demoBtn').addEventListener('click', demarrerDemo);
 
   // ==================== SERVICE WORKER ====================

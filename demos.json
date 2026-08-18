@@ -1,0 +1,2573 @@
+[
+  {
+    "id": 1,
+    "niveau": "Primaire",
+    "matiere": "Maths",
+    "titre": "Les fractions",
+    "topic": "Les fractions",
+    "corrected_course": "<h2>Les fractions</h2><p>Une fraction partage un tout en parts égales. Le nombre du bas, appelé le dénominateur, indique en combien de parts le tout est coupé. Le nombre du haut, appelé le numérateur, indique combien de parts on prend.</p><p>Exemple : 3/4 signifie que l'on prend 3 parts sur un total de 4 parts.</p><p>Deux moitiés font un entier : 1/2 + 1/2 = 1.</p><p>Comparer des fractions : 1/2 est plus grand que 1/4.</p>",
+    "key_points": [
+      "Une fraction partage un tout en parts égales.",
+      "Le dénominateur (nombre du bas) indique en combien de parts le tout est coupé.",
+      "Le numérateur (nombre du haut) indique combien de parts on prend.",
+      "Exemple : 3/4 signifie 3 parts sur 4.",
+      "Deux moitiés font un entier : 1/2 + 1/2 = 1.",
+      "Comparer des fractions : 1/2 est plus grand que 1/4."
+    ],
+    "definition": "Une fraction est un nombre qui représente une partie d'un tout, avec un numérateur (en haut) et un dénominateur (en bas).",
+    "to_remember": [
+      "Le dénominateur est en bas, le numérateur est en haut.",
+      "1/2 est plus grand que 1/4.",
+      "1/2 + 1/2 = 1."
+    ],
+    "flashcards": [
+      {
+        "question": "Dans la fraction 3/4, que représente le nombre 4 ?",
+        "answer": "Le dénominateur : le tout est coupé en 4 parts égales."
+      },
+      {
+        "question": "Dans la fraction 3/4, que représente le nombre 3 ?",
+        "answer": "Le numérateur : on prend 3 parts sur 4."
+      },
+      {
+        "question": "Écris la fraction qui représente deux parts sur cinq.",
+        "answer": "2/5"
+      },
+      {
+        "question": "Que vaut 1/2 + 1/2 ?",
+        "answer": "1 (un entier)."
+      },
+      {
+        "question": "Quelle fraction est plus grande : 1/2 ou 1/4 ?",
+        "answer": "1/2 est plus grand que 1/4."
+      },
+      {
+        "question": "Dans la fraction 7/8, quel est le numérateur ?",
+        "answer": "7"
+      },
+      {
+        "question": "Dans la fraction 7/8, quel est le dénominateur ?",
+        "answer": "8"
+      },
+      {
+        "question": "Si un gâteau est coupé en 6 parts égales et que tu en prends 2, quelle fraction as-tu ?",
+        "answer": "2/6"
+      },
+      {
+        "question": "Combien de parts égales faut-il pour faire un entier avec des tiers ?",
+        "answer": "3 tiers, car 1/3 + 1/3 + 1/3 = 1."
+      },
+      {
+        "question": "Compare : 1/3 et 1/5. Lequel est plus grand ?",
+        "answer": "1/3 est plus grand que 1/5 (car le dénominateur est plus petit)."
+      }
+    ],
+    "qcm": [
+      {
+        "question": "Dans la fraction 2/5, le nombre 5 s'appelle...",
+        "options": [
+          "numérateur",
+          "dénominateur",
+          "quotient"
+        ],
+        "correct": 1,
+        "explanation": "Le nombre du bas est le dénominateur."
+      },
+      {
+        "question": "Dans la fraction 2/5, le nombre 2 s'appelle...",
+        "options": [
+          "dénominateur",
+          "numérateur",
+          "entier"
+        ],
+        "correct": 1,
+        "explanation": "Le nombre du haut est le numérateur."
+      },
+      {
+        "question": "Quelle fraction représente 1 part sur 3 ?",
+        "options": [
+          "3/1",
+          "1/3",
+          "3/3"
+        ],
+        "correct": 1,
+        "explanation": "On prend 1 part sur 3, donc 1/3."
+      },
+      {
+        "question": "Combien font 1/2 + 1/2 ?",
+        "options": [
+          "1/4",
+          "2/4",
+          "1"
+        ],
+        "correct": 2,
+        "explanation": "Deux moitiés font un entier : 1/2 + 1/2 = 1."
+      },
+      {
+        "question": "Quelle fraction est plus grande que 1/4 ?",
+        "options": [
+          "1/8",
+          "1/2",
+          "1/10"
+        ],
+        "correct": 1,
+        "explanation": "1/2 est plus grand que 1/4."
+      },
+      {
+        "question": "Si un tout est coupé en 8 parts égales et qu'on en prend 3, quelle fraction écrit-on ?",
+        "options": [
+          "8/3",
+          "3/8",
+          "3/3"
+        ],
+        "correct": 1,
+        "explanation": "Numérateur = 3 (parts prises), dénominateur = 8 (parts totales)."
+      },
+      {
+        "question": "Quelle fraction représente l'entier quand le dénominateur est 4 ?",
+        "options": [
+          "1/4",
+          "4/4",
+          "4/1"
+        ],
+        "correct": 1,
+        "explanation": "4 parts sur 4, c'est tout le gâteau, donc 4/4 = 1."
+      },
+      {
+        "question": "Compare 1/6 et 1/3 : quelle est la bonne affirmation ?",
+        "options": [
+          "1/6 > 1/3",
+          "1/3 > 1/6",
+          "1/6 = 1/3"
+        ],
+        "correct": 1,
+        "explanation": "Plus le dénominateur est petit, plus la part est grande (pour un même numérateur 1)."
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "Explique avec tes mots ce que signifient le numérateur et le dénominateur dans une fraction.",
+        "model_answer": "Le dénominateur (en bas) indique en combien de parts égales le tout est coupé. Le numérateur (en haut) indique combien de parts on prend."
+      },
+      {
+        "question": "Compare 1/2 et 1/4 en expliquant pourquoi l'un est plus grand.",
+        "model_answer": "1/2 est plus grand que 1/4 car quand le tout est coupé en 2 parts, chaque part est plus grande que quand il est coupé en 4 parts. Donc 1/2 > 1/4."
+      },
+      {
+        "question": "Écris la fraction qui correspond à 5 parts sur 8. Quel est le numérateur ? Quel est le dénominateur ?",
+        "model_answer": "La fraction est 5/8. Le numérateur est 5, le dénominateur est 8."
+      },
+      {
+        "question": "Un gâteau est partagé en 6 parts égales. Marie en prend 2 et Jean en prend 3. Quelle fraction du gâteau reste-t-il ?",
+        "model_answer": "Parts prises : 2 + 3 = 5. Reste : 6 - 5 = 1 part. Fraction restante : 1/6."
+      },
+      {
+        "question": "Explique pourquoi 1/3 est plus grand que 1/5 en t'appuyant sur le découpage du tout.",
+        "model_answer": "Si on coupe un gâteau en 3 parts, chaque part est plus grosse que si on le coupe en 5 parts. Donc 1/3 > 1/5."
+      },
+      {
+        "question": "Vrai ou faux : 2/4 et 1/2 représentent la même quantité. Justifie avec le cours.",
+        "model_answer": "Vrai : 2/4 signifie 2 parts sur 4, soit la moitié. 1/2 est aussi la moitié. Donc 2/4 = 1/2."
+      }
+    ],
+    "exercises": [
+      {
+        "tag": "Appli",
+        "statement": "Écris la fraction pour chaque situation : a) 3 parts sur 7 ; b) 1 part sur 10 ; c) 5 parts sur 5.",
+        "solution": "a) 3/7 ; b) 1/10 ; c) 5/5 = 1."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Dans une classe de 20 élèves, 3/4 des élèves ont un animal de compagnie. Combien d'élèves ont un animal ?",
+        "solution": "3/4 de 20 = 20 ÷ 4 = 5, puis 5 × 3 = 15. Donc 15 élèves."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Compare les fractions suivantes en utilisant <, > ou = : a) 1/2 et 1/3 ; b) 1/4 et 1/8 ; c) 1/2 et 2/4.",
+        "solution": "a) 1/2 > 1/3 ; b) 1/4 > 1/8 ; c) 1/2 = 2/4."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Un gâteau est coupé en 8 parts. On en mange 3. Quelle fraction du gâteau a été mangée ? Quelle fraction reste-t-il ?",
+        "solution": "Mangée : 3/8. Reste : 5/8 (car 8 - 3 = 5)."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Complète : a) 1/4 + 1/4 + 1/4 + 1/4 = ? ; b) 1/3 + 1/3 + 1/3 = ? ; c) 1/2 + 1/2 = ?",
+        "solution": "a) 4/4 = 1 ; b) 3/3 = 1 ; c) 2/2 = 1."
+      }
+    ],
+    "interro": [
+      {
+        "question": "Dans la fraction 3/8, quel est le dénominateur ?",
+        "answer": "8"
+      },
+      {
+        "question": "Dans la fraction 3/8, quel est le numérateur ?",
+        "answer": "3"
+      },
+      {
+        "question": "Écris la fraction : 4 parts sur 9.",
+        "answer": "4/9"
+      },
+      {
+        "question": "Combien font 1/2 + 1/2 ?",
+        "answer": "1"
+      },
+      {
+        "question": "Quelle fraction est plus grande : 1/2 ou 1/4 ?",
+        "answer": "1/2"
+      },
+      {
+        "question": "Si un tout est coupé en 5 parts égales, combien de parts faut-il pour faire un entier ?",
+        "answer": "5 parts, donc 5/5 = 1."
+      },
+      {
+        "question": "Compare : 1/3 et 1/5 (utilise > ou <).",
+        "answer": "1/3 > 1/5"
+      },
+      {
+        "question": "Quelle fraction représente la moitié d'un tout ?",
+        "answer": "1/2"
+      }
+    ],
+    "mindmap": {
+      "center": "Fractions",
+      "branches": [
+        {
+          "label": "Définition",
+          "leaves": [
+            "Partage en parts égales",
+            "Numérateur (haut)",
+            "Dénominateur (bas)"
+          ]
+        },
+        {
+          "label": "Exemple",
+          "leaves": [
+            "3/4 = 3 parts sur 4"
+          ]
+        },
+        {
+          "label": "Addition",
+          "leaves": [
+            "1/2 + 1/2 = 1",
+            "Deux moitiés = entier"
+          ]
+        },
+        {
+          "label": "Comparaison",
+          "leaves": [
+            "1/2 > 1/4",
+            "Dénominateur plus grand = part plus petite"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "niveau": "Primaire",
+    "matiere": "Français",
+    "titre": "Le passé composé",
+    "topic": "Le passé composé",
+    "corrected_course": "<h2>Le passé composé</h2><p>Le passé composé est un temps qui sert à parler d'une action qui est passée et qui est terminée. Pour le former, on utilise un auxiliaire (avoir ou être) au présent, puis on ajoute le participe passé du verbe. Par exemple : j'ai mangé, nous avons fini, elle est partie.</p><p>Quand on utilise l'auxiliaire être, le participe passé s'accorde avec le sujet. Par exemple : elles sont parties (le participe passé 'parties' prend un 's' parce que le sujet est féminin et pluriel).</p><p>Voici quelques participes passés à connaître : manger devient mangé, finir devient fini, partir devient parti, faire devient fait.</p>",
+    "key_points": [
+      "Le passé composé exprime une action passée et terminée.",
+      "Il se forme avec l'auxiliaire avoir ou être au présent + le participe passé du verbe.",
+      "Avec l'auxiliaire être, le participe passé s'accorde avec le sujet (exemple : elles sont parties).",
+      "Quelques participes passés : mangé, fini, parti, fait."
+    ],
+    "definition": "Le passé composé est un temps du passé qui indique qu'une action est terminée. Il se construit avec un auxiliaire (avoir ou être) au présent et le participe passé du verbe.",
+    "to_remember": [
+      "Avec être, le participe passé s'accorde avec le sujet (exemple : elles sont parties).",
+      "Les participes passés de : manger → mangé, finir → fini, partir → parti, faire → fait."
+    ],
+    "flashcards": [
+      {
+        "question": "Quel temps exprime une action passée et terminée ?",
+        "answer": "Le passé composé."
+      },
+      {
+        "question": "Comment se forme le passé composé ?",
+        "answer": "Auxiliaire avoir ou être au présent + participe passé du verbe."
+      },
+      {
+        "question": "Quel est le participe passé du verbe 'manger' ?",
+        "answer": "mangé"
+      },
+      {
+        "question": "Quel est le participe passé du verbe 'finir' ?",
+        "answer": "fini"
+      },
+      {
+        "question": "Quel est le participe passé du verbe 'partir' ?",
+        "answer": "parti"
+      },
+      {
+        "question": "Quel est le participe passé du verbe 'faire' ?",
+        "answer": "fait"
+      },
+      {
+        "question": "Quand faut-il accorder le participe passé avec le sujet ?",
+        "answer": "Quand l'auxiliaire est être."
+      },
+      {
+        "question": "Conjugue 'partir' au passé composé avec 'elles'.",
+        "answer": "elles sont parties"
+      },
+      {
+        "question": "Conjugue 'manger' au passé composé avec 'je'.",
+        "answer": "j'ai mangé"
+      },
+      {
+        "question": "Conjugue 'finir' au passé composé avec 'nous'.",
+        "answer": "nous avons fini"
+      }
+    ],
+    "qcm": [
+      {
+        "question": "Quelle est la bonne forme du passé composé de 'manger' à la 1ère personne du singulier ?",
+        "options": [
+          "j'ai mangé",
+          "je suis mangé",
+          "j'ai mangé",
+          "je mange"
+        ],
+        "correct": 0,
+        "explanation": "Avec l'auxiliaire avoir, on écrit 'j'ai mangé'."
+      },
+      {
+        "question": "Quel auxiliaire utilise-t-on pour le verbe 'partir' au passé composé ?",
+        "options": [
+          "avoir",
+          "être",
+          "les deux",
+          "ni l'un ni l'autre"
+        ],
+        "correct": 1,
+        "explanation": "Le verbe 'partir' se conjugue avec l'auxiliaire être."
+      },
+      {
+        "question": "Quelle est la forme correcte du passé composé de 'finir' avec 'nous' ?",
+        "options": [
+          "nous sommes fini",
+          "nous avons fini",
+          "nous avons finis",
+          "nous sommes finis"
+        ],
+        "correct": 1,
+        "explanation": "Avec avoir, pas d'accord : 'nous avons fini'."
+      },
+      {
+        "question": "Quel est le participe passé du verbe 'faire' ?",
+        "options": [
+          "fait",
+          "faite",
+          "fais",
+          "fini"
+        ],
+        "correct": 0,
+        "explanation": "Le participe passé de 'faire' est 'fait'."
+      },
+      {
+        "question": "Avec l'auxiliaire être, comment s'écrit le participe passé pour 'elles' (partir) ?",
+        "options": [
+          "parti",
+          "partie",
+          "partis",
+          "parties"
+        ],
+        "correct": 3,
+        "explanation": "Avec être, on accorde : 'elles sont parties'."
+      },
+      {
+        "question": "Quelle phrase est au passé composé ?",
+        "options": [
+          "Je mange une pomme.",
+          "J'ai mangé une pomme.",
+          "Je mangeais une pomme.",
+          "Je mangerai une pomme."
+        ],
+        "correct": 1,
+        "explanation": "Seule 'j'ai mangé' est au passé composé."
+      },
+      {
+        "question": "Quelle est la forme correcte du passé composé de 'manger' avec 'tu' ?",
+        "options": [
+          "tu as mangé",
+          "tu es mangé",
+          "tu as mangés",
+          "tu es mangée"
+        ],
+        "correct": 0,
+        "explanation": "Avec avoir, pas d'accord : 'tu as mangé'."
+      },
+      {
+        "question": "Quel est le participe passé du verbe 'finir' ?",
+        "options": [
+          "fini",
+          "finie",
+          "finis",
+          "fait"
+        ],
+        "correct": 0,
+        "explanation": "Le participe passé de 'finir' est 'fini'."
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "Conjugue le verbe 'manger' au passé composé à toutes les personnes.",
+        "model_answer": "j'ai mangé, tu as mangé, il/elle a mangé, nous avons mangé, vous avez mangé, ils/elles ont mangé."
+      },
+      {
+        "question": "Conjugue le verbe 'partir' au passé composé à toutes les personnes (féminin pluriel pour ils/elles).",
+        "model_answer": "je suis parti(e), tu es parti(e), il est parti / elle est partie, nous sommes parti(e)s, vous êtes parti(e)(s), ils sont partis / elles sont parties."
+      },
+      {
+        "question": "Explique pourquoi on écrit 'elles sont parties' et non 'elles sont parti'.",
+        "model_answer": "Parce que le verbe 'partir' se conjugue avec l'auxiliaire être, et avec être le participe passé s'accorde avec le sujet. 'Elles' est féminin pluriel, donc on ajoute -es."
+      },
+      {
+        "question": "Compare l'accord du participe passé avec 'avoir' et avec 'être'. Donne un exemple pour chaque.",
+        "model_answer": "Avec avoir, le participe passé ne s'accorde pas avec le sujet : 'j'ai mangé' (pas de e). Avec être, il s'accorde : 'elle est partie' (on ajoute e)."
+      },
+      {
+        "question": "Transforme la phrase 'Nous finissons nos devoirs' au passé composé, puis accorde le participe passé si nécessaire.",
+        "model_answer": "Nous avons fini nos devoirs. Avec avoir, pas d'accord, donc 'fini' reste invariable."
+      },
+      {
+        "question": "Explique la différence entre 'il a fait' et 'il est fait' (sens et construction).",
+        "model_answer": "'Il a fait' utilise l'auxiliaire avoir et signifie qu'il a réalisé une action (ex : il a fait un gâteau). 'Il est fait' utilise l'auxiliaire être et décrit un état ou une action subie (ex : le gâteau est fait)."
+      }
+    ],
+    "exercises": [
+      {
+        "tag": "Appli",
+        "statement": "Conjugue au passé composé les verbes entre parenthèses : 1) Je (manger) une pomme. 2) Nous (finir) nos devoirs. 3) Elles (partir) à l'école. 4) Tu (faire) un dessin.",
+        "solution": "1) j'ai mangé ; 2) nous avons fini ; 3) elles sont parties ; 4) tu as fait."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Réécris ces phrases au passé composé : 1) Je mange une pomme. 2) Nous finissons notre travail. 3) Elle part en vacances. 4) Ils font du sport.",
+        "solution": "1) J'ai mangé une pomme. 2) Nous avons fini notre travail. 3) Elle est partie en vacances. 4) Ils ont fait du sport."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Accorde le participe passé si nécessaire : 1) Elles sont (parti)____. 2) Nous avons (mangé)____. 3) Marie est (allé)____. 4) Les enfants sont (venu)____.",
+        "solution": "1) parties ; 2) mangé (pas d'accord) ; 3) allée ; 4) venus."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Choisis le bon auxiliaire (avoir ou être) et conjugue : 1) Je (manger) ____. 2) Il (partir) ____. 3) Nous (finir) ____. 4) Elles (venir) ____.",
+        "solution": "1) j'ai mangé ; 2) il est parti ; 3) nous avons fini ; 4) elles sont venues."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Transforme au passé composé en respectant l'accord : 1) Elle fait ses devoirs. 2) Ils partent ensemble. 3) Nous mangeons des gâteaux. 4) Vous finissez votre livre.",
+        "solution": "1) Elle a fait ses devoirs. 2) Ils sont partis ensemble. 3) Nous avons mangé des gâteaux. 4) Vous avez fini votre livre."
+      }
+    ],
+    "interro": [
+      {
+        "question": "Quel auxiliaire utilise-t-on pour le verbe 'manger' au passé composé ?",
+        "answer": "avoir"
+      },
+      {
+        "question": "Quel est le participe passé de 'finir' ?",
+        "answer": "fini"
+      },
+      {
+        "question": "Conjugue 'partir' au passé composé avec 'elle'.",
+        "answer": "elle est partie"
+      },
+      {
+        "question": "Conjugue 'faire' au passé composé avec 'nous'.",
+        "answer": "nous avons fait"
+      },
+      {
+        "question": "Pourquoi 'elles sont parties' prend un 'e' et un 's' ?",
+        "answer": "Parce que l'auxiliaire est être, on accorde avec le sujet féminin pluriel."
+      },
+      {
+        "question": "Conjugue 'manger' au passé composé avec 'vous'.",
+        "answer": "vous avez mangé"
+      },
+      {
+        "question": "Conjugue 'finir' au passé composé avec 'ils'.",
+        "answer": "ils ont fini"
+      },
+      {
+        "question": "Quelle est la forme correcte : 'j'ai mangé' ou 'j'ai mangée' ?",
+        "answer": "j'ai mangé (pas d'accord avec avoir)"
+      }
+    ],
+    "mindmap": {
+      "center": "Passé composé",
+      "branches": [
+        {
+          "label": "Formation",
+          "leaves": [
+            "Auxiliaire avoir ou être au présent",
+            "Participe passé"
+          ]
+        },
+        {
+          "label": "Auxiliaire avoir",
+          "leaves": [
+            "Pas d'accord avec le sujet",
+            "Ex : j'ai mangé"
+          ]
+        },
+        {
+          "label": "Auxiliaire être",
+          "leaves": [
+            "Accord avec le sujet",
+            "Ex : elles sont parties"
+          ]
+        },
+        {
+          "label": "Exemples de participes passés",
+          "leaves": [
+            "manger → mangé",
+            "finir → fini",
+            "partir → parti",
+            "faire → fait"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "niveau": "Primaire",
+    "matiere": "Sciences",
+    "titre": "Le cycle de l'eau",
+    "topic": "Le cycle de l'eau",
+    "corrected_course": "<h2>Le cycle de l'eau</h2><p>L'eau circule en continu sur la Terre : c'est le cycle de l'eau.</p><p>1) Le soleil chauffe l'eau des océans, elle s'évapore et devient de la vapeur d'eau.</p><p>2) La vapeur monte dans l'air, se refroidit et forme les nuages. C'est la condensation.</p><p>3) L'eau des nuages retombe sur la Terre sous forme de pluie ou de neige. Ce sont les précipitations.</p><p>4) L'eau qui tombe ruisselle sur le sol et retourne dans les océans.</p><p>Au cours de ce cycle, l'eau change d'état : elle peut être liquide (comme l'eau des rivières), gazeuse (comme la vapeur d'eau) ou solide (comme la glace).</p>",
+    "key_points": [
+      "Le soleil chauffe l'eau des océans, ce qui la fait s'évaporer.",
+      "La vapeur d'eau se refroidit et forme les nuages (condensation).",
+      "L'eau retombe en pluie ou en neige (précipitations), puis ruisselle vers les océans.",
+      "L'eau change d'état : liquide, gazeux (vapeur) et solide (glace)."
+    ],
+    "definition": "Le cycle de l'eau est le trajet continu de l'eau sur Terre, qui passe par l'évaporation, la condensation, les précipitations et le ruissellement.",
+    "to_remember": [
+      "L'eau circule sans arrêt sur Terre.",
+      "Les trois états de l'eau sont : liquide, gazeux (vapeur) et solide (glace).",
+      "Le soleil est le moteur du cycle de l'eau."
+    ],
+    "flashcards": [
+      {
+        "question": "Quelle est la première étape du cycle de l'eau ?",
+        "answer": "Le soleil chauffe l'eau des océans et elle s'évapore."
+      },
+      {
+        "question": "Quel changement d'état se produit lors de la condensation ?",
+        "answer": "La vapeur d'eau se refroidit et devient liquide (formation des nuages)."
+      },
+      {
+        "question": "Quelles sont les deux formes de précipitations citées dans le cours ?",
+        "answer": "La pluie et la neige."
+      },
+      {
+        "question": "Que devient l'eau après les précipitations ?",
+        "answer": "Elle ruisselle et retourne aux océans."
+      },
+      {
+        "question": "Quels sont les trois états de l'eau ?",
+        "answer": "Liquide, gaz (vapeur), solide (glace)."
+      },
+      {
+        "question": "Quel est le rôle du soleil dans le cycle de l'eau ?",
+        "answer": "Il chauffe l'eau et provoque son évaporation."
+      },
+      {
+        "question": "Où l'eau s'évapore-t-elle principalement ?",
+        "answer": "Dans les océans."
+      },
+      {
+        "question": "Comment se forment les nuages ?",
+        "answer": "La vapeur d'eau monte, se refroidit et se condense."
+      },
+      {
+        "question": "Que se passe-t-il lorsque l'eau se refroidit à l'état solide ?",
+        "answer": "Elle devient de la glace."
+      },
+      {
+        "question": "Le cycle de l'eau est-il un processus continu ?",
+        "answer": "Oui, il se répète sans cesse."
+      }
+    ],
+    "qcm": [
+      {
+        "question": "Quelle est la première étape du cycle de l'eau ?",
+        "options": [
+          "La condensation",
+          "L'évaporation",
+          "Les précipitations"
+        ],
+        "correct": 1,
+        "explanation": "Le soleil chauffe l'eau des océans, ce qui provoque son évaporation."
+      },
+      {
+        "question": "Lors de la condensation, la vapeur d'eau devient...",
+        "options": [
+          "solide",
+          "liquide",
+          "gazeuse"
+        ],
+        "correct": 1,
+        "explanation": "La condensation transforme la vapeur d'eau en fines gouttelettes liquides."
+      },
+      {
+        "question": "Quel est l'état de l'eau dans la glace ?",
+        "options": [
+          "Liquide",
+          "Gazeux",
+          "Solide"
+        ],
+        "correct": 2,
+        "explanation": "La glace est de l'eau à l'état solide."
+      },
+      {
+        "question": "Que se passe-t-il après les précipitations ?",
+        "options": [
+          "L'eau s'évapore",
+          "L'eau ruisselle et retourne aux océans",
+          "L'eau se condense"
+        ],
+        "correct": 1,
+        "explanation": "Après les précipitations, l'eau ruisselle sur le sol et rejoint les océans."
+      },
+      {
+        "question": "Quel est le moteur principal du cycle de l'eau ?",
+        "options": [
+          "Le vent",
+          "Le soleil",
+          "La lune"
+        ],
+        "correct": 1,
+        "explanation": "Le soleil fournit l'énergie nécessaire à l'évaporation."
+      },
+      {
+        "question": "Quand la vapeur d'eau se refroidit-elle ?",
+        "options": [
+          "En montant dans l'atmosphère",
+          "En retombant sur Terre",
+          "En ruisselant"
+        ],
+        "correct": 0,
+        "explanation": "La vapeur monte et se refroidit en altitude, ce qui permet la condensation."
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "Décris les quatre étapes principales du cycle de l'eau dans l'ordre.",
+        "model_answer": "1) Évaporation : le soleil chauffe l'eau des océans, elle devient vapeur. 2) Condensation : la vapeur monte, se refroidit et forme les nuages. 3) Précipitations : l'eau retombe en pluie ou neige. 4) Ruissellement : l'eau retourne aux océans."
+      },
+      {
+        "question": "Quels sont les trois états de l'eau ? Donne un exemple pour chacun.",
+        "model_answer": "Liquide (eau de pluie), gaz (vapeur d'eau), solide (glace)."
+      },
+      {
+        "question": "Explique pourquoi le soleil est indispensable au cycle de l'eau.",
+        "model_answer": "Sans le soleil, l'eau des océans ne s'évaporerait pas, donc pas de nuages ni de précipitations : le cycle s'arrêterait."
+      },
+      {
+        "question": "Compare l'évaporation et la condensation : qu'ont-elles en commun, qu'ont-elles de différent ?",
+        "model_answer": "Les deux sont des changements d'état de l'eau. L'évaporation transforme l'eau liquide en vapeur (nécessite de la chaleur), la condensation transforme la vapeur en liquide (nécessite du refroidissement). Ce sont des transformations inverses."
+      },
+      {
+        "question": "Imagine que le soleil brille plus fort. Que se passerait-il dans le cycle de l'eau ? Explique.",
+        "model_answer": "L'évaporation serait plus rapide, donc plus de vapeur d'eau dans l'air, peut-être plus de nuages et de précipitations. Le cycle serait plus intense."
+      }
+    ],
+    "exercises": [
+      {
+        "tag": "Appli",
+        "statement": "Classe les étapes suivantes dans l'ordre du cycle : Précipitations, Évaporation, Ruissellement, Condensation.",
+        "solution": "1) Évaporation, 2) Condensation, 3) Précipitations, 4) Ruissellement."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Pour chaque situation, dis à quel état de l'eau cela correspond : a) la buée sur une vitre, b) un glaçon, c) l'eau d'une rivière.",
+        "solution": "a) gaz (vapeur d'eau condensée), b) solide, c) liquide."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Relie chaque changement d'état à sa description : 1) Évaporation, 2) Condensation, 3) Solidification. A) liquide → solide, B) liquide → gaz, C) gaz → liquide.",
+        "solution": "1-B, 2-C, 3-A."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Vrai ou faux ? Justifie : « La neige est de l'eau à l'état gazeux. »",
+        "solution": "Faux. La neige est de l'eau à l'état solide."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Complète les phrases : « Le soleil chauffe l'eau des océans, elle s'______. La vapeur monte, se refroidit et forme les ______. L'eau retombe en ______ ou neige. »",
+        "solution": "évapore ; nuages ; pluie."
+      }
+    ],
+    "interro": [
+      {
+        "question": "Quel est le rôle du soleil dans le cycle de l'eau ?",
+        "answer": "Il chauffe l'eau des océans et provoque son évaporation."
+      },
+      {
+        "question": "Comment s'appelle le passage de l'état liquide à l'état gazeux ?",
+        "answer": "Évaporation."
+      },
+      {
+        "question": "Comment s'appelle le passage de l'état gazeux à l'état liquide ?",
+        "answer": "Condensation."
+      },
+      {
+        "question": "Que deviennent les précipitations ?",
+        "answer": "Elles ruissellent et retournent aux océans."
+      },
+      {
+        "question": "Quels sont les trois états de l'eau ?",
+        "answer": "Liquide, solide, gazeux."
+      },
+      {
+        "question": "Quelle est la source d'énergie du cycle de l'eau ?",
+        "answer": "Le soleil."
+      },
+      {
+        "question": "La glace est-elle de l'eau à l'état liquide ?",
+        "answer": "Non, à l'état solide."
+      },
+      {
+        "question": "Où l'eau s'évapore-t-elle principalement ?",
+        "answer": "Dans les océans."
+      }
+    ],
+    "mindmap": {
+      "center": "Le cycle de l'eau",
+      "branches": [
+        {
+          "label": "Étapes",
+          "leaves": [
+            "Évaporation",
+            "Condensation",
+            "Précipitations",
+            "Ruissellement"
+          ]
+        },
+        {
+          "label": "États de l'eau",
+          "leaves": [
+            "Liquide",
+            "Gaz",
+            "Solide"
+          ]
+        },
+        {
+          "label": "Moteur",
+          "leaves": [
+            "Soleil"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "niveau": "Collège",
+    "matiere": "Maths",
+    "titre": "Théorème de Pythagore",
+    "topic": "Le théorème de Pythagore",
+    "corrected_course": "<h2>Le théorème de Pythagore</h2><p>Dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés. L'hypoténuse est le côté opposé à l'angle droit, c'est le plus long des trois côtés.</p><p>Exemple : un triangle rectangle dont les petits côtés mesurent 3 cm et 4 cm. Trois au carré font 9, quatre au carré font 16, et 9 + 16 font 25. L'hypoténuse vaut donc la racine carrée de 25, c'est-à-dire 5 cm.</p><p>On utilise ce théorème pour calculer un côté manquant ou pour vérifier qu'un triangle est rectangle.</p>",
+    "key_points": [
+      "Dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés.",
+      "L'hypoténuse est le côté opposé à l'angle droit, c'est le plus long des trois côtés.",
+      "Exemple : 3 cm et 4 cm donnent une hypoténuse de 5 cm (car 3 au carré + 4 au carré = 25, racine de 25 = 5).",
+      "On s'en sert pour calculer un côté manquant ou vérifier qu'un triangle est rectangle."
+    ],
+    "definition": "L'hypoténuse est le côté opposé à l'angle droit dans un triangle rectangle ; c'est le plus long des trois côtés.",
+    "to_remember": [
+      "Pour un triangle rectangle : hypoténuse au carré = côté1 au carré + côté2 au carré.",
+      "Si on connaît deux côtés, on peut trouver le troisième avec la racine carrée."
+    ],
+    "flashcards": [
+      {
+        "question": "Dans un triangle rectangle, que vaut le carré de l'hypoténuse ?",
+        "answer": "Il est égal à la somme des carrés des deux autres côtés."
+      },
+      {
+        "question": "Comment s'appelle le côté opposé à l'angle droit ?",
+        "answer": "L'hypoténuse."
+      },
+      {
+        "question": "Quelle est la propriété de l'hypoténuse par rapport aux autres côtés ?",
+        "answer": "C'est le plus long des trois côtés."
+      },
+      {
+        "question": "Un triangle rectangle a des côtés de 3 cm et 4 cm. Quelle est la longueur de l'hypoténuse ?",
+        "answer": "5 cm, car 3² + 4² = 9 + 16 = 25, et √25 = 5."
+      },
+      {
+        "question": "Peut-on appliquer le théorème de Pythagore dans un triangle quelconque ?",
+        "answer": "Non, uniquement dans un triangle rectangle."
+      },
+      {
+        "question": "Quelles sont les deux utilisations principales du théorème de Pythagore ?",
+        "answer": "Calculer un côté manquant ou vérifier qu'un triangle est rectangle."
+      },
+      {
+        "question": "Dans la formule a² + b² = c², que représente c ?",
+        "answer": "L'hypoténuse."
+      },
+      {
+        "question": "Si un triangle a pour côtés 5, 12, 13, est-il rectangle ?",
+        "answer": "Oui, car 5² + 12² = 25 + 144 = 169 = 13²."
+      }
+    ],
+    "qcm": [
+      {
+        "question": "Dans un triangle rectangle, si les deux côtés de l'angle droit mesurent 6 cm et 8 cm, combien mesure l'hypoténuse ?",
+        "options": [
+          "10 cm",
+          "14 cm",
+          "12 cm"
+        ],
+        "correct": 0,
+        "explanation": "6² + 8² = 36 + 64 = 100, √100 = 10."
+      },
+      {
+        "question": "Quel est le côté le plus long dans un triangle rectangle ?",
+        "options": [
+          "Le côté adjacent à l'angle droit",
+          "L'hypoténuse",
+          "Le côté opposé à l'angle aigu"
+        ],
+        "correct": 1,
+        "explanation": "L'hypoténuse est toujours le plus long côté."
+      },
+      {
+        "question": "Le théorème de Pythagore s'applique uniquement aux triangles...",
+        "options": [
+          "équilatéraux",
+          "rectangles",
+          "isocèles"
+        ],
+        "correct": 1,
+        "explanation": "Le théorème est spécifique aux triangles rectangles."
+      },
+      {
+        "question": "Si un triangle a pour côtés 3, 4, 6, est-il rectangle ?",
+        "options": [
+          "Oui",
+          "Non",
+          "On ne peut pas savoir"
+        ],
+        "correct": 1,
+        "explanation": "3² + 4² = 9 + 16 = 25, et 6² = 36, donc 25 ≠ 36."
+      },
+      {
+        "question": "Quelle est la formule du théorème de Pythagore ?",
+        "options": [
+          "c² = a² + b²",
+          "a² = b² + c²",
+          "a + b = c"
+        ],
+        "correct": 0,
+        "explanation": "Le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés."
+      },
+      {
+        "question": "Un triangle rectangle a une hypoténuse de 13 cm et un côté de 5 cm. Combien mesure l'autre côté ?",
+        "options": [
+          "12 cm",
+          "8 cm",
+          "10 cm"
+        ],
+        "correct": 0,
+        "explanation": "13² - 5² = 169 - 25 = 144, √144 = 12."
+      },
+      {
+        "question": "Que signifie √25 ?",
+        "options": [
+          "Le nombre qui, multiplié par lui-même, donne 25",
+          "25 divisé par 2",
+          "25 multiplié par 2"
+        ],
+        "correct": 0,
+        "explanation": "√25 = 5 car 5×5 = 25."
+      },
+      {
+        "question": "Pour vérifier qu'un triangle est rectangle, on compare...",
+        "options": [
+          "le carré du plus grand côté avec la somme des carrés des deux autres",
+          "la somme des trois côtés avec le périmètre",
+          "le produit des deux petits côtés avec le grand côté"
+        ],
+        "correct": 0,
+        "explanation": "Si le carré du plus grand côté est égal à la somme des carrés des deux autres, le triangle est rectangle."
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "Énonce le théorème de Pythagore.",
+        "model_answer": "Dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés."
+      },
+      {
+        "question": "Un triangle rectangle a des côtés de 5 cm et 12 cm. Calcule l'hypoténuse.",
+        "model_answer": "5² + 12² = 25 + 144 = 169, donc hypoténuse = √169 = 13 cm."
+      },
+      {
+        "question": "Un triangle a pour côtés 7 cm, 24 cm, 25 cm. Est-il rectangle ? Justifie.",
+        "model_answer": "25² = 625, 7² + 24² = 49 + 576 = 625. Puisque 625 = 625, le triangle est rectangle."
+      },
+      {
+        "question": "Explique pourquoi l'hypoténuse est toujours le côté le plus long d'un triangle rectangle.",
+        "model_answer": "Parce que dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés. Cette somme est plus grande que chaque carré pris séparément, donc l'hypoténuse est plus grande que chaque côté."
+      },
+      {
+        "question": "Compare l'utilisation du théorème de Pythagore pour calculer un côté manquant et pour vérifier qu'un triangle est rectangle.",
+        "model_answer": "Pour calculer un côté manquant, on connaît deux côtés et on utilise la formule pour trouver le troisième. Pour vérifier qu'un triangle est rectangle, on calcule le carré du plus grand côté et on compare avec la somme des carrés des deux autres : si c'est égal, le triangle est rectangle."
+      },
+      {
+        "question": "Un triangle rectangle a une hypoténuse de 17 cm et un côté de 8 cm. Calcule le troisième côté.",
+        "model_answer": "17² - 8² = 289 - 64 = 225, donc le côté manquant = √225 = 15 cm."
+      }
+    ],
+    "exercises": [
+      {
+        "tag": "Appli",
+        "statement": "Calcule l'hypoténuse d'un triangle rectangle dont les côtés de l'angle droit mesurent 6 cm et 8 cm.",
+        "solution": "6² + 8² = 36 + 64 = 100, donc hypoténuse = √100 = 10 cm."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Un triangle rectangle a une hypoténuse de 15 cm et un côté de 9 cm. Trouve la longueur du troisième côté.",
+        "solution": "15² - 9² = 225 - 81 = 144, donc côté = √144 = 12 cm."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Un triangle a pour côtés 9 cm, 12 cm, 15 cm. Est-il rectangle ? Justifie.",
+        "solution": "15² = 225, 9² + 12² = 81 + 144 = 225, donc oui, il est rectangle."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Calcule la longueur de l'hypoténuse d'un triangle rectangle dont les côtés mesurent 5 cm et 7 cm. Donne la valeur exacte sous forme de racine carrée, puis une valeur approchée au dixième.",
+        "solution": "5² + 7² = 25 + 49 = 74, donc hypoténuse = √74 ≈ 8,6 cm."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Une échelle de 13 m est posée contre un mur. Le pied de l'échelle est à 5 m du mur. À quelle hauteur touche-t-elle le mur ?",
+        "solution": "Le triangle est rectangle, l'échelle est l'hypoténuse (13 m), un côté est 5 m. Hauteur = √(13² - 5²) = √(169 - 25) = √144 = 12 m."
+      }
+    ],
+    "interro": [
+      {
+        "question": "Dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés. Vrai ou faux ?",
+        "answer": "Vrai."
+      },
+      {
+        "question": "Comment s'appelle le côté opposé à l'angle droit ?",
+        "answer": "L'hypoténuse."
+      },
+      {
+        "question": "Quelle est la longueur de l'hypoténuse si les deux autres côtés mesurent 6 cm et 8 cm ?",
+        "answer": "10 cm."
+      },
+      {
+        "question": "Un triangle a pour côtés 5, 12, 13. Est-il rectangle ?",
+        "answer": "Oui, car 5² + 12² = 25 + 144 = 169 = 13²."
+      },
+      {
+        "question": "Que vaut √49 ?",
+        "answer": "7, car 7×7 = 49."
+      },
+      {
+        "question": "Peut-on utiliser le théorème de Pythagore dans un triangle équilatéral ?",
+        "answer": "Non, seulement dans un triangle rectangle."
+      },
+      {
+        "question": "Si l'hypoténuse mesure 10 cm et un côté mesure 6 cm, combien mesure l'autre côté ?",
+        "answer": "8 cm, car 10² - 6² = 100 - 36 = 64, √64 = 8."
+      }
+    ],
+    "mindmap": {
+      "center": "Théorème de Pythagore",
+      "branches": [
+        {
+          "label": "Triangle rectangle",
+          "leaves": [
+            "angle droit",
+            "hypoténuse (côté le plus long)"
+          ]
+        },
+        {
+          "label": "Formule",
+          "leaves": [
+            "hypoténuse² = côté1² + côté2²",
+            "exemple : 3² + 4² = 25, √25 = 5"
+          ]
+        },
+        {
+          "label": "Utilisations",
+          "leaves": [
+            "calculer un côté manquant",
+            "vérifier qu'un triangle est rectangle"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 5,
+    "niveau": "Collège",
+    "matiere": "SVT",
+    "titre": "La photosynthèse",
+    "topic": "La photosynthèse",
+    "corrected_course": "<h2>La photosynthèse</h2><p>La photosynthèse est le processus qui permet aux plantes vertes de fabriquer leur propre matière, notamment du glucose (un sucre). Pour cela, elles ont besoin de lumière, d'eau et de dioxyde de carbone. Ce phénomène se déroule dans les feuilles, grâce à un pigment vert appelé chlorophylle.</p><p>L'équation simplifiée de la photosynthèse est : six molécules de dioxyde de carbone + six molécules d'eau + lumière donnent du glucose et de l'oxygène.</p><p>La photosynthèse est très importante car elle produit l'oxygène indispensable à la respiration de tous les êtres vivants.</p>",
+    "key_points": [
+      "Les plantes vertes fabriquent leur propre matière (le glucose) grâce à la photosynthèse.",
+      "La photosynthèse utilise la lumière, l'eau et le dioxyde de carbone.",
+      "Elle se fait dans les feuilles grâce à la chlorophylle.",
+      "L'équation est : 6 dioxyde de carbone + 6 eau + lumière donnent glucose + oxygène.",
+      "La photosynthèse produit l'oxygène nécessaire à la respiration des êtres vivants."
+    ],
+    "definition": "La photosynthèse est le processus par lequel les plantes vertes fabriquent leur nourriture (glucose) à partir de lumière, d'eau et de dioxyde de carbone, en produisant de l'oxygène.",
+    "to_remember": [
+      "La chlorophylle est le pigment vert qui permet la photosynthèse dans les feuilles.",
+      "La photosynthèse produit l'oxygène indispensable à la vie."
+    ],
+    "flashcards": [
+      {
+        "question": "Quel est le rôle de la photosynthèse ?",
+        "answer": "Elle permet aux plantes vertes de fabriquer leur propre matière (glucose)."
+      },
+      {
+        "question": "Quels sont les trois éléments nécessaires à la photosynthèse ?",
+        "answer": "La lumière, l'eau et le dioxyde de carbone."
+      },
+      {
+        "question": "Où se déroule la photosynthèse ?",
+        "answer": "Dans les feuilles."
+      },
+      {
+        "question": "Quel pigment donne sa couleur verte à la plante ?",
+        "answer": "La chlorophylle."
+      },
+      {
+        "question": "Quels sont les deux produits de la photosynthèse ?",
+        "answer": "Le glucose et l'oxygène."
+      },
+      {
+        "question": "Quelle est l'équation simplifiée de la photosynthèse ?",
+        "answer": "6 CO₂ + 6 H₂O + lumière → glucose + 6 O₂."
+      },
+      {
+        "question": "Pourquoi la photosynthèse est-elle essentielle pour les êtres vivants ?",
+        "answer": "Elle produit l'oxygène nécessaire à la respiration."
+      },
+      {
+        "question": "Combien de molécules de dioxyde de carbone sont nécessaires pour produire une molécule de glucose ?",
+        "answer": "Six molécules de CO₂."
+      },
+      {
+        "question": "Quelle est la matière fabriquée par la plante ?",
+        "answer": "Le glucose."
+      },
+      {
+        "question": "La photosynthèse consomme-t-elle ou produit-elle de l'oxygène ?",
+        "answer": "Elle produit de l'oxygène."
+      }
+    ],
+    "qcm": [
+      {
+        "question": "La photosynthèse se déroule principalement dans :",
+        "options": [
+          "Les racines",
+          "Les feuilles",
+          "Les fleurs",
+          "Les tiges"
+        ],
+        "correct": 1,
+        "explanation": "Les feuilles contiennent la chlorophylle et sont le lieu de la photosynthèse."
+      },
+      {
+        "question": "Quel est le rôle de la chlorophylle ?",
+        "options": [
+          "Absorber l'eau",
+          "Donner la couleur verte et capter la lumière",
+          "Produire du CO₂",
+          "Stocker le glucose"
+        ],
+        "correct": 1,
+        "explanation": "La chlorophylle est un pigment qui capte la lumière et donne la couleur verte."
+      },
+      {
+        "question": "Quels sont les réactifs de la photosynthèse ?",
+        "options": [
+          "Glucose et oxygène",
+          "Eau et dioxyde de carbone",
+          "Lumière, eau et dioxyde de carbone",
+          "Glucose et eau"
+        ],
+        "correct": 2,
+        "explanation": "La photosynthèse utilise la lumière, l'eau et le CO₂."
+      },
+      {
+        "question": "Quel gaz est produit par la photosynthèse ?",
+        "options": [
+          "Dioxyde de carbone",
+          "Azote",
+          "Oxygène",
+          "Hydrogène"
+        ],
+        "correct": 2,
+        "explanation": "La photosynthèse libère de l'oxygène."
+      },
+      {
+        "question": "L'équation simplifiée de la photosynthèse est :",
+        "options": [
+          "6 CO₂ + 6 H₂O + lumière → C₆H₁₂O₆ + 6 O₂",
+          "C₆H₁₂O₆ + 6 O₂ → 6 CO₂ + 6 H₂O",
+          "6 O₂ + 6 H₂O → C₆H₁₂O₆ + 6 CO₂",
+          "6 CO₂ + 6 O₂ → glucose + eau"
+        ],
+        "correct": 0,
+        "explanation": "C'est l'équation donnée dans le cours."
+      },
+      {
+        "question": "Que devient le glucose produit par la photosynthèse ?",
+        "options": [
+          "Il est rejeté dans l'air",
+          "Il sert à fabriquer la matière de la plante",
+          "Il est transformé en chlorophylle",
+          "Il est utilisé pour la respiration uniquement"
+        ],
+        "correct": 1,
+        "explanation": "Le glucose est la matière organique fabriquée par la plante."
+      },
+      {
+        "question": "La photosynthèse est indispensable à la vie car elle produit :",
+        "options": [
+          "Du dioxyde de carbone",
+          "De l'oxygène",
+          "De l'eau",
+          "Du glucose uniquement"
+        ],
+        "correct": 1,
+        "explanation": "L'oxygène est nécessaire à la respiration des êtres vivants."
+      },
+      {
+        "question": "Sans lumière, la photosynthèse :",
+        "options": [
+          "Fonctionne plus vite",
+          "Ne peut pas se produire",
+          "Se produit la nuit",
+          "Produit plus d'oxygène"
+        ],
+        "correct": 1,
+        "explanation": "La lumière est un réactif indispensable."
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "Décris brièvement le processus de la photosynthèse.",
+        "model_answer": "La plante absorbe de l'eau par ses racines et du CO₂ par ses feuilles. Grâce à la chlorophylle, elle utilise la lumière pour transformer ces éléments en glucose et libère de l'oxygène."
+      },
+      {
+        "question": "Quels sont les rôles de la chlorophylle et de la lumière dans la photosynthèse ?",
+        "model_answer": "La chlorophylle est un pigment qui capte la lumière ; la lumière fournit l'énergie nécessaire à la réaction."
+      },
+      {
+        "question": "Explique pourquoi la photosynthèse est essentielle à la vie sur Terre.",
+        "model_answer": "Elle produit l'oxygène indispensable à la respiration des êtres vivants et fabrique la matière organique (glucose) qui nourrit les plantes et, indirectement, les animaux."
+      },
+      {
+        "question": "Compare la photosynthèse et la respiration en ce qui concerne les gaz échangés.",
+        "model_answer": "La photosynthèse absorbe du CO₂ et rejette de l'O₂ ; la respiration absorbe de l'O₂ et rejette du CO₂. Elles sont complémentaires."
+      },
+      {
+        "question": "Applique : Si une plante reçoit 12 molécules de CO₂ et suffisamment d'eau et de lumière, combien de molécules de glucose peut-elle produire ? Justifie.",
+        "model_answer": "L'équation montre que 6 CO₂ donnent 1 glucose. Donc 12 CO₂ donnent 2 glucoses."
+      },
+      {
+        "question": "Explique ce qui se passerait si la chlorophylle venait à disparaître chez toutes les plantes vertes.",
+        "model_answer": "Sans chlorophylle, la plante ne pourrait pas capter la lumière pour réaliser la photosynthèse ; elle ne produirait plus de glucose ni d'oxygène. La vie animale et humaine serait menacée par manque d'oxygène et de nourriture."
+      }
+    ],
+    "exercises": [
+      {
+        "tag": "Appli",
+        "statement": "Complète l'équation : 6 CO₂ + 6 H₂O + lumière → … + 6 O₂",
+        "solution": "C₆H₁₂O₆ (glucose)"
+      },
+      {
+        "tag": "Appli",
+        "statement": "Cite les trois réactifs de la photosynthèse dans l'ordre de l'équation.",
+        "solution": "CO₂, H₂O, lumière"
+      },
+      {
+        "tag": "Appli",
+        "statement": "Si une plante produit 3 molécules de glucose, combien de molécules de CO₂ a-t-elle utilisées ? (Utilise l'équation)",
+        "solution": "3 × 6 = 18 molécules de CO₂"
+      },
+      {
+        "tag": "Appli",
+        "statement": "Vrai ou faux : La photosynthèse consomme de l'oxygène. Corrige si faux.",
+        "solution": "Faux. Elle produit de l'oxygène."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Quel est le rôle de la chlorophylle ?",
+        "solution": "Capter la lumière et donner la couleur verte."
+      }
+    ],
+    "interro": [
+      {
+        "question": "Quel est le nom du pigment vert des feuilles ?",
+        "answer": "Chlorophylle."
+      },
+      {
+        "question": "Quels sont les deux produits de la photosynthèse ?",
+        "answer": "Glucose et oxygène."
+      },
+      {
+        "question": "Où se déroule la photosynthèse ?",
+        "answer": "Dans les feuilles."
+      },
+      {
+        "question": "Quelle est l'équation simplifiée de la photosynthèse ?",
+        "answer": "6 CO₂ + 6 H₂O + lumière → glucose + 6 O₂."
+      },
+      {
+        "question": "Combien de molécules d'eau sont nécessaires pour produire une molécule de glucose ?",
+        "answer": "Six molécules d'eau."
+      },
+      {
+        "question": "Pourquoi la photosynthèse est-elle importante pour les animaux ?",
+        "answer": "Elle produit l'oxygène qu'ils respirent."
+      },
+      {
+        "question": "Que fabrique la plante grâce à la photosynthèse ?",
+        "answer": "Sa propre matière (glucose)."
+      },
+      {
+        "question": "Quel gaz est absorbé par la plante pendant la photosynthèse ?",
+        "answer": "Le dioxyde de carbone (CO₂)."
+      }
+    ],
+    "mindmap": {
+      "center": "Photosynthèse",
+      "branches": [
+        {
+          "label": "Lieu",
+          "leaves": [
+            "Feuilles",
+            "Chlorophylle"
+          ]
+        },
+        {
+          "label": "Réactifs",
+          "leaves": [
+            "Lumière",
+            "Eau",
+            "CO₂"
+          ]
+        },
+        {
+          "label": "Produits",
+          "leaves": [
+            "Glucose",
+            "Oxygène"
+          ]
+        },
+        {
+          "label": "Importance",
+          "leaves": [
+            "Oxygène pour respiration",
+            "Matière pour la plante"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 6,
+    "niveau": "Collège",
+    "matiere": "Histoire",
+    "titre": "La Révolution française (1789)",
+    "topic": "La Révolution française",
+    "corrected_course": "<h2>La Révolution française</h2><p>En 1789, la France traverse une grave crise financière et sociale. Le 14 juillet 1789, le peuple parisien prend la Bastille. Le 26 août, la Déclaration des droits de l'homme et du citoyen proclame la liberté et l'égalité. La monarchie est abolie en 1792, le roi Louis XVI est guillotiné en 1793. La Révolution met fin à l'Ancien Régime et à la société d'ordres.</p>",
+    "key_points": [
+      "En 1789, la France a une grave crise financière et sociale.",
+      "Le 14 juillet 1789, le peuple prend la Bastille.",
+      "Le 26 août, la Déclaration des droits de l'homme et du citoyen proclame la liberté et l'égalité.",
+      "La monarchie est abolie en 1792.",
+      "Louis XVI est guillotiné en 1793.",
+      "La Révolution met fin à l'Ancien Régime et à la société d'ordres."
+    ],
+    "definition": "La Déclaration des droits de l'homme et du citoyen est un texte qui proclame la liberté et l'égalité pour tous.",
+    "to_remember": [
+      "14 juillet 1789 : prise de la Bastille",
+      "26 août : Déclaration des droits de l'homme et du citoyen",
+      "1792 : abolition de la monarchie",
+      "1793 : guillotine de Louis XVI"
+    ],
+    "flashcards": [
+      {
+        "question": "Quelle est la date de la prise de la Bastille ?",
+        "answer": "14 juillet 1789"
+      },
+      {
+        "question": "Que proclame la Déclaration des droits de l'homme et du citoyen ?",
+        "answer": "La liberté et l'égalité"
+      },
+      {
+        "question": "En quelle année la monarchie est-elle abolie ?",
+        "answer": "1792"
+      },
+      {
+        "question": "Qui est guillotiné en 1793 ?",
+        "answer": "Le roi Louis XVI"
+      },
+      {
+        "question": "Quelle est la situation de la France en 1789 ?",
+        "answer": "Une grave crise financière et sociale"
+      },
+      {
+        "question": "Qu'est-ce que la Révolution met fin ?",
+        "answer": "À l'Ancien Régime et à la société d'ordres"
+      },
+      {
+        "question": "Quel événement a lieu le 26 août 1789 ?",
+        "answer": "La Déclaration des droits de l'homme et du citoyen"
+      },
+      {
+        "question": "Quel régime politique est aboli en 1792 ?",
+        "answer": "La monarchie"
+      }
+    ],
+    "qcm": [
+      {
+        "question": "Quelle est la date de la prise de la Bastille ?",
+        "options": [
+          "14 juillet 1789",
+          "26 août 1789",
+          "1792",
+          "1793"
+        ],
+        "correct": 0,
+        "explanation": "Le 14 juillet 1789, le peuple parisien prend la Bastille."
+      },
+      {
+        "question": "Que proclame la Déclaration des droits de l'homme et du citoyen ?",
+        "options": [
+          "La liberté et l'égalité",
+          "La fraternité et la justice",
+          "L'ordre et la paix",
+          "La propriété et la sécurité"
+        ],
+        "correct": 0,
+        "explanation": "Elle proclame la liberté et l'égalité."
+      },
+      {
+        "question": "En quelle année la monarchie est-elle abolie ?",
+        "options": [
+          "1789",
+          "1792",
+          "1793",
+          "1794"
+        ],
+        "correct": 1,
+        "explanation": "La monarchie est abolie en 1792."
+      },
+      {
+        "question": "Qui est guillotiné en 1793 ?",
+        "options": [
+          "Robespierre",
+          "Louis XVI",
+          "Napoléon",
+          "Danton"
+        ],
+        "correct": 1,
+        "explanation": "Le roi Louis XVI est guillotiné en 1793."
+      },
+      {
+        "question": "Quel événement marque le début de la Révolution ?",
+        "options": [
+          "La prise de la Bastille",
+          "L'abolition de la monarchie",
+          "La Déclaration des droits de l'homme",
+          "L'exécution de Louis XVI"
+        ],
+        "correct": 0,
+        "explanation": "La prise de la Bastille le 14 juillet 1789 est un événement majeur du début de la Révolution."
+      },
+      {
+        "question": "Quelle crise la France traverse-t-elle en 1789 ?",
+        "options": [
+          "Crise militaire",
+          "Crise financière et sociale",
+          "Crise religieuse",
+          "Crise agricole seulement"
+        ],
+        "correct": 1,
+        "explanation": "La France traverse une grave crise financière et sociale."
+      },
+      {
+        "question": "Que met fin la Révolution ?",
+        "options": [
+          "À la République",
+          "À l'Ancien Régime et à la société d'ordres",
+          "À la monarchie absolue uniquement",
+          "Aux privilèges du clergé"
+        ],
+        "correct": 1,
+        "explanation": "La Révolution met fin à l'Ancien Régime et à la société d'ordres."
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "Quels sont les deux grands principes proclamés par la Déclaration des droits de l'homme et du citoyen ?",
+        "model_answer": "La liberté et l'égalité."
+      },
+      {
+        "question": "Pourquoi la prise de la Bastille est-elle un événement important ?",
+        "model_answer": "Elle symbolise la révolte du peuple parisien contre l'autorité royale et marque le début de la Révolution."
+      },
+      {
+        "question": "Expliquez comment la Révolution met fin à l'Ancien Régime.",
+        "model_answer": "Elle abolit la monarchie, proclame les droits de l'homme, et supprime la société d'ordres (privilèges de la noblesse et du clergé)."
+      },
+      {
+        "question": "Comparez la situation de la France avant et après 1789.",
+        "model_answer": "Avant : monarchie absolue, société d'ordres, inégalités. Après : abolition de la monarchie (1792), proclamation de la liberté et de l'égalité, fin des privilèges."
+      },
+      {
+        "question": "Quelle est la conséquence de l'exécution de Louis XVI sur le régime politique ?",
+        "model_answer": "Elle marque la rupture définitive avec la monarchie et renforce la République (qui avait été proclamée en 1792)."
+      }
+    ],
+    "exercises": [
+      {
+        "tag": "Appli",
+        "statement": "Classez ces événements dans l'ordre chronologique : abolition de la monarchie, prise de la Bastille, exécution de Louis XVI, Déclaration des droits de l'homme.",
+        "solution": "1. Prise de la Bastille (14 juillet 1789) ; 2. Déclaration des droits de l'homme (26 août 1789) ; 3. Abolition de la monarchie (1792) ; 4. Exécution de Louis XVI (1793)."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Vrai ou faux ? Justifiez : a) La Déclaration des droits de l'homme a été proclamée avant la prise de la Bastille. b) Louis XVI a été guillotiné après l'abolition de la monarchie.",
+        "solution": "a) Faux, elle a été proclamée après (26 août 1789). b) Vrai, il a été guillotiné en 1793, un an après l'abolition (1792)."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Complétez les phrases : En 1789, la France traverse une grave crise ______ et ______. Le 14 juillet, le peuple ______ prend la ______. Le 26 août, la ______ des droits de l'homme et du citoyen est proclamée.",
+        "solution": "financière, sociale ; parisien, Bastille ; Déclaration."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Reliez chaque date à son événement : 1789, 1792, 1793 - abolition de la monarchie, prise de la Bastille, exécution de Louis XVI.",
+        "solution": "1789 : prise de la Bastille ; 1792 : abolition de la monarchie ; 1793 : exécution de Louis XVI."
+      }
+    ],
+    "interro": [
+      {
+        "question": "Quelle est la date de la prise de la Bastille ?",
+        "answer": "14 juillet 1789"
+      },
+      {
+        "question": "Que proclame la Déclaration des droits de l'homme et du citoyen ?",
+        "answer": "La liberté et l'égalité"
+      },
+      {
+        "question": "En quelle année la monarchie est-elle abolie ?",
+        "answer": "1792"
+      },
+      {
+        "question": "Qui est guillotiné en 1793 ?",
+        "answer": "Louis XVI"
+      },
+      {
+        "question": "Quelle crise la France traverse-t-elle en 1789 ?",
+        "answer": "Financière et sociale"
+      },
+      {
+        "question": "Quel régime est aboli en 1792 ?",
+        "answer": "La monarchie"
+      },
+      {
+        "question": "Que met fin la Révolution ?",
+        "answer": "À l'Ancien Régime et à la société d'ordres"
+      }
+    ],
+    "mindmap": {
+      "center": "Révolution française",
+      "branches": [
+        {
+          "label": "Causes",
+          "leaves": [
+            "Crise financière",
+            "Crise sociale"
+          ]
+        },
+        {
+          "label": "Événements",
+          "leaves": [
+            "14 juillet 1789 : prise de la Bastille",
+            "26 août 1789 : Déclaration des droits",
+            "1792 : abolition de la monarchie",
+            "1793 : exécution de Louis XVI"
+          ]
+        },
+        {
+          "label": "Conséquences",
+          "leaves": [
+            "Fin de l'Ancien Régime",
+            "Fin de la société d'ordres"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 7,
+    "niveau": "Collège",
+    "matiere": "Anglais",
+    "titre": "Le present perfect",
+    "topic": "Le present perfect en anglais",
+    "corrected_course": "<h2>Le present perfect</h2><p>Le present perfect sert à parler d'une action passée qui a un lien avec le présent. Pour le former, on utilise have ou has suivi du participe passé du verbe.</p><p>On l'utilise dans trois cas :</p><p>1. Pour parler d'une expérience (exemple : I have been to London).</p><p>2. Pour parler d'un résultat (exemple : She has finished her homework).</p><p>3. Pour parler d'une action récente (exemple : They have just arrived).</p><p>On utilise souvent ces petits mots avec le present perfect : ever, never, just, already, yet.</p><p>Exemples : I have never eaten sushi. (Je n'ai jamais mangé de sushi.) Have you ever visited Paris? (As-tu déjà visité Paris ?)</p>",
+    "key_points": [
+      "Le present perfect relie une action passée au présent.",
+      "Il se forme avec have ou has + le participe passé.",
+      "On l'utilise pour une expérience, un résultat ou une action récente.",
+      "Les mots utiles sont : ever, never, just, already, yet."
+    ],
+    "definition": "Le present perfect est un temps du passé qui montre qu'une action passée a un lien avec le présent.",
+    "to_remember": [
+      "have/has + participe passé",
+      "ever, never, just, already, yet sont les marqueurs de temps"
+    ],
+    "flashcards": [
+      {
+        "question": "What is the form of the present perfect?",
+        "answer": "have/has + past participle"
+      },
+      {
+        "question": "Give one use of the present perfect.",
+        "answer": "Experience, result, or recent action"
+      },
+      {
+        "question": "Translate: 'I have never eaten sushi.'",
+        "answer": "Je n'ai jamais mangé de sushi."
+      },
+      {
+        "question": "Which marker means 'déjà' in affirmative sentences?",
+        "answer": "already"
+      },
+      {
+        "question": "Which marker is used in questions like 'Have you ... visited Paris?'",
+        "answer": "ever"
+      },
+      {
+        "question": "Give the past participle of 'finish'.",
+        "answer": "finished"
+      },
+      {
+        "question": "Complete: 'She ___ just arrived.'",
+        "answer": "has"
+      },
+      {
+        "question": "What does 'yet' mean and where is it placed?",
+        "answer": "It means 'déjà' in questions or 'pas encore' in negatives, placed at the end."
+      },
+      {
+        "question": "Is 'I have been to London' an experience or a result?",
+        "answer": "Experience"
+      },
+      {
+        "question": "Complete: 'They have ___ (eat) their dinner.'",
+        "answer": "eaten"
+      }
+    ],
+    "qcm": [
+      {
+        "question": "Choose the correct form: 'He ___ his homework.'",
+        "options": [
+          "has finish",
+          "have finished",
+          "has finished"
+        ],
+        "correct": 2,
+        "explanation": "Third person singular uses 'has' + past participle 'finished'."
+      },
+      {
+        "question": "Which sentence is correct?",
+        "options": [
+          "I have ever been to Paris.",
+          "I have never been to Paris.",
+          "I never have been to Paris."
+        ],
+        "correct": 1,
+        "explanation": "'Never' goes between 'have' and the past participle."
+      },
+      {
+        "question": "Choose the correct marker for a recent action: 'They have ___ left.'",
+        "options": [
+          "yet",
+          "just",
+          "ever"
+        ],
+        "correct": 1,
+        "explanation": "'Just' means 'juste' (recently)."
+      },
+      {
+        "question": "Which sentence uses 'yet' correctly?",
+        "options": [
+          "I haven't finished yet.",
+          "I have finished yet.",
+          "I yet have finished."
+        ],
+        "correct": 0,
+        "explanation": "'Yet' is used in negatives/questions at the end."
+      },
+      {
+        "question": "What is the past participle of 'go'?",
+        "options": [
+          "goed",
+          "gone",
+          "went"
+        ],
+        "correct": 1,
+        "explanation": "'Went' is past simple, 'gone' is the past participle."
+      },
+      {
+        "question": "Choose the correct sentence:",
+        "options": [
+          "She have already eaten.",
+          "She has already eaten.",
+          "She has eaten already."
+        ],
+        "correct": 1,
+        "explanation": "'Already' goes between 'has' and the past participle."
+      },
+      {
+        "question": "Which sentence expresses a result?",
+        "options": [
+          "I have visited Rome.",
+          "She has broken her arm.",
+          "They have just arrived."
+        ],
+        "correct": 1,
+        "explanation": "A broken arm is a result in the present."
+      },
+      {
+        "question": "Complete: '___ you ever tried sushi?'",
+        "options": [
+          "Has",
+          "Have",
+          "Do"
+        ],
+        "correct": 1,
+        "explanation": "With 'you', use 'have'."
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "Conjugate the verb 'to see' in the present perfect for all persons.",
+        "model_answer": "I have seen, you have seen, he/she/it has seen, we have seen, they have seen."
+      },
+      {
+        "question": "Write two sentences: one with 'ever' in a question, one with 'never' in a negative.",
+        "model_answer": "Have you ever been to Rome? / I have never seen that film."
+      },
+      {
+        "question": "Explain the difference between 'I have been to London' and 'I went to London last year'.",
+        "model_answer": "The first is present perfect: it talks about an experience without a specific time, linked to the present. The second is past simple: it gives a specific past time (last year)."
+      },
+      {
+        "question": "Correct the mistakes: 'She have just finish her work. Have you ever ate sushi?'",
+        "model_answer": "She has just finished her work. Have you ever eaten sushi?"
+      },
+      {
+        "question": "Apply: Write a short paragraph (3 sentences) using present perfect with 'already', 'just', and 'yet' to describe your morning.",
+        "model_answer": "I have already brushed my teeth. I have just eaten my breakfast. I haven't left the house yet."
+      },
+      {
+        "question": "Compare: Why do we use 'has' with 'she' but 'have' with 'they'? Give two examples.",
+        "model_answer": "Because 'has' is for third person singular (he/she/it), 'have' for plural and I/you. Example: She has arrived. They have arrived."
+      }
+    ],
+    "exercises": [
+      {
+        "tag": "Appli",
+        "statement": "Complete with the present perfect: 1) I ___ (see) that film. 2) She ___ (write) a letter. 3) They ___ (not/eat) yet.",
+        "solution": "1) have seen 2) has written 3) haven't eaten"
+      },
+      {
+        "tag": "Appli",
+        "statement": "Rewrite with 'just': 1) He left. 2) We finished. 3) The train arrived.",
+        "solution": "1) He has just left. 2) We have just finished. 3) The train has just arrived."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Make questions with 'ever' and answer negatively: 1) you / visit / Japan 2) she / try / coffee 3) they / see / a ghost",
+        "solution": "1) Have you ever visited Japan? No, I haven't. 2) Has she ever tried coffee? No, she hasn't. 3) Have they ever seen a ghost? No, they haven't."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Put the words in order: 1) already / has / she / finished 2) yet / haven't / we / arrived 3) never / I / have / been / abroad",
+        "solution": "1) She has already finished. 2) We haven't arrived yet. 3) I have never been abroad."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Choose the correct verb (past participle): 1) I have ___ (break/ broke/ broken) my phone. 2) She has ___ (take/ taken/ took) the bus. 3) They have ___ (do/ done/ did) their chores.",
+        "solution": "1) broken 2) taken 3) done"
+      }
+    ],
+    "interro": [
+      {
+        "question": "What is the form of the present perfect?",
+        "answer": "have/has + past participle"
+      },
+      {
+        "question": "Give the past participle of 'eat'.",
+        "answer": "eaten"
+      },
+      {
+        "question": "Complete: 'I ___ never been to New York.'",
+        "answer": "have"
+      },
+      {
+        "question": "Which marker goes at the end of a negative sentence?",
+        "answer": "yet"
+      },
+      {
+        "question": "Translate: 'Elle a déjà fini.'",
+        "answer": "She has already finished."
+      },
+      {
+        "question": "Is 'I have seen that film' an experience or a recent action?",
+        "answer": "experience"
+      },
+      {
+        "question": "Correct: 'He have gone.'",
+        "answer": "He has gone."
+      },
+      {
+        "question": "Complete: 'Have you ___ (try) sushi?'",
+        "answer": "tried"
+      }
+    ],
+    "mindmap": {
+      "center": "Present Perfect",
+      "branches": [
+        {
+          "label": "Form",
+          "leaves": [
+            "have/has",
+            "past participle"
+          ]
+        },
+        {
+          "label": "Uses",
+          "leaves": [
+            "experience",
+            "result",
+            "recent action"
+          ]
+        },
+        {
+          "label": "Markers",
+          "leaves": [
+            "ever",
+            "never",
+            "just",
+            "already",
+            "yet"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 8,
+    "niveau": "Lycée",
+    "matiere": "SES",
+    "titre": "Le marché (offre et demande)",
+    "topic": "Le marché et le mécanisme de l'offre et de la demande : introduction économique",
+    "corrected_course": "<h2>Le marché et le mécanisme de l'offre et de la demande</h2><p>L'économie, c'est l'étude de comment les individus et les entreprises utilisent des ressources limitées pour satisfaire des besoins illimités.</p><p>Par exemple, si j'ai 100 roupies, je peux acheter une écouteur, du pain, ou économiser. Faire ce choix, c'est ça l'économie.</p><h3>La rareté et le choix</h3><p>La rareté, c'est le fait que les ressources sont limitées, alors que les besoins humains sont illimités.</p><p>Par exemple, j'ai 24 heures dans la journée : je choisis entre étudier, dormir, regarder un film, etc.</p><p>Les ressources économiques principales sont :</p><ul><li>La terre (sol, minerais, eau, forêts)</li><li>Le travail (ouvriers, enseignants, médecins)</li><li>Le capital (machines, usines, ordinateurs)</li><li>L'entrepreneuriat (l'esprit d'innovation, le leadership)</li></ul><p>Le choix, c'est comment utiliser ces ressources.</p><p>L'économie étudie quels choix sont faits, et comment ces choix affectent les individus, les entreprises et l'État.</p>",
+    "key_points": [
+      "L'économie étudie comment utiliser des ressources limitées pour satisfaire des besoins illimités.",
+      "La rareté signifie que les ressources sont limitées alors que les besoins humains sont illimités.",
+      "Les 4 ressources économiques principales sont : la terre, le travail, le capital et l'entrepreneuriat.",
+      "Faire un choix, c'est décider comment utiliser ces ressources limitées.",
+      "L'économie regarde comment ces choix affectent les individus, les entreprises et l'État."
+    ],
+    "definition": "La rareté, c'est le fait que les ressources sont limitées, alors que les besoins humains sont illimités.",
+    "to_remember": [
+      "Les ressources économiques principales sont : la terre, le travail, le capital et l'entrepreneuriat.",
+      "L'économie étudie les choix faits avec des ressources limitées pour des besoins illimités."
+    ],
+    "flashcards": [
+      {
+        "question": "Quelle est la définition de l'économie ?",
+        "answer": "L'économie est l'étude de comment les individus et les entreprises utilisent des ressources limitées pour satisfaire des besoins illimités."
+      },
+      {
+        "question": "Que signifie la rareté en économie ?",
+        "answer": "La rareté signifie que les ressources sont limitées alors que les besoins humains sont illimités."
+      },
+      {
+        "question": "Citez les quatre ressources économiques principales.",
+        "answer": "Terre, travail, capital et entrepreneuriat."
+      },
+      {
+        "question": "Donnez un exemple de ressource 'terre'.",
+        "answer": "Sol, minerais, eau, forêts."
+      },
+      {
+        "question": "Donnez un exemple de ressource 'travail'.",
+        "answer": "Ouvriers, enseignants, médecins."
+      },
+      {
+        "question": "Donnez un exemple de ressource 'capital'.",
+        "answer": "Machines, usines, ordinateurs."
+      },
+      {
+        "question": "Qu'est-ce que l'entrepreneuriat comme ressource ?",
+        "answer": "L'esprit d'innovation et le leadership."
+      },
+      {
+        "question": "Pourquoi le choix est-il important en économie ?",
+        "answer": "Parce que les ressources sont rares, il faut choisir comment les utiliser pour satisfaire au mieux les besoins."
+      },
+      {
+        "question": "Quels sont les acteurs concernés par les choix économiques ?",
+        "answer": "Les individus, les entreprises et l'État."
+      },
+      {
+        "question": "Donnez un exemple de choix économique quotidien.",
+        "answer": "Avec 100 Rs, choisir entre acheter un écouteur, du pain ou économiser."
+      }
+    ],
+    "qcm": [
+      {
+        "question": "Quelle est la cause fondamentale du problème économique ?",
+        "options": [
+          "Les besoins sont limités",
+          "Les ressources sont illimitées",
+          "Les ressources sont rares face à des besoins illimités",
+          "L'argent manque toujours"
+        ],
+        "correct": 2,
+        "explanation": "La rareté (ressources limitées) face à des besoins illimités est le fondement de l'économie."
+      },
+      {
+        "question": "Parmi les éléments suivants, lequel n'est PAS une ressource économique selon le cours ?",
+        "options": [
+          "Le travail",
+          "Le capital",
+          "La monnaie",
+          "L'entrepreneuriat"
+        ],
+        "correct": 2,
+        "explanation": "La monnaie n'est pas citée comme ressource économique ; les ressources sont terre, travail, capital, entrepreneuriat."
+      },
+      {
+        "question": "Que signifie 'faire un choix' en économie ?",
+        "options": [
+          "Acheter tout ce qu'on veut",
+          "Utiliser les ressources rares de manière optimale",
+          "Ne rien dépenser",
+          "Augmenter ses besoins"
+        ],
+        "correct": 1,
+        "explanation": "Le choix consiste à décider comment utiliser des ressources limitées pour satisfaire les besoins."
+      },
+      {
+        "question": "Quel exemple illustre le concept de rareté ?",
+        "options": [
+          "Avoir 24 heures dans une journée",
+          "Avoir des besoins illimités",
+          "Avoir des ressources illimitées",
+          "Avoir tout ce qu'on désire"
+        ],
+        "correct": 0,
+        "explanation": "Le temps est une ressource limitée, donc rare ; il faut choisir comment l'utiliser."
+      },
+      {
+        "question": "Les 'machines, usines, ordinateurs' sont classés dans quelle ressource ?",
+        "options": [
+          "Terre",
+          "Travail",
+          "Capital",
+          "Entrepreneuriat"
+        ],
+        "correct": 2,
+        "explanation": "Le capital regroupe les biens de production comme les machines et les usines."
+      },
+      {
+        "question": "L'économie étudie principalement :",
+        "options": [
+          "Les choix des agents économiques",
+          "La météo",
+          "Les mathématiques",
+          "La biologie"
+        ],
+        "correct": 0,
+        "explanation": "L'économie analyse les choix et leurs conséquences sur les individus, entreprises et l'État."
+      },
+      {
+        "question": "Qui est concerné par les choix économiques ?",
+        "options": [
+          "Seulement les entreprises",
+          "Seulement l'État",
+          "Les individus, les entreprises et l'État",
+          "Seulement les consommateurs"
+        ],
+        "correct": 2,
+        "explanation": "Le cours mentionne explicitement que les choix affectent les individus, les entreprises et l'État."
+      },
+      {
+        "question": "Que signifie 'besoins illimités' ?",
+        "options": [
+          "Les besoins sont infinis",
+          "Les besoins sont limités",
+          "Les besoins sont satisfaits",
+          "Les besoins n'existent pas"
+        ],
+        "correct": 0,
+        "explanation": "Les besoins humains sont illimités, c'est-à-dire infinis, contrairement aux ressources."
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "Définissez l'économie et expliquez pourquoi elle est nécessaire.",
+        "model_answer": "L'économie est l'étude de l'utilisation des ressources limitées pour satisfaire des besoins illimités. Elle est nécessaire car sans elle, il n'y aurait pas de gestion rationnelle des ressources rares."
+      },
+      {
+        "question": "Expliquez la notion de rareté avec un exemple personnel.",
+        "model_answer": "La rareté signifie que les ressources sont limitées. Par exemple, j'ai 24 heures par jour : je dois choisir entre étudier, dormir ou regarder un film. Le temps est rare."
+      },
+      {
+        "question": "Listez les quatre ressources économiques et donnez un exemple pour chacune.",
+        "model_answer": "Terre (sol, eau), travail (ouvriers), capital (machines), entrepreneuriat (innovation)."
+      },
+      {
+        "question": "Pourquoi le choix est-il inévitable en économie ?",
+        "model_answer": "Parce que les ressources sont rares et que les besoins sont illimités, il faut faire des choix pour allouer ces ressources de manière optimale."
+      },
+      {
+        "question": "Comparez les ressources 'travail' et 'capital' en donnant des exemples concrets.",
+        "model_answer": "Le travail est l'effort humain (enseignants, médecins), le capital est l'ensemble des biens de production (machines, usines). Les deux sont complémentaires : le travail utilise le capital pour produire."
+      },
+      {
+        "question": "Expliquez comment les choix économiques affectent les individus, les entreprises et l'État.",
+        "model_answer": "Les choix individuels (consommation) affectent les entreprises (production) et l'État (politiques économiques). Par exemple, si les gens achètent plus de biens, les entreprises produisent plus et l'État peut percevoir plus d'impôts."
+      }
+    ],
+    "exercises": [
+      {
+        "tag": "Appli",
+        "statement": "Vous disposez de 100 roupies. Citez trois choix possibles et expliquez pourquoi c'est un problème économique.",
+        "solution": "Acheter un écouteur, du pain, ou économiser. C'est un problème économique car la ressource (100 Rs) est limitée et les besoins sont multiples."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Classez les éléments suivants dans les quatre ressources économiques : pétrole, médecin, tracteur, créativité d'un chef d'entreprise.",
+        "solution": "Pétrole : terre ; médecin : travail ; tracteur : capital ; créativité : entrepreneuriat."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Donnez un exemple de choix que fait un étudiant dans sa journée et identifiez la ressource rare.",
+        "solution": "Choisir entre étudier et sortir avec des amis. La ressource rare est le temps."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Vrai ou faux : 'Les besoins humains sont limités'. Justifiez.",
+        "solution": "Faux. Les besoins humains sont illimités, c'est la rareté des ressources qui oblige à choisir."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Imaginez une économie sans rareté. Quelles seraient les conséquences sur la nécessité de faire des choix ?",
+        "solution": "S'il n'y avait pas de rareté, les choix seraient inutiles car tout serait disponible en abondance. Mais en réalité, la rareté existe."
+      }
+    ],
+    "interro": [
+      {
+        "question": "Qu'est-ce que la rareté ?",
+        "answer": "C'est la situation où les ressources sont limitées par rapport aux besoins illimités."
+      },
+      {
+        "question": "Nommez les quatre ressources économiques.",
+        "answer": "Terre, travail, capital, entrepreneuriat."
+      },
+      {
+        "question": "Donnez un exemple de ressource 'capital'.",
+        "answer": "Machines, usines, ordinateurs."
+      },
+      {
+        "question": "Pourquoi l'économie est-elle nécessaire ?",
+        "answer": "Pour gérer les ressources rares et faire des choix optimaux."
+      },
+      {
+        "question": "Que signifie 'besoins illimités' ?",
+        "answer": "Les besoins humains sont infinis, jamais totalement satisfaits."
+      },
+      {
+        "question": "Citez un acteur économique mentionné dans le cours.",
+        "answer": "Les individus, les entreprises, l'État."
+      },
+      {
+        "question": "Quel est l'exemple donné dans le cours pour illustrer le choix ?",
+        "answer": "Avec 100 Rs, choisir entre un écouteur, du pain ou économiser."
+      },
+      {
+        "question": "Quelle est la différence entre le travail et l'entrepreneuriat ?",
+        "answer": "Le travail est l'effort humain (ouvriers, médecins), l'entrepreneuriat est l'innovation et le leadership."
+      }
+    ],
+    "mindmap": {
+      "center": "Économie",
+      "branches": [
+        {
+          "label": "Rareté",
+          "leaves": [
+            "Ressources limitées",
+            "Besoins illimités"
+          ]
+        },
+        {
+          "label": "Ressources",
+          "leaves": [
+            "Terre",
+            "Travail",
+            "Capital",
+            "Entrepreneuriat"
+          ]
+        },
+        {
+          "label": "Choix",
+          "leaves": [
+            "Individus",
+            "Entreprises",
+            "État"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 9,
+    "niveau": "Lycée",
+    "matiere": "Physique-Chimie",
+    "titre": "Poids et masse",
+    "topic": "La masse et le poids",
+    "corrected_course": "<h2>La masse et le poids</h2><p>La masse (notée m) est la quantité de matière dans un objet. Elle se mesure en kilogrammes (kg). La masse ne change jamais, où que tu sois.</p><p>Le poids (noté P) est la force d'attraction qu'exerce la Terre (ou un autre astre) sur un objet. Il se mesure en newtons (N). Le poids varie selon le lieu.</p><p>Formule : P = m x g, où g est l'intensité de la pesanteur.</p><p>Sur la Terre, g vaut environ 9,81 newtons par kilogramme (N/kg).</p><p>Sur la Lune, g vaut environ 1,6 N/kg. Donc le poids sur la Lune est environ 6 fois plus faible que sur la Terre, mais la masse reste identique.</p>",
+    "key_points": [
+      "La masse se mesure en kilogrammes et ne change jamais.",
+      "Le poids se mesure en newtons et varie selon le lieu.",
+      "La formule est P = m x g.",
+      "Sur Terre, g vaut environ 9,81 N/kg.",
+      "Sur la Lune, g vaut environ 1,6 N/kg, donc le poids est environ 6 fois plus faible, mais la masse reste la même."
+    ],
+    "definition": "La masse est la quantité de matière (en kg), le poids est la force d'attraction (en N).",
+    "to_remember": [
+      "P = m x g",
+      "La masse ne change pas, le poids change selon l'endroit."
+    ],
+    "flashcards": [
+      {
+        "question": "Quelle est la grandeur qui se mesure en kilogrammes ?",
+        "answer": "La masse."
+      },
+      {
+        "question": "Quelle est la grandeur qui se mesure en newtons ?",
+        "answer": "Le poids."
+      },
+      {
+        "question": "Quelle est la formule reliant le poids, la masse et l'intensité de la pesanteur ?",
+        "answer": "P = m × g."
+      },
+      {
+        "question": "Que vaut g sur Terre ?",
+        "answer": "Environ 9,81 N/kg."
+      },
+      {
+        "question": "Que vaut g sur la Lune ?",
+        "answer": "Environ 1,6 N/kg."
+      },
+      {
+        "question": "Sur la Lune, le poids est environ ... fois plus faible que sur Terre.",
+        "answer": "6 fois."
+      },
+      {
+        "question": "La masse change-t-elle quand on va sur la Lune ?",
+        "answer": "Non, la masse reste identique."
+      },
+      {
+        "question": "Le poids est une force : vrai ou faux ?",
+        "answer": "Vrai."
+      }
+    ],
+    "qcm": [
+      {
+        "question": "Quelle est l'unité de la masse ?",
+        "options": [
+          "Le newton",
+          "Le kilogramme",
+          "Le litre"
+        ],
+        "correct": 1,
+        "explanation": "La masse se mesure en kilogrammes."
+      },
+      {
+        "question": "Quelle est l'unité du poids ?",
+        "options": [
+          "Le kilogramme",
+          "Le newton",
+          "Le gramme"
+        ],
+        "correct": 1,
+        "explanation": "Le poids est une force, il se mesure en newtons."
+      },
+      {
+        "question": "Un objet a une masse de 10 kg sur Terre. Quelle est sa masse sur la Lune ?",
+        "options": [
+          "Environ 1,6 kg",
+          "10 kg",
+          "Environ 60 kg"
+        ],
+        "correct": 1,
+        "explanation": "La masse ne change pas, elle reste 10 kg."
+      },
+      {
+        "question": "Un objet a un poids de 100 N sur Terre. Quel est son poids approximatif sur la Lune ?",
+        "options": [
+          "Environ 16 N",
+          "Environ 100 N",
+          "Environ 600 N"
+        ],
+        "correct": 0,
+        "explanation": "Sur la Lune, le poids est environ 6 fois plus faible : 100 ÷ 6 ≈ 16 N."
+      },
+      {
+        "question": "Que représente la lettre g dans la formule P = m × g ?",
+        "options": [
+          "La masse",
+          "L'intensité de la pesanteur",
+          "Le poids"
+        ],
+        "correct": 1,
+        "explanation": "g est l'intensité de la pesanteur, environ 9,81 N/kg sur Terre."
+      },
+      {
+        "question": "Si on double la masse d'un objet sur Terre, son poids :",
+        "options": [
+          "est divisé par 2",
+          "reste le même",
+          "est multiplié par 2"
+        ],
+        "correct": 2,
+        "explanation": "P = m × g, donc si m double, P double."
+      },
+      {
+        "question": "Sur la Lune, g est environ 1,6 N/kg. Quel est le poids d'un objet de 5 kg sur la Lune ?",
+        "options": [
+          "8 N",
+          "5 N",
+          "49 N"
+        ],
+        "correct": 0,
+        "explanation": "P = 5 × 1,6 = 8 N."
+      },
+      {
+        "question": "Quelle affirmation est correcte ?",
+        "options": [
+          "La masse varie selon le lieu.",
+          "Le poids est constant partout.",
+          "La masse est constante, le poids varie."
+        ],
+        "correct": 2,
+        "explanation": "La masse ne change jamais, le poids dépend de g."
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "Définis la masse et le poids, et donne leurs unités.",
+        "model_answer": "La masse est la quantité de matière, mesurée en kilogrammes. Le poids est la force d'attraction exercée par la Terre sur un objet, mesurée en newtons."
+      },
+      {
+        "question": "Écris la formule reliant poids, masse et intensité de la pesanteur, et précise les unités.",
+        "model_answer": "P = m × g, avec P en newtons (N), m en kilogrammes (kg), g en N/kg."
+      },
+      {
+        "question": "Compare le poids et la masse d'un objet sur Terre et sur la Lune.",
+        "model_answer": "La masse reste identique. Le poids est environ 6 fois plus faible sur la Lune car g y est plus petit (1,6 au lieu de 9,81)."
+      },
+      {
+        "question": "Explique pourquoi un astronaute peut sauter plus haut sur la Lune alors que sa masse est la même.",
+        "model_answer": "Sa masse ne change pas, mais son poids est environ 6 fois plus faible, donc la force qui l'attire vers le sol est moindre, ce qui lui permet de sauter plus haut."
+      },
+      {
+        "question": "Un objet pèse 50 N sur Terre. Calcule sa masse, puis son poids sur la Lune (g = 1,6 N/kg).",
+        "model_answer": "m = P ÷ g = 50 ÷ 9,81 ≈ 5,1 kg. Sur la Lune : P = m × g = 5,1 × 1,6 ≈ 8,16 N."
+      }
+    ],
+    "exercises": [
+      {
+        "tag": "Appli",
+        "statement": "Calcule le poids sur Terre d'un objet de masse 3 kg (g = 9,81 N/kg).",
+        "solution": "P = 3 × 9,81 = 29,43 N."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Un objet a une masse de 12 kg. Quel est son poids sur la Lune (g = 1,6 N/kg) ?",
+        "solution": "P = 12 × 1,6 = 19,2 N."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Un objet a un poids de 45 N sur Terre. Calcule sa masse (g = 9,81 N/kg).",
+        "solution": "m = 45 ÷ 9,81 ≈ 4,59 kg."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Un objet a une masse de 8 kg. Quel est son poids sur Terre et sur la Lune ? (g_Terre = 9,81, g_Lune = 1,6)",
+        "solution": "Sur Terre : P = 8 × 9,81 = 78,48 N. Sur Lune : P = 8 × 1,6 = 12,8 N."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Sur une planète, un objet de masse 5 kg a un poids de 20 N. Calcule g sur cette planète.",
+        "solution": "g = P ÷ m = 20 ÷ 5 = 4 N/kg."
+      }
+    ],
+    "interro": [
+      {
+        "question": "Quelle est l'unité de la masse ?",
+        "answer": "Le kilogramme (kg)."
+      },
+      {
+        "question": "Quelle est l'unité du poids ?",
+        "answer": "Le newton (N)."
+      },
+      {
+        "question": "Donne la formule du poids.",
+        "answer": "P = m × g."
+      },
+      {
+        "question": "Que vaut g sur Terre ?",
+        "answer": "Environ 9,81 N/kg."
+      },
+      {
+        "question": "Que vaut g sur la Lune ?",
+        "answer": "Environ 1,6 N/kg."
+      },
+      {
+        "question": "La masse d'un objet change-t-elle selon le lieu ?",
+        "answer": "Non, elle reste identique."
+      },
+      {
+        "question": "Le poids d'un objet est-il plus faible sur la Lune ?",
+        "answer": "Oui, environ 6 fois plus faible."
+      },
+      {
+        "question": "Un objet de 2 kg sur Terre pèse combien ? (g = 9,81)",
+        "answer": "P = 2 × 9,81 = 19,62 N."
+      }
+    ],
+    "mindmap": {
+      "center": "Masse et poids",
+      "branches": [
+        {
+          "label": "Masse",
+          "leaves": [
+            "Quantité de matière",
+            "Unité : kg",
+            "Constante"
+          ]
+        },
+        {
+          "label": "Poids",
+          "leaves": [
+            "Force d'attraction",
+            "Unité : N",
+            "Varie selon le lieu"
+          ]
+        },
+        {
+          "label": "Formule",
+          "leaves": [
+            "P = m × g",
+            "g Terre ≈ 9,81",
+            "g Lune ≈ 1,6"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 10,
+    "niveau": "Lycée",
+    "matiere": "SVT",
+    "titre": "La cellule",
+    "topic": "L'unité du vivant : la cellule",
+    "corrected_course": "<h2>L'unité du vivant : la cellule</h2><p>Tout être vivant est formé de cellules. C'est ce qu'on appelle l'unité du vivant.</p><p>La cellule eucaryote possède un noyau, qui contient l'ADN (l'information génétique). Elle a aussi un cytoplasme et une membrane plasmique qui l'entoure.</p><p>Dans la cellule, il y a des organites, comme les mitochondries. Ces organites produisent l'énergie nécessaire à la cellule.</p><p>Les cellules se divisent par mitose pour assurer la croissance et le renouvellement des tissus.</p>",
+    "key_points": [
+      "Tout être vivant est formé de cellules.",
+      "La cellule eucaryote a un noyau, un cytoplasme et une membrane plasmique.",
+      "Le noyau contient l'ADN, qui est l'information génétique.",
+      "Les mitochondries sont des organites qui produisent l'énergie de la cellule.",
+      "Les cellules se divisent par mitose pour la croissance et le renouvellement des tissus."
+    ],
+    "definition": "Cellule eucaryote : cellule qui possède un noyau contenant l'ADN, un cytoplasme et une membrane plasmique.",
+    "to_remember": [
+      "La cellule est l'unité de tout être vivant.",
+      "Le noyau contient l'ADN.",
+      "Les mitochondries produisent l'énergie.",
+      "La mitose permet la division des cellules."
+    ],
+    "flashcards": [
+      {
+        "question": "Quelle est l'unité commune à tous les êtres vivants ?",
+        "answer": "La cellule."
+      },
+      {
+        "question": "Que contient le noyau d'une cellule eucaryote ?",
+        "answer": "L'ADN, qui est l'information génétique."
+      },
+      {
+        "question": "Cite les trois éléments de base d'une cellule eucaryote.",
+        "answer": "Noyau, cytoplasme, membrane plasmique."
+      },
+      {
+        "question": "Quel organite produit l'énergie nécessaire à la cellule ?",
+        "answer": "Les mitochondries."
+      },
+      {
+        "question": "Quel est le rôle de la mitose ?",
+        "answer": "Assurer la croissance et le renouvellement des tissus."
+      },
+      {
+        "question": "Où se trouve l'information génétique dans une cellule eucaryote ?",
+        "answer": "Dans le noyau, contenu dans l'ADN."
+      },
+      {
+        "question": "Quelle est la fonction de la membrane plasmique ?",
+        "answer": "Elle délimite la cellule et contrôle les échanges (d'après le cours, elle fait partie de la cellule)."
+      },
+      {
+        "question": "Pourquoi dit-on que la cellule est l'unité du vivant ?",
+        "answer": "Parce que tout être vivant est formé de cellules."
+      }
+    ],
+    "qcm": [
+      {
+        "question": "Quelle affirmation est vraie ?",
+        "options": [
+          "Tous les êtres vivants sont formés de cellules.",
+          "Seuls les animaux sont formés de cellules.",
+          "Les cellules n'existent que chez les eucaryotes.",
+          "Les êtres vivants sont formés de tissus sans cellules."
+        ],
+        "correct": 0,
+        "explanation": "Le cours dit : 'Tout être vivant est formé de cellules'."
+      },
+      {
+        "question": "Dans une cellule eucaryote, l'ADN se trouve dans :",
+        "options": [
+          "le cytoplasme",
+          "le noyau",
+          "la membrane plasmique",
+          "les mitochondries"
+        ],
+        "correct": 1,
+        "explanation": "Le cours : le noyau contient l'ADN."
+      },
+      {
+        "question": "Les mitochondries sont des organites qui :",
+        "options": [
+          "stockent l'ADN",
+          "produisent l'énergie",
+          "fabriquent la membrane",
+          "divisent la cellule"
+        ],
+        "correct": 1,
+        "explanation": "Le cours : les mitochondries produisent l'énergie nécessaire à la cellule."
+      },
+      {
+        "question": "La mitose permet :",
+        "options": [
+          "la production d'énergie",
+          "la croissance et le renouvellement des tissus",
+          "la digestion des aliments",
+          "le stockage de l'ADN"
+        ],
+        "correct": 1,
+        "explanation": "Le cours : les cellules se divisent par mitose pour la croissance et le renouvellement des tissus."
+      },
+      {
+        "question": "Quel élément n'est PAS cité comme composant de la cellule eucaryote ?",
+        "options": [
+          "noyau",
+          "cytoplasme",
+          "membrane plasmique",
+          "paroi cellulaire"
+        ],
+        "correct": 3,
+        "explanation": "La paroi cellulaire n'est pas mentionnée dans le cours."
+      },
+      {
+        "question": "L'information génétique est portée par :",
+        "options": [
+          "les mitochondries",
+          "la membrane plasmique",
+          "l'ADN",
+          "le cytoplasme"
+        ],
+        "correct": 2,
+        "explanation": "Le cours : l'ADN est l'information génétique."
+      },
+      {
+        "question": "Une cellule eucaryote est caractérisée par la présence :",
+        "options": [
+          "d'un noyau",
+          "d'une paroi en cellulose",
+          "de chloroplastes",
+          "d'un flagelle"
+        ],
+        "correct": 0,
+        "explanation": "Le cours définit la cellule eucaryote avec un noyau."
+      },
+      {
+        "question": "Le cytoplasme est :",
+        "options": [
+          "le liquide qui entoure le noyau",
+          "la membrane externe",
+          "l'organite qui produit l'énergie",
+          "le lieu de stockage de l'ADN"
+        ],
+        "correct": 0,
+        "explanation": "D'après le cours, le cytoplasme est un composant de la cellule, il remplit la cellule autour du noyau."
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "Décris les principaux éléments d'une cellule eucaryote.",
+        "model_answer": "Une cellule eucaryote possède un noyau (contenant l'ADN), un cytoplasme et une membrane plasmique. Elle contient aussi des organites comme les mitochondries."
+      },
+      {
+        "question": "Quel est le rôle des mitochondries dans la cellule ?",
+        "model_answer": "Les mitochondries produisent l'énergie nécessaire à la cellule."
+      },
+      {
+        "question": "Explique pourquoi la mitose est importante pour un organisme.",
+        "model_answer": "La mitose permet la division des cellules, ce qui assure la croissance de l'organisme et le renouvellement des tissus."
+      },
+      {
+        "question": "Compare le rôle du noyau et celui des mitochondries dans une cellule eucaryote.",
+        "model_answer": "Le noyau contient l'ADN, l'information génétique, tandis que les mitochondries produisent l'énergie. Le noyau dirige les activités, les mitochondries fournissent l'énergie."
+      },
+      {
+        "question": "Un organisme unicellulaire est-il un être vivant ? Justifie en t'appuyant sur le cours.",
+        "model_answer": "Oui, car tout être vivant est formé de cellules ; un organisme unicellulaire est formé d'une seule cellule."
+      },
+      {
+        "question": "Explique comment la cellule assure à la fois le renouvellement des tissus et la production d'énergie.",
+        "model_answer": "La cellule se divise par mitose pour renouveler les tissus, et ses mitochondries produisent l'énergie nécessaire à ces activités."
+      }
+    ],
+    "exercises": [
+      {
+        "tag": "Appli",
+        "statement": "Classe les éléments suivants en deux colonnes : éléments de la cellule eucaryote / fonctions. Éléments : noyau, cytoplasme, membrane plasmique, mitochondries, ADN, production d'énergie, division cellulaire.",
+        "solution": "Éléments : noyau, cytoplasme, membrane plasmique, mitochondries, ADN. Fonctions : production d'énergie, division cellulaire."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Vrai ou Faux ? Justifie. a) Tous les êtres vivants sont des cellules. b) L'ADN est dans le cytoplasme. c) La mitose produit de l'énergie.",
+        "solution": "a) Vrai (tous sont formés de cellules). b) Faux (dans le noyau). c) Faux (la mitose divise les cellules)."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Complète les phrases : 1) Les ......... produisent l'énergie. 2) La ......... est la division cellulaire. 3) Le ......... contient l'ADN.",
+        "solution": "1) mitochondries 2) mitose 3) noyau"
+      },
+      {
+        "tag": "Appli",
+        "statement": "Relie chaque élément à sa fonction : noyau / membrane plasmique / mitochondries / mitose. Fonctions : produire l'énergie, contenir l'ADN, diviser la cellule, délimiter la cellule.",
+        "solution": "noyau → contenir l'ADN ; membrane plasmique → délimiter la cellule ; mitochondries → produire l'énergie ; mitose → diviser la cellule."
+      },
+      {
+        "tag": "Appli",
+        "statement": "Un chercheur observe une cellule avec un microscope et voit un noyau. Peut-il dire que c'est une cellule eucaryote ? Pourquoi ?",
+        "solution": "Oui, car la présence d'un noyau est caractéristique des cellules eucaryotes."
+      }
+    ],
+    "interro": [
+      {
+        "question": "Quelle est l'unité du vivant ?",
+        "answer": "La cellule."
+      },
+      {
+        "question": "Où se trouve l'ADN dans une cellule eucaryote ?",
+        "answer": "Dans le noyau."
+      },
+      {
+        "question": "Quel organite produit l'énergie ?",
+        "answer": "Les mitochondries."
+      },
+      {
+        "question": "Quel processus permet la croissance des tissus ?",
+        "answer": "La mitose."
+      },
+      {
+        "question": "Cite les trois éléments de base de la cellule eucaryote.",
+        "answer": "Noyau, cytoplasme, membrane plasmique."
+      },
+      {
+        "question": "Que contient le noyau ?",
+        "answer": "L'ADN (information génétique)."
+      },
+      {
+        "question": "Quel est le rôle de la membrane plasmique ?",
+        "answer": "Elle délimite la cellule (et contrôle les échanges)."
+      },
+      {
+        "question": "Vrai ou faux : les cellules se divisent pour produire de l'énergie.",
+        "answer": "Faux : elles se divisent pour la croissance et le renouvellement."
+      }
+    ],
+    "mindmap": {
+      "center": "La cellule",
+      "branches": [
+        {
+          "label": "Éléments",
+          "leaves": [
+            "noyau",
+            "cytoplasme",
+            "membrane plasmique"
+          ]
+        },
+        {
+          "label": "ADN",
+          "leaves": [
+            "information génétique"
+          ]
+        },
+        {
+          "label": "Organites",
+          "leaves": [
+            "mitochondries (énergie)"
+          ]
+        },
+        {
+          "label": "Division",
+          "leaves": [
+            "mitose",
+            "croissance",
+            "renouvellement"
+          ]
+        }
+      ]
+    }
+  }
+]
