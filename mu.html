@@ -336,6 +336,7 @@
     .ocr-box-title { font-weight: 700; color: var(--accent); margin-bottom: 6px; font-size: 0.8rem; }
     #ocrTexte { white-space: pre-wrap; line-height: 1.5; color: var(--ink); }
     .etape-bandeau { margin: 12px 0 0; padding: 10px 14px; border-radius: 12px; background: var(--al); color: var(--accent); font-size: 14px; font-weight: 600; border: 1px solid var(--accent); }
+    .export-btn { display: inline-flex; align-items: center; gap: 6px; background: white; border: 1.5px solid var(--accent); color: var(--accent); border-radius: 40px; padding: 9px 16px; cursor: pointer; font-weight: 700; font-size: 0.85rem; font-family: inherit; margin: 4px 0 12px; }
 
     body.dys { font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif; }
     body.dys .main-content, body.dys .ccard, body.dys #modeSection { background: #fdf8e7 !important; }
@@ -473,6 +474,7 @@
     </div>
     <div id="dejaBandeau" class="deja-bandeau" style="display:none;"></div>
     <div id="etapeBandeau" class="etape-bandeau" style="display:none;"></div>
+    <button type="button" class="export-btn" id="exportPdfBtn">📄 Exporter en PDF</button>
       <div id="carea" class="carea"></div>
   </div>
 
@@ -2357,6 +2359,80 @@
 
   if (new URLSearchParams(location.search).get('demo')) demarrerDemo();
   document.getElementById('demoBtn').addEventListener('click', demarrerDemo);
+
+  // ==================== EXPORT PDF ====================
+  // Génère un document imprimable (cours + fiche d'exercices + corrigé) et
+  // ouvre la fenêtre d'impression du navigateur ("Enregistrer en PDF").
+  function construirePdfHtml_() {
+    const a = appData || {};
+    const esc = escapeHtml;
+    const h = [];
+    h.push('<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><title>' + esc(a.topic || 'Cours') + '</title>');
+    h.push('<style>body{font-family:Arial,sans-serif;color:#111;line-height:1.5;max-width:800px;margin:0 auto;padding:20px}h1{font-size:22px;margin-bottom:4px}h2{font-size:17px;border-bottom:2px solid #4f6ef7;padding-bottom:4px;margin-top:26px;color:#3d5ce0}.qblock{border:1px solid #ddd;border-radius:6px;padding:9px;margin:10px 0;page-break-inside:avoid}.option{margin:2px 0 2px 18px}.correct{color:#006644;font-weight:bold}.reponse{color:#006644;font-style:italic}.mm li{margin:3px 0}ul{padding-left:20px}@media print{body{padding:0}}</style>');
+    h.push('</head><body>');
+    h.push('<h1>📘 ' + esc(a.topic || 'Cours') + '</h1>');
+
+    h.push('<h2>1. Cours corrigé</h2>');
+    h.push(sanitizerHtml(a.corrected_course || ''));
+
+    if ((a.key_points || []).length) {
+      h.push('<h2>2. Points clés</h2><ul>');
+      a.key_points.forEach(p => h.push('<li>' + esc(p) + '</li>'));
+      h.push('</ul>');
+    }
+    if (a.definition) h.push('<h2>Définition</h2><p>' + esc(a.definition) + '</p>');
+    if ((a.to_remember || []).length) {
+      h.push('<h2>À retenir</h2><ul>');
+      a.to_remember.forEach(r => h.push('<li>' + esc(r) + '</li>'));
+      h.push('</ul>');
+    }
+
+    if ((a.flashcards || []).length) {
+      h.push('<h2>3. Flashcards</h2>');
+      a.flashcards.forEach(f => h.push('<div class="qblock"><b>❓ ' + esc(f.question) + '</b><br><span class="reponse">✅ ' + esc(f.answer) + '</span></div>'));
+    }
+
+    h.push("<h2>4. Fiche d'exercices (sans réponses)</h2>");
+    (a.qcm || []).forEach((q, i) => {
+      h.push('<div class="qblock"><b>' + (i + 1) + '. ' + esc(q.question) + '</b>');
+      q.options.forEach((o, oi) => h.push('<div class="option">' + String.fromCharCode(65 + oi) + '. ' + esc(o) + '</div>'));
+      h.push('</div>');
+    });
+    (a.open_questions || []).forEach((q, i) => h.push('<div class="qblock"><b>' + (i + 1) + '. ' + esc(q.question) + '</b><br><span style="color:#999">Réponse : ........................................</span></div>'));
+    (a.exercises || []).forEach((ex, i) => h.push('<div class="qblock"><b>Exercice ' + (i + 1) + (ex.tag ? ' — ' + esc(ex.tag) : '') + '</b><br>' + esc(ex.statement) + '<br><span style="color:#999">Réponse : ........................................</span></div>'));
+    (a.interro || []).forEach((q, i) => h.push('<div class="qblock"><b>Interro ' + (i + 1) + '. ' + esc(q.question) + '</b><br><span style="color:#999">Réponse : ........................................</span></div>'));
+
+    h.push('<h2>5. Corrigé</h2>');
+    (a.qcm || []).forEach((q, i) => {
+      h.push('<div class="qblock"><b>' + (i + 1) + '. ' + esc(q.question) + '</b>');
+      q.options.forEach((o, oi) => h.push('<div class="option' + (oi === q.correct ? ' correct' : '') + '">' + String.fromCharCode(65 + oi) + '. ' + esc(o) + (oi === q.correct ? ' ✔' : '') + '</div>'));
+      if (q.explanation) h.push('<div class="reponse">💡 ' + esc(q.explanation) + '</div>');
+      h.push('</div>');
+    });
+    (a.open_questions || []).forEach((q, i) => h.push('<div class="qblock"><b>' + (i + 1) + '. ' + esc(q.question) + '</b><br><span class="reponse">✅ ' + esc(q.model_answer || '') + '</span></div>'));
+    (a.exercises || []).forEach((ex, i) => h.push('<div class="qblock"><b>Exercice ' + (i + 1) + '</b><br><span class="reponse">✅ ' + esc(ex.solution || '') + '</span></div>'));
+    (a.interro || []).forEach((q, i) => h.push('<div class="qblock"><b>Interro ' + (i + 1) + '. ' + esc(q.question) + '</b><br><span class="reponse">✅ ' + esc(q.answer || '') + '</span></div>'));
+
+    if (a.mindmap && (a.mindmap.branches || []).length) {
+      h.push('<h2>6. Carte mentale</h2><div class="mm"><b>' + esc(a.mindmap.center || '') + '</b><ul>');
+      a.mindmap.branches.forEach(b => h.push('<li><b>' + esc(b.label) + '</b> : ' + (b.leaves || []).map(l => esc(l)).join(', ') + '</li>'));
+      h.push('</ul></div>');
+    }
+
+    h.push('</body></html>');
+    return h.join('');
+  }
+
+  function exporterPdf() {
+    if (!appData) return;
+    const w = window.open('', '_blank');
+    if (!w) { afficherErreur('Autorise les fenêtres pop-up pour exporter en PDF'); return; }
+    w.document.open();
+    w.document.write(construirePdfHtml_());
+    w.document.close();
+    setTimeout(function () { w.focus(); w.print(); }, 300);
+  }
+  document.getElementById('exportPdfBtn').addEventListener('click', exporterPdf);
 
   // ==================== SERVICE WORKER ====================
   if ('serviceWorker' in navigator) {
