@@ -225,15 +225,40 @@
     .generate-btn:disabled { background: var(--g2); color: var(--g5); cursor: not-allowed; }
 
     #modeSection { margin-top: 30px; background: white; border-radius: 24px; padding: 20px 16px; }
-    .mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
     .mode-btn {
-      background: var(--g1); border: 2px solid var(--g2); border-radius: 16px;
-      padding: 14px 10px; text-align: center; cursor: pointer;
-      transition: 0.2s;
+      display: inline-flex; align-items: center; gap: 6px;
+      min-height: 44px; padding: 10px 14px; border-radius: 40px;
+      background: white; border: 1.5px solid var(--g2);
+      cursor: pointer; font-size: 0.875rem; font-weight: 700; transition: 0.2s;
     }
-    .mode-btn.active { background: var(--accent); color: white; }
-    .mode-emoji { font-size: 1.6rem; margin-bottom: 6px; }
-    .mode-title { font-weight: 700; font-size: 0.85rem; }
+    .mode-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .mode-title { font-weight: 700; font-size: 0.875rem; }
+    .mode-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+    .mode-bento { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+    .bento-tile { border-radius: 14px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 44px; border: none; }
+    .bento-cours { grid-column: 1 / -1; background: var(--accent); color: white; padding: 16px; min-height: 84px; }
+    .bento-cours.active { background: var(--ink); }
+    .bento-half { background: var(--al); color: var(--ink); min-height: 76px; padding: 12px; font-weight: 700; gap: 6px; }
+    .bento-half.active { background: var(--accent); color: white; }
+    .bento-pratique { grid-column: 1 / -1; background: #fdf6e3; color: #7a5b0c; min-height: 56px; padding: 14px; font-weight: 800; font-size: 1rem; }
+    .bento-pratique-pills { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; }
+    .bento-pratique-pills .mode-btn:not(.active) { background: #fdf6e3; }
+    .bento-compte { display: block; margin-top: 4px; font-size: 13px; opacity: .85; font-weight: 600; }
+    .bento-emoji { font-size: 20px; }
+    .bento-title { font-size: 15px; font-weight: 800; margin-top: 4px; }
+    .bento-sub { font-size: 0.8rem; opacity: 0.88; margin-top: 2px; }
+    .hint-box { background: var(--al); border-radius: 12px; padding: 10px 12px; margin-top: 8px; font-size: 0.9rem; }
+    .hint-zone:empty { margin: 0; }
+    .celebrate-card { margin-top: 16px; text-align: center; padding: 20px 16px; border-top: 1px solid var(--g2); animation: celebrateIn 0.3s ease-out; }
+    @keyframes celebrateIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .celebrate-badge { width: 54px; height: 54px; border-radius: 50%; background: #d4f5e2; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 12px; }
+    .celebrate-score { font-weight: 800; font-size: 1rem; margin-bottom: 6px; }
+    .celebrate-phrase { font-size: 0.875rem; color: var(--g5); margin-bottom: 14px; }
+    .celebrate-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .celebrate-actions button { min-height: 44px; padding: 10px 18px; border-radius: 40px; font-weight: 700; font-size: 0.875rem; cursor: pointer; border: 1.5px solid var(--g2); background: white; color: var(--ink); }
+    .celebrate-actions button.celebrate-next { background: var(--accent); color: white; border-color: var(--accent); }
+    .progress-card { background: white; border: 1px solid var(--g2); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
+    .progress-streak { background: #fdf6e3; color: #7a5b0c; border-radius: 20px; padding: 4px 12px; font-size: 0.8rem; font-weight: 700; }
 
     .deja-bandeau { margin: 12px 0 0; padding: 10px 14px; border-radius: 12px;
       background: #e8f5e9; color: #1b5e20; font-size: 14px; font-weight: 600;
@@ -392,15 +417,29 @@
   <div id="errorDiv" style="display:none; background:#fde8e8; border:1.5px solid var(--red); border-radius:16px; padding:14px 18px; margin-bottom:16px; font-size:0.9rem;"></div>
 
   <div id="modeSection" style="display:none;">
-    <div class="mode-grid">
-      <div class="mode-btn" data-mode="cours" role="button" tabindex="0"><div class="mode-emoji">📋</div><div class="mode-title">Cours corrigé</div></div>
-      <div class="mode-btn" data-mode="resume" role="button" tabindex="0"><div class="mode-emoji">🗂️</div><div class="mode-title">Résumé</div></div>
-      <div class="mode-btn" data-mode="flashcard" role="button" tabindex="0"><div class="mode-emoji">🃏</div><div class="mode-title">Flashcards</div></div>
-      <div class="mode-btn" data-mode="qcm" role="button" tabindex="0"><div class="mode-emoji">✅</div><div class="mode-title">QCM</div></div>
-      <div class="mode-btn" data-mode="open" role="button" tabindex="0"><div class="mode-emoji">✍️</div><div class="mode-title">Questions</div></div>
-      <div class="mode-btn" data-mode="exercise" role="button" tabindex="0"><div class="mode-emoji">🧮</div><div class="mode-title">Exercices</div></div>
-      <div class="mode-btn" data-mode="mindmap" role="button" tabindex="0"><div class="mode-emoji">🗺️</div><div class="mode-title">Mind Map</div></div>
-      <div class="mode-btn" data-mode="interro" role="button" tabindex="0"><div class="mode-emoji">⏱️</div><div class="mode-title">Interro</div></div>
+    <div id="progressCard" class="progress-card" style="display:none;"></div>
+    <div class="mode-bento">
+      <div class="bento-tile bento-cours mode-btn" data-mode="cours" role="button" tabindex="0">
+        <div class="bento-emoji">📋</div>
+        <div class="bento-title">Cours corrigé</div>
+        <div class="bento-sub">Ta leçon remise au propre</div>
+      </div>
+      <div class="bento-tile bento-half mode-btn" data-mode="resume" role="button" tabindex="0">
+        <span>🗂️</span> <span class="mode-title">Résumé</span>
+      </div>
+      <div class="bento-tile bento-half mode-btn" data-mode="mindmap" role="button" tabindex="0">
+        <span>🗺️</span> <span class="mode-title">Mind Map</span>
+      </div>
+      <div class="bento-tile bento-pratique" id="bentoPratiqueToggle" role="button" tabindex="0" aria-expanded="false">
+        <span class="mode-title">🎯 S'entraîner · 5 activités</span>
+      </div>
+      <div class="mode-pills bento-pratique-pills" id="bentoPratiquePills" style="display:none;">
+        <div class="mode-btn" data-mode="flashcard" role="button" tabindex="0">🃏 <span class="mode-title">Flashcards</span></div>
+        <div class="mode-btn" data-mode="qcm" role="button" tabindex="0">✅ <span class="mode-title">QCM</span></div>
+        <div class="mode-btn" data-mode="open" role="button" tabindex="0">✍️ <span class="mode-title">Questions</span></div>
+        <div class="mode-btn" data-mode="exercise" role="button" tabindex="0">🧮 <span class="mode-title">Exercices</span></div>
+        <div class="mode-btn" data-mode="interro" role="button" tabindex="0">⏱️ <span class="mode-title">Interro</span></div>
+      </div>
     </div>
     <div id="dejaBandeau" class="deja-bandeau" style="display:none;"></div>
     <div id="etapeBandeau" class="etape-bandeau" style="display:none;"></div>
@@ -419,6 +458,10 @@
   let currentMode = null, currentInputMode = 'photo', pages = [], pastedText = '', appData = null;
   let chargementEnCours = false, debutChargement = 0;
   let ajoutPages = false;
+  let hintProgress = {}; // clef "mode-idx" -> niveau d'indice affiché (0 à 3)
+  let qcmRepondu = {};   // clef qi -> true/false (bonne/mauvaise réponse)
+  let pratiqueOuverte = false;
+  const PRATIQUE_MODES = ['flashcard', 'qcm', 'open', 'exercise', 'interro'];
   let fcIndex = 0, fcFlipped = false, _compteurDYSGlobal = 0;
 
   // DOM elements
@@ -1237,7 +1280,9 @@
     if (!Array.isArray(d.flashcards)) d.flashcards = [];
     if (!Array.isArray(d.qcm)) d.qcm = [];
     if (!Array.isArray(d.open_questions)) d.open_questions = [];
+    d.open_questions.forEach(q => { if (!Array.isArray(q.hints)) q.hints = []; });
     if (!Array.isArray(d.exercises)) d.exercises = [];
+    d.exercises.forEach(ex => { if (!Array.isArray(ex.hints)) ex.hints = []; });
     if (!Array.isArray(d.interro)) d.interro = [];
     if (!d.mindmap || typeof d.mindmap !== 'object') {
       d.mindmap = { center: d.topic || 'Cours', branches: [] };
@@ -1331,7 +1376,7 @@
       let donnees = hashCours ? await lireLeconCache_(hashCours) : null;
       const dejaPreparee = !!donnees;
 
-      const prompt = `Cours:\n${coursTexte}\n\nTu es un professeur particulier exigeant. Prépare un entraînement complet à partir du cours ci-dessus. Quantités attendues : 8 à 12 flashcards couvrant toutes les notions, 6 à 8 questions de QCM avec des pièges plausibles, 4 à 6 questions ouvertes dont les 2 dernières plus difficiles (expliquer, comparer, appliquer), 3 à 5 exercices, 5 à 8 questions d'interro. Adapte-toi au type de cours : s'il s'agit d'une MÉTHODE ou d'une PROCÉDURE à appliquer (mathématiques, calcul, conjugaison, grammaire, orthographe), crée de NOUVEAUX exercices en variant les nombres, les verbes ou les cas, tant que la méthode reste exactement celle enseignée dans le cours — vise le haut des fourchettes même si le cours est court, car c'est la répétition qui fait progresser. S'il s'agit au contraire d'un cours de CONNAISSANCES (histoire, géographie, sciences, vocabulaire, littérature), n'invente jamais un fait, une date ou une notion absente du cours : réduis alors les quantités plutôt que d'ajouter du contenu qui n'a pas été enseigné. Si le texte transcrit est très mince (un titre ou quelques mots isolés, sans phrase explicative), ne fabrique JAMAIS un cours complet à partir de presque rien : topic et corrected_course doivent refléter fidèlement ce qui a été lu, et les tableaux (flashcards, qcm, open_questions, exercises, interro) peuvent rester VIDES — un tableau vide vaut toujours mieux qu'un tableau inventé. Écris les mathématiques en texte simple lisible par un enfant (x², 3/4, √9, ×, ÷, ≤) : n'utilise JAMAIS de LaTeX, ni \\( \\), ni $, ni \\frac, ni \\begin. Reste concis dans les corrections : va à l'essentiel plutôt que de tout détailler. Génère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
+      const prompt = `Cours:\n${coursTexte}\n\nTu es un professeur particulier exigeant. Prépare un entraînement complet à partir du cours ci-dessus. Quantités attendues : 8 à 12 flashcards couvrant toutes les notions, 6 à 8 questions de QCM avec des pièges plausibles, 4 à 6 questions ouvertes dont les 2 dernières plus difficiles (expliquer, comparer, appliquer), 3 à 5 exercices, 5 à 8 questions d'interro. Adapte-toi au type de cours : s'il s'agit d'une MÉTHODE ou d'une PROCÉDURE à appliquer (mathématiques, calcul, conjugaison, grammaire, orthographe), crée de NOUVEAUX exercices en variant les nombres, les verbes ou les cas, tant que la méthode reste exactement celle enseignée dans le cours — vise le haut des fourchettes même si le cours est court, car c'est la répétition qui fait progresser. S'il s'agit au contraire d'un cours de CONNAISSANCES (histoire, géographie, sciences, vocabulaire, littérature), n'invente jamais un fait, une date ou une notion absente du cours : réduis alors les quantités plutôt que d'ajouter du contenu qui n'a pas été enseigné. Si le texte transcrit est très mince (un titre ou quelques mots isolés, sans phrase explicative), ne fabrique JAMAIS un cours complet à partir de presque rien : topic et corrected_course doivent refléter fidèlement ce qui a été lu, et les tableaux (flashcards, qcm, open_questions, exercises, interro) peuvent rester VIDES — un tableau vide vaut toujours mieux qu'un tableau inventé. Écris les mathématiques en texte simple lisible par un enfant (x², 3/4, √9, ×, ÷, ≤) : n'utilise JAMAIS de LaTeX, ni \\( \\), ni $, ni \\frac, ni \\begin. Reste concis dans les corrections : va à l'essentiel plutôt que de tout détailler. Pratique l'apprentissage guidé : pour chaque question ouverte et chaque exercice, écris deux indices gradués (champ hints) pour un élève de 10-12 ans qui bloque. Le premier relance sa réflexion par une question qui recentre, sans rien dévoiler. Le second oriente vers l'endroit du cours où chercher, sans jamais contenir un élément de la réponse. Génère UNIQUEMENT JSON (sans texte avant ou après): {"topic":"titre","corrected_course":"<h2>Titre</h2><p>cours</p>","key_points":["p1","p2"],"definition":"def","to_remember":["r1"],"flashcards":[{"question":"q","answer":"r"}],"qcm":[{"question":"q","options":["A","B","C"],"correct":0,"explanation":"exp"}],"open_questions":[{"question":"q","hints":["indice1","indice2"],"model_answer":"r"}],"exercises":[{"tag":"Appli","statement":"exo","hints":["indice1","indice2"],"solution":"sol"}],"mindmap":{"center":"sujet","branches":[{"label":"b","leaves":["l"]}]},"interro":[{"question":"q","answer":"r"}]}`;
 
       // Le cours seul est court : il revient vers 12 s, les activites vers 38 s.
       // On lance les deux ensemble et on affiche le cours des qu'il est la.
@@ -1384,12 +1429,18 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
       consommerLeconEssai_();
       fcIndex = 0;
       fcFlipped = false;
+      hintProgress = {};
+      qcmRepondu = {};
 
       document.getElementById('loadingDiv').style.display = 'none';
       document.getElementById('modeSection').style.display = 'block';
       afficherDejaPreparee_(dejaPreparee);
       generateBtn.disabled = false;
       setMode('cours');
+      annoncerActivites_();
+      setPratiqueOuverte(true);
+      enregistrerJourActif();
+      renderProgressCard();
       cacherEtapeFinale();
       chargementEnCours = false;
       logActivity('generation_terminee', { mode: currentInputMode, pages: pages.length, duree_ms: Date.now() - debutChargement });
@@ -1434,10 +1485,55 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
     return `<div class="ccard"><p>${texte}</p></div>`;
   }
 
+  // Apprentissage guidé : indices progressifs avant la correction (open/exercise)
+  function renderIndiceZone(mode, idx, hints) {
+    const key = mode + '-' + idx;
+    if (!Array.isArray(hints) || hints.length === 0) {
+      const btn = mode === 'open' ? '📖 Voir correction' : '🔍 Voir correction';
+      return `<button onclick="voirCorrection('${mode}',${idx})">${btn}</button><div class="correction-box" id="corr-${mode}-${idx}" style="display:none;"></div>`;
+    }
+    const level = hintProgress[key] || 0;
+    let hintsHtml = '';
+    if (level >= 1 && hints[0]) hintsHtml += `<div class="hint-box">💡 ${escapeHtml(hints[0])}</div>`;
+    if (level >= 2 && hints[1]) hintsHtml += `<div class="hint-box">💡 ${escapeHtml(hints[1])}</div>`;
+    let btnHtml = '';
+    if (level < 3) {
+      const label = level === 0 ? '💡 Un indice' : (level === 1 ? '💡 Encore un indice' : '📖 Voir la réponse');
+      btnHtml = `<button id="hintbtn-${key}" onclick="clicIndice('${mode}',${idx})">${label}</button>`;
+    }
+    return `<div class="hint-zone" id="hintzone-${key}">${hintsHtml}</div>${btnHtml}<div class="correction-box" id="corr-${mode}-${idx}" style="display:none;"></div>`;
+  }
+
+  window.clicIndice = function(mode, idx) {
+    const key = mode + '-' + idx;
+    const level = hintProgress[key] || 0;
+    const liste = mode === 'open' ? appData.open_questions : appData.exercises;
+    const item = liste && liste[idx];
+    const hints = item ? item.hints : [];
+    const zone = document.getElementById('hintzone-' + key);
+    const btn = document.getElementById('hintbtn-' + key);
+    if (level === 0) {
+      if (zone && hints && hints[0]) zone.insertAdjacentHTML('beforeend', `<div class="hint-box">💡 ${escapeHtml(hints[0])}</div>`);
+      if (btn) btn.textContent = '💡 Encore un indice';
+      hintProgress[key] = 1;
+    } else if (level === 1) {
+      if (zone && hints && hints[1]) zone.insertAdjacentHTML('beforeend', `<div class="hint-box">💡 ${escapeHtml(hints[1])}</div>`);
+      if (btn) btn.textContent = '📖 Voir la réponse';
+      hintProgress[key] = 2;
+    } else if (level === 2) {
+      voirCorrection(mode, idx);
+      if (btn) btn.remove();
+      hintProgress[key] = 3;
+    }
+    appliquerCouleursDYS();
+  };
+
   function setMode(mode) {
     currentMode = mode;
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
     document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
+    // Un mode d'entraînement actif garde la tuile bento "S'entraîner" dépliée
+    if (PRATIQUE_MODES.includes(mode)) setPratiqueOuverte(true);
     const area = document.getElementById('carea');
 
     if (mode === 'cours') {
@@ -1474,12 +1570,13 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); opt.click(); }
         });
       });
+      verifierFinQCM();
 
     } else if (mode === 'open') {
       if (appData.open_questions.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
       let html = `<div class="ccard"><h2>✍️ Questions</h2>`;
       appData.open_questions.forEach((q, idx) => {
-        html += `<div class="qblock"><p><strong>${escapeHtml(q.question)}</strong></p><textarea rows="4" style="width:100%; border-radius:12px; padding:10px;"></textarea><button onclick="voirCorrection('open',${idx})">📖 Voir correction</button><div class="correction-box" id="corr-open-${idx}" style="display:none;"></div></div>`;
+        html += `<div class="qblock"><p><strong>${escapeHtml(q.question)}</strong></p><textarea rows="4" style="width:100%; border-radius:12px; padding:10px;"></textarea>${renderIndiceZone('open', idx, q.hints)}</div>`;
       });
       html += `</div>`;
       area.innerHTML = html;
@@ -1488,7 +1585,7 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
       if (appData.exercises.length === 0) { area.innerHTML = getMsgVide(); appliquerCouleursDYS(); return; }
       let html = `<div class="ccard"><h2>🧮 Exercices</h2>`;
       appData.exercises.forEach((ex, idx) => {
-        html += `<div class="qblock"><p class="ex-tag"><strong>${escapeHtml(ex.tag)}</strong></p><p>${escapeHtml(ex.statement)}</p><textarea rows="4" style="width:100%; padding:10px;"></textarea><button onclick="voirCorrection('exercise',${idx})">🔍 Voir correction</button><div class="correction-box" id="corr-exercise-${idx}" style="display:none;"></div></div>`;
+        html += `<div class="qblock"><p class="ex-tag"><strong>${escapeHtml(ex.tag)}</strong></p><p>${escapeHtml(ex.statement)}</p><textarea rows="4" style="width:100%; padding:10px;"></textarea>${renderIndiceZone('exercise', idx, ex.hints)}</div>`;
       });
       html += `</div>`;
       area.innerHTML = html;
@@ -1524,12 +1621,13 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
     const box = document.getElementById(`corr-${mode}-${idx}`);
     if (!box) return;
     if (box.style.display !== 'none') { box.style.display = 'none'; return; }
-    box.innerHTML = escapeHtml(reponse);
+    const texteAffiche = '✅ Réponse : ' + reponse;
+    box.innerHTML = escapeHtml(texteAffiche);
     box.style.display = 'block';
     // Appliquer DYS si actif
     if (document.body.classList.contains('dys')) {
-      box.dataset.dysOriginal = reponse;
-      const res = colorerTexteDYS(reponse, _compteurDYSGlobal);
+      box.dataset.dysOriginal = texteAffiche;
+      const res = colorerTexteDYS(texteAffiche, _compteurDYSGlobal);
       box.innerHTML = res.html;
     }
   };
@@ -1551,6 +1649,7 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
     });
     // Marquer comme répondu
     block.classList.add('answered');
+    qcmRepondu[qi] = (oi === q.correct);
     // Feedback
     const expl = escapeHtml(q.explanation || '');
     if (oi === q.correct) {
@@ -1559,7 +1658,136 @@ Remets ce cours au propre pour un eleve de 10-12 ans. N'invente jamais une notio
       fb.innerHTML = `<span style="color:var(--red)">❌ Mauvaise réponse.</span> ${expl}`;
     }
     appliquerCouleursDYS();
+    verifierFinQCM();
   };
+
+  // ==================== MICRO-CÉLÉBRATION FIN DE QCM ====================
+  function verifierFinQCM() {
+    if (!appData || !Array.isArray(appData.qcm) || appData.qcm.length === 0) return;
+    const total = appData.qcm.length;
+    const area = document.getElementById('carea');
+    if (!area) return;
+    const repondus = area.querySelectorAll('.qblock.answered').length;
+    if (repondus < total) return;
+    const bonnes = Object.values(qcmRepondu).filter(Boolean).length;
+    afficherBilanQCM(bonnes, total);
+  }
+
+  function afficherBilanQCM(bonnes, total) {
+    const area = document.getElementById('carea');
+    const ccard = area ? area.querySelector('.ccard') : null;
+    if (!ccard || document.getElementById('qcmBilan')) return;
+    const pct = total > 0 ? (bonnes / total) : 0;
+    const emoji = pct >= 0.5 ? '✅' : '😊';
+    const phrase = pct === 1 ? 'Sans faute, bravo !' : (pct >= 0.5 ? 'Tu progresses vite sur ce chapitre' : 'Refais le quiz pour ancrer tes réponses');
+    const div = document.createElement('div');
+    div.id = 'qcmBilan';
+    div.className = 'celebrate-card';
+    div.innerHTML = `
+      <div class="celebrate-badge">${emoji}</div>
+      <p class="celebrate-score">${bonnes} bonne${bonnes > 1 ? 's' : ''} réponse${bonnes > 1 ? 's' : ''} sur ${total}</p>
+      <p class="celebrate-phrase">${phrase}</p>
+      <div class="celebrate-actions">
+        <button onclick="reprendreQCM()">Refaire</button>
+        <button class="celebrate-next" onclick="continuerApresQCM()">Continuer</button>
+      </div>
+    `;
+    ccard.appendChild(div);
+    appliquerCouleursDYS();
+  }
+
+  window.reprendreQCM = function() { qcmRepondu = {}; setMode('qcm'); };
+  window.continuerApresQCM = function() { setMode('interro'); };
+
+  // ==================== PROGRESSION & SÉRIE ====================
+  function dateISO(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function enregistrerJourActif() {
+    let jours = [];
+    try { jours = JSON.parse(localStorage.getItem('ms_jours') || '[]'); } catch (e) { jours = []; }
+    if (!Array.isArray(jours)) jours = [];
+    const iso = dateISO(new Date());
+    if (!jours.includes(iso)) jours.push(iso);
+    jours.sort();
+    if (jours.length > 60) jours = jours.slice(jours.length - 60);
+    localStorage.setItem('ms_jours', JSON.stringify(jours));
+  }
+  function calculerProgression() {
+    let jours = [];
+    try { jours = JSON.parse(localStorage.getItem('ms_jours') || '[]'); } catch (e) { jours = []; }
+    if (!Array.isArray(jours)) jours = [];
+    const set = new Set(jours);
+    const now = new Date();
+    const dow = now.getDay();
+    const offsetLundi = (dow === 0) ? 6 : (dow - 1);
+    const lundi = new Date(now);
+    lundi.setHours(0, 0, 0, 0);
+    lundi.setDate(lundi.getDate() - offsetLundi);
+    const joursSemaine = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(lundi);
+      d.setDate(lundi.getDate() + i);
+      joursSemaine.push(set.has(dateISO(d)));
+    }
+    const scansSemaine = joursSemaine.filter(Boolean).length;
+    let serie = 0;
+    const curseur = new Date(now);
+    curseur.setHours(0, 0, 0, 0);
+    if (!set.has(dateISO(curseur))) curseur.setDate(curseur.getDate() - 1);
+    while (set.has(dateISO(curseur))) { serie++; curseur.setDate(curseur.getDate() - 1); }
+    return { scansSemaine, serie, joursSemaine };
+  }
+  function renderProgressCard() {
+    const card = document.getElementById('progressCard');
+    if (!card) return;
+    const { scansSemaine, serie, joursSemaine } = calculerProgression();
+    const initiales = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+    let barsHtml = '';
+    joursSemaine.forEach((actif, i) => {
+      barsHtml += `<div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;">
+        <div style="width:100%; height:26px; border-radius:6px; background:${actif ? 'var(--accent)' : 'var(--g2)'}; transition:0.2s;"></div>
+        <span style="font-size:0.7rem; color:var(--g5);">${initiales[i]}</span>
+      </div>`;
+    });
+    const streakHtml = serie >= 2 ? `<span class="progress-streak">🔥 ${serie} jours</span>` : '';
+    card.innerHTML = `
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; gap:8px;">
+        <strong style="font-size:0.95rem;">Cette semaine</strong>
+        ${streakHtml}
+      </div>
+      <div style="display:flex; gap:6px;">${barsHtml}</div>
+      <p style="font-size:0.75rem; color:var(--g5); margin-top:10px;">${scansSemaine} cours révisé${scansSemaine > 1 ? 's' : ''} cette semaine</p>
+    `;
+    card.style.display = 'block';
+  }
+
+  // ==================== GRILLE BENTO : tuile "S'entraîner" ====================
+  function annoncerActivites_() {
+    const tuile = document.getElementById('bentoPratiqueToggle');
+    if (!tuile || !appData) return;
+    const bouts = [];
+    const compte = [['flashcards', '🃏'], ['qcm', '✅'], ['open_questions', '✍️'], ['exercises', '🧮'], ['interro', '⏱️']];
+    compte.forEach(([cle, emoji]) => {
+      const n = (appData[cle] || []).length;
+      if (n) bouts.push(`${n} ${emoji}`);
+    });
+    let badge = tuile.querySelector('.bento-compte');
+    if (!badge) { badge = document.createElement('span'); badge.className = 'bento-compte'; tuile.appendChild(badge); }
+    badge.textContent = bouts.join(' · ');
+  }
+  function setPratiqueOuverte(val) {
+    pratiqueOuverte = val;
+    const pills = document.getElementById('bentoPratiquePills');
+    const toggle = document.getElementById('bentoPratiqueToggle');
+    if (pills) pills.style.display = val ? 'flex' : 'none';
+    if (toggle) toggle.setAttribute('aria-expanded', val ? 'true' : 'false');
+  }
+  const bentoPratiqueToggle = document.getElementById('bentoPratiqueToggle');
+  bentoPratiqueToggle.addEventListener('click', () => setPratiqueOuverte(!pratiqueOuverte));
+  bentoPratiqueToggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bentoPratiqueToggle.click(); }
+  });
 
   // Accessibilité clavier sur les mode-btn
   document.querySelectorAll('.mode-btn').forEach(btn => {
