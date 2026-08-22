@@ -447,13 +447,14 @@
       <div id="carea" class="carea"></div>
   </div>
 
-  <div class="footer">Memo Scan · Smart Learn — Cours à domicile, prof particulier, soutien scolaire · <a href="privacy.html" style="color:inherit;">Confidentialité</a></div>
+  <div class="footer">Memo Scan · Smart Learn — Cours à domicile, prof particulier, soutien scolaire · <a href="privacy.html" style="color:inherit;">Confidentialité</a> · utilisé sous la responsabilité d'un parent</div>
 </div>
 
 <script>
   // ==================== CONFIGURATION ====================
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfrICeVrhpkUg2h7X_PUSQB6BX_Y7tX7VhxVn9wSChSkvFsAwtVhnVqiZkrbSffFZ_ig/exec";
   const APP_TOKEN = "ms_7f3a1e9c4b6d2058";
+  const MODE_TEST = new URLSearchParams(location.search).get('test') === '1'; // mode test : zéro appel, zéro ligne en feuille
 
   let currentMode = null, currentInputMode = 'photo', pages = [], pastedText = '', appData = null;
   let chargementEnCours = false, debutChargement = 0;
@@ -559,6 +560,7 @@
   // Prévient le propriétaire d'un incident (feuille Erreurs + email groupé).
   // Silencieux et non bloquant : ne doit jamais dégrader l'expérience élève.
   function signalerErreur(type, detail) {
+    if (MODE_TEST) return;
     try {
       fetch(SCRIPT_URL + '?action=logErreur&id=' + getDeviceId()
         + '&token=' + encodeURIComponent(APP_TOKEN)
@@ -588,6 +590,7 @@
   }
 
   function logActivity(type, detail) {
+    if (MODE_TEST) return;
     try {
       fetch(SCRIPT_URL + '?action=activity&id=' + getDeviceId()
         + '&session=' + getSessionId()
@@ -670,6 +673,7 @@
   initTrial();
 
   async function syncEssaiServeur() {
+    if (MODE_TEST) return;
     try {
       const utm = getUtm();
       const qUtm = utm ? '&utm=' + encodeURIComponent(JSON.stringify(utm).slice(0, 160)) : '';
@@ -1324,6 +1328,31 @@
     if (isTrialExpired()) {
       logActivity('essai_epuise_bloque', {});
       afficherErreur("🔒 Essai terminé ! 💳 Paiement 29€/an via Wise — Contact : smartlearn.mu@gmail.com");
+      return;
+    }
+    if (MODE_TEST) {
+      // Données factices : zéro appel API, zéro coût, zéro ligne en feuille.
+      appData = normaliserAppData({
+        topic: 'Leçon de test',
+        corrected_course: '<h2>Leçon de test</h2><p>Ceci est une leçon fictive générée en mode test (aucun appel IA, aucune donnée envoyée).</p>',
+        key_points: ['Point de test 1', 'Point de test 2'],
+        definition: 'Définition de test',
+        to_remember: ['À retenir : mode test'],
+        flashcards: [{ question: 'Question de test ?', answer: 'Réponse de test.' }],
+        qcm: [{ question: 'QCM de test ?', options: ['A', 'B', 'C'], correct: 0, explanation: 'Explication de test' }],
+        open_questions: [{ question: 'Question ouverte de test ?', model_answer: 'Réponse modèle de test', hints: ['Indice 1', 'Indice 2'] }],
+        exercises: [{ tag: 'Test', statement: 'Exercice de test', solution: 'Solution de test', hints: ['Indice 1', 'Indice 2'] }],
+        interro: [{ question: 'Interro de test ?', answer: 'Réponse interro de test' }],
+        mindmap: { center: 'Test', branches: [{ label: 'Branche', leaves: ['Feuille'] }] }
+      });
+      fcIndex = 0; fcFlipped = false; hintProgress = {}; qcmRepondu = {};
+      document.getElementById('loadingDiv').style.display = 'none';
+      document.getElementById('modeSection').style.display = 'block';
+      setMode('cours');
+      annoncerActivites_();
+      setPratiqueOuverte(true);
+      generateBtn.disabled = false;
+      cacherEtapeFinale();
       return;
     }
     logActivity('generation_lancee', { mode: currentInputMode, pages: pages.length });
